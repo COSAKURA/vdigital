@@ -3,20 +3,28 @@
       <div class="content-container">
         <!-- 左侧内容 -->
         <div class="left-content">
+          <h2>让每一个原创内容<br>都获得 <span class="highlight">尊重</span> 和 <span class="highlight">持续回报</span></h2>
+          <ul class="features">
+            <li>📜 DCI 申领：快捷认证权属</li>
+            <li>🔒 版权保护：解决侵权问题</li>
+            <li>📈 内容出海：增加变现机会</li>
+          </ul>
           <img src="../assets/images/resource/service-2.png" alt="Illustration" class="illustration" />
         </div>
+        
   
         <!-- 右侧注册表单 -->
         <div class="right-form">
           <el-card class="form-card">
             <h2 class="form-title">用户注册</h2>
+            <el-tab-pane label="账号密码登录" name="account"></el-tab-pane>
             <el-form :model="registerForm" :rules="rules" ref="registerFormRef">
               <!-- 手机号 -->
-              <el-form-item label="手机号" prop="phone">
-                <el-input v-model="registerForm.phone" placeholder="请输入手机号" />
+              <el-form-item label="邮箱" prop="phone">
+                <el-input v-model="registerForm.phone" placeholder="请输入邮箱" />
               </el-form-item>
               <!-- 验证码 -->
-              <el-form-item label="短信验证码" prop="code">
+              <el-form-item label="验证码" prop="code">
                 <div class="code-input-wrapper">
                   <el-input v-model="registerForm.code" placeholder="请输入验证码" />
                   <el-button
@@ -60,8 +68,8 @@
             </el-form>
             <!-- 已有账号 -->
             <div class="login-link">
-              已有账号，
-              <router-link to="/login" class="link">直接登录</router-link>
+
+              <router-link to="/" class="link">已有账号👉 直接登录</router-link>
             </div>
           </el-card>
         </div>
@@ -84,8 +92,8 @@
   
   const rules = {
     phone: [
-      { required: true, message: "请输入手机号", trigger: "blur" },
-      { pattern: /^1[3-9]\d{9}$/, message: "手机号格式不正确", trigger: "blur" },
+      { required: true, message: "请输入邮箱", trigger: "blur" },
+      { pattern:/^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "邮箱格式不正确", trigger: "blur" },
     ],
     code: [{ required: true, message: "请输入验证码", trigger: "blur" }],
     password: [{ required: true, message: "请输入密码", trigger: "blur" }],
@@ -147,10 +155,11 @@
     height: 100vh;
     background-color: #f5faff;
   }
-  
   /* 内容容器 */
   .content-container {
     display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     width: 90%;
     max-width: 1200px;
     background-color: #fff;
@@ -162,14 +171,31 @@
   /* 左侧内容 */
   .left-content {
     flex: 1.5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    padding: 40px;
     background-color: #eef5ff;
+  }
+  
+  .left-content h2 {
+    font-size: 24px;
+    line-height: 1.8;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .left-content .highlight {
+    color: #6a71f0;
   }
   
   .illustration {
     width: 50%;
+  }
+
+  .features {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    color: #666;
   }
   
   /* 右侧表单 */
@@ -180,7 +206,6 @@
     justify-content: center;
     padding: 40px;
   }
-  
   .form-card {
     width: 100%;
     max-width: 400px;
@@ -207,16 +232,10 @@
     background: linear-gradient(to right, #4facfe, #00f2fe);
     color: white;
   }
-  
-  .login-link {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 14px;
-  }
-  
   .link {
     color: #409eff;
     text-decoration: none;
+    font-size: 13px;
   }
   
   .link:hover {

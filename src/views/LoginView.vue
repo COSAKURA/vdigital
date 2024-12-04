@@ -19,8 +19,8 @@
             <el-tabs v-model="activeTab" class="login-tabs">
               <el-tab-pane label="账号密码登录" name="account">
                 <el-form :model="loginForm" :rules="rules" ref="loginFormRef">
-                  <el-form-item label="账号用户名" prop="username">
-                    <el-input v-model="loginForm.username" placeholder="请输入用户名" />
+                  <el-form-item label="邮箱" prop="username">
+                    <el-input v-model="loginForm.username" placeholder="请输入邮箱" />
                   </el-form-item>
                   <el-form-item label="密码" prop="password">
                     <el-input
@@ -31,11 +31,12 @@
                     />
                   </el-form-item>
                   <div class="form-actions">
+                    <router-link to="/register" class="register-link">没有账号?👉 点击注册 </router-link>
                     <router-link to="/forgot-password" class="forgot-password">忘记密码?</router-link>
-                    <router-link to="/register" class="register-link">立即注册 &gt;</router-link>
                   </div>
                   <el-form-item>
                     <el-button type="primary" class="login-button" @click="handleLogin">登 录</el-button>
+
                   </el-form-item>
                 </el-form>
               </el-tab-pane>
@@ -84,6 +85,7 @@
   </script>
   
   <style scoped>
+  
   /* 整体页面样式 */
   .login-page {
     display: flex;
@@ -200,6 +202,12 @@
     width: 32px;
     margin: 0 8px;
     cursor: pointer;
+  }
+  .login-button {
+    margin-top: 18px;
+    width: 100%;
+    background: linear-gradient(to right, #4facfe, #00f2fe);
+    color: white;
   }
   </style>
   
