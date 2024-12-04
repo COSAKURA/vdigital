@@ -2,12 +2,12 @@
   <div id="app">
 
     <!-- 导航 -->
-    <MainHeader />
+    <!-- <MainHeader /> -->
     <!-- 渲染路由对应的组件 -->
     <router-view />
 
      <!-- 页脚 -->
-     <MainFooter />
+     <!-- <MainFooter /> -->
   </div>
 </template>
 
