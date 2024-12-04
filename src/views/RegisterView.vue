@@ -39,7 +39,7 @@
                 <el-input v-model="registerForm.code" placeholder="请输入验证码" />
                 <el-button
                   class="send-code-btn"
-                  :disabled="isSending"
+                  :disabled="!isFormValid || isSending"
                   @click="sendCode"
                 >
                   {{ isSending ? `${countdown}s 后重试` : "获取验证码" }}
@@ -87,17 +87,17 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
-import axios from "axios";
+import { reactive, ref, computed } from "vue";
 import { ElMessage } from "element-plus";
+import request from "../utils/reques";
 
 // 注册表单数据和验证规则
 const registerForm = reactive({
   username: "",
   email: "",
-  code: "",
+  emailCode: "",
   password: "",
-  agreement: false,
+  type: "0"
 });
 
 const rules = {
@@ -117,44 +117,81 @@ const rules = {
 const isSending = ref(false);
 const countdown = ref(60);
 
+// 检查表单是否有效
+const isFormValid = computed(() => {
+  return (
+    registerForm.username &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(registerForm.email) &&
+    registerForm.password &&
+    registerForm.agreement
+  );
+});
+
 // 发送验证码逻辑
 const sendCode = async () => {
-  if (!registerForm.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(registerForm.email)) {
-    ElMessage.error("请输入正确的邮箱！");
+  if (!isFormValid.value) {
+    ElMessage.error("请先填写完整的用户名、邮箱和密码，并同意协议！");
     return;
   }
   isSending.value = true;
   countdown.value = 60;
 
   try {
-    await axios.post("/user/emailCode", { email: registerForm.email });
-    ElMessage.success("验证码已发送！");
-    const timer = setInterval(() => {
-      if (countdown.value > 0) {
-        countdown.value--;
-      } else {
-        isSending.value = false;
-        clearInterval(timer);
-      }
-    }, 1000);
+    const response = await request.post("/user/emailCode", { email: registerForm.email });
+
+    // 判断响应码是否为 0
+    if (response.data.code === 0) {
+      ElMessage.success("验证码已发送！");
+      const timer = setInterval(() => {
+        if (countdown.value > 0) {
+          countdown.value--;
+        } else {
+          isSending.value = false;
+          clearInterval(timer);
+        }
+      }, 1000);
+    } else {
+      // 如果响应码不是 0，则提示失败信息
+      ElMessage.error(response.data.msg || "发送验证码失败，请稍后重试！");
+      isSending.value = false;
+    }
   } catch (error) {
     ElMessage.error("发送验证码失败，请稍后重试！");
     isSending.value = false;
+    console.error("发送验证码错误：", error);
   }
 };
 
+
 // 注册处理
 const handleRegister = async () => {
-  try {
-    await axios.post("/api/register", registerForm);
-    ElMessage.success("注册成功！");
-    setTimeout(() => {
-      window.location.href = "/login";
-    }, 1500);
-  } catch (error) {
-    ElMessage.error("注册失败，请检查信息！");
-    console.error("注册错误：", error);
-  }
+  // 验证表单数据
+  await registerFormRef.value.validate(async (valid) => {
+    if (valid) {
+      try {
+        // 发送注册请求
+        const response = await request.post("/api/register", registerForm);
+
+        // 检查响应状态码
+        if (response.data.code === 0) {
+          ElMessage.success("注册成功！");
+          setTimeout(() => {
+            // 跳转到登录页面
+            window.location.href = "/login";
+          }, 1500);
+        } else {
+          // 提示后端返回的错误信息
+          ElMessage.error(response.data.msg || "注册失败，请稍后重试！");
+        }
+      } catch (error) {
+        // 捕获请求错误
+        ElMessage.error("注册失败，请检查信息！");
+        console.error("注册错误：", error);
+      }
+    } else {
+      ElMessage.error("请填写完整信息！");
+    }
+  });
 };
 </script>
 
@@ -167,7 +204,7 @@ const handleRegister = async () => {
   width: 100vw;
   height: 100vh;
   background-color: #f5faff;
-  transform: scale(1.2); /* 整体放大到120% */
+  transform: scale(1.3); /* 整体放大比例 */
   transform-origin: center;
 }
 
@@ -187,12 +224,12 @@ const handleRegister = async () => {
 /* 左侧内容 */
 .left-content {
   flex: 1.5;
-  padding: 50px; /* 放大内容间距 */
+  padding: 50px;
   background-color: #eef5ff;
 }
 
 .left-content h2 {
-  font-size: 28px; /* 增大字体 */
+  font-size: 28px;
   line-height: 2;
   font-weight: bold;
   margin-bottom: 20px;
@@ -204,7 +241,7 @@ const handleRegister = async () => {
 }
 
 .illustration {
-  width: 60%; /* 增大图片比例 */
+  width: 60%;
   margin-top: 20px;
 }
 
@@ -213,7 +250,7 @@ const handleRegister = async () => {
   padding: 0;
   margin: 20px 0;
   color: #666;
-  font-size: 16px; /* 调整字体大小 */
+  font-size: 16px;
 }
 
 /* 右侧表单 */
@@ -222,16 +259,16 @@ const handleRegister = async () => {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 50px; /* 放大内容间距 */
+  padding: 50px;
 }
 
 .form-card {
   width: 100%;
-  max-width: 450px; /* 调整表单宽度 */
+  max-width: 450px;
 }
 
 .form-title {
-  font-size: 24px; /* 增大标题字体 */
+  font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
   text-align: center;
@@ -250,7 +287,7 @@ const handleRegister = async () => {
 .register-button {
   width: 100%;
   height: 48px;
-  font-size: 18px; /* 增大按钮字体 */
+  font-size: 18px;
   background: linear-gradient(to right, #4facfe, #00f2fe);
   color: white;
 }
@@ -258,7 +295,7 @@ const handleRegister = async () => {
 .link {
   color: #409eff;
   text-decoration: none;
-  font-size: 14px; /* 增大字体 */
+  font-size: 14px;
 }
 
 .link:hover {
