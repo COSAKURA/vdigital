@@ -17,7 +17,6 @@
         <div class="right-form">
           <el-card class="form-card">
             <h2 class="form-title">用户注册</h2>
-            <el-tab-pane label="账号密码登录" name="account"></el-tab-pane>
             <el-form :model="registerForm" :rules="rules" ref="registerFormRef">
               <!-- 手机号 -->
               <el-form-item label="邮箱" prop="phone">
