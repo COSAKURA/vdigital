@@ -10,6 +10,12 @@ export default defineConfig({
     vue(),
     vueDevTools(),
   ],
+
+
+  server:{
+    port: 8089, // 例如修改为 8080
+  },
+
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
