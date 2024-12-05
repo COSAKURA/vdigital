@@ -27,7 +27,7 @@
                     <div class="info-item">
                         <el-icon><i class="el-icon-help"></i></el-icon>
                         <h3>帮助与支持</h3>
-                        <p>如有问题，请联系我们：support@email.com</p>
+                        <p>如有问题，请联系我们：847070349@qq.com</p>
                     </div>
                 </el-col>
 
