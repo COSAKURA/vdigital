@@ -6,7 +6,7 @@
     <!-- 透明主导航栏 -->
     <el-header class="main-header">
       <div class="logo">
-        <img src="@/assets/images/logo.png" alt="Logo" />
+        <!-- <img src="@/assets/images/logo.png" alt="Logo" /> -->
       </div>
       <el-menu
         mode="horizontal"
@@ -91,7 +91,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 
 export default {
   name: 'HomeView',
