@@ -5,9 +5,7 @@
 
     <!-- 透明主导航栏 -->
     <el-header class="main-header">
-      <div class="logo">
-        <!-- <img src="@/assets/images/logo.png" alt="Logo" /> -->
-      </div>
+      
       <el-menu
         mode="horizontal"
         @select="handleMenuSelect"
@@ -190,14 +188,9 @@ export default {
   top: 0; /* 保证导航栏固定在页面顶端 */
   left: 0;
   width: 100vw; /* 宽度设置为视口宽度，确保铺满 */
-  background-color: rgba(255, 255, 255, 0.1); /* 透明背景 */
+  background-color: rgba(255, 255, 255); /* 透明背景 */
   z-index: 1000;
   transition: background-color 0.3s ease-in-out;
-}
-
-/* 导航栏内容 */
-.logo img {
-  height: 40px;
 }
 
 .el-menu-demo {
