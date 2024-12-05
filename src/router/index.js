@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import HomeView from '../views/HomeView.vue'
-import ShenView from '../views/ShenView.vue'
+import application from '../views/application.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,9 +21,9 @@ const router = createRouter({
       name: 'HomeView',
       component:HomeView,
     },
-    { path: '/shen',
-      name: 'ShenView',
-      component:ShenView,
+    { path: '/application',
+      name: 'application',
+      component:application,
     }
 
     

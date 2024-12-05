@@ -13,17 +13,17 @@
         @select="handleMenuSelect"
         class="el-menu-demo"
       >
-        <el-menu-item index="home" class="nav-item">Home</el-menu-item>
-        <el-menu-item index="about" class="nav-item">About</el-menu-item>
-        <el-menu-item index="services" class="nav-item">Services</el-menu-item>
-        <el-menu-item index="case-studio" class="nav-item">Case Studio</el-menu-item>
-        <el-menu-item index="blog" class="nav-item">Blog</el-menu-item>
-        <el-menu-item index="contact" class="nav-item">Contact</el-menu-item>
+        <el-menu-item index="home" class="nav-item">首页</el-menu-item>
+        <el-menu-item index="about" class="nav-item">关于我们</el-menu-item>
+        <el-menu-item index="services" class="nav-item">服务内容</el-menu-item>
+        <el-menu-item index="case-studio" class="nav-item">我的作品</el-menu-item>
+        <el-menu-item index="blog" class="nav-item">侵权监测</el-menu-item>
+        <el-menu-item index="contact" class="nav-item">拍卖市场</el-menu-item>
       </el-menu>
       <div class="header-actions">
-        <el-button type="text" class="language-switch">ENG</el-button>
-        <el-button type="text" class="language-switch">DUT</el-button>
-        <el-button type="primary" icon="el-icon-user" @click="goToPage('login')">Log In</el-button>
+        <el-button type="text" class="language-switch">中文</el-button>
+        <el-button type="text" class="language-switch">English</el-button>
+        <el-button type="primary" icon="el-icon-user" @click="goToPage('login')">登录</el-button>
       </div>
     </el-header>
 
@@ -32,10 +32,10 @@
       <el-row class="header-content" type="flex" align="middle">
         <el-col :span="12">
           <div class="header-text">
-            <h1>We provide truly prominent IT solutions.</h1>
-            <p>IT Services For All Your Business Needs</p>
-            <el-button type="primary" @click="goToPage('get-started')">Get Started Now</el-button>
-            <el-button type="success" @click="goToPage('solution')">Solution</el-button>
+            <h1>我们为您的原创内容提供全方位的版权保护。</h1>
+            <p>数字版权认证与保护平台</p>
+            <el-button type="primary" @click="goToPage('get-started')">立即开始</el-button>
+            <el-button type="success" @click="goToPage('solution')">解决方案</el-button>
           </div>
         </el-col>
         <el-col :span="12">
@@ -81,7 +81,7 @@
               <img :src="service.image" alt="Service Image" class="service-image" />
               <h3>{{ service.title }}</h3>
               <p>{{ service.description }}</p>
-              <el-button type="text" @click="goToPage(service.link)">Read More ></el-button>
+              <el-button type="text" @click="goToPage(service.link)">了解更多 ></el-button>
             </el-card>
           </el-col>
         </el-row>
@@ -101,22 +101,22 @@ export default {
       activeStep: 4, // 当前步骤
       services: [
         {
-          title: 'IT Strategy and Consultancy',
+          title: '版权咨询与解决方案',
           link: 'case-detail',
           image: 'src/assets/images/resource/service-1.png',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.'
+          description: '提供全方位的版权咨询服务与个性化解决方案。'
         },
         {
-          title: 'World Class Support',
+          title: '侵权保护与法律支持',
           link: 'case-detail',
           image: 'src/assets/images/resource/service-2.png',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.'
+          description: '快速解决侵权问题，保护您的版权利益。'
         },
         {
-          title: 'IT Management Data Services',
+          title: '数字存证与全球化推广',
           link: 'case-detail',
           image: 'src/assets/images/resource/service-3.png',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing.'
+          description: '为您的原创作品提供全球化的数字存证支持。'
         }
       ],
       steps: [
@@ -157,7 +157,8 @@ export default {
       this.$router.push({ name: index });
     },
     handleApply() {
-      console.log("立即申请按钮被点击");
+      // 跳转到申请页面
+      this.$router.push({ name: 'application' });
     },
   }
 };
@@ -242,6 +243,16 @@ export default {
   align-items: center;
   padding: 0 10vw; /* 留出两边空白 */
   box-sizing: border-box;
+}
+
+.register-link {
+  font-size: 12px;
+  color: #666;
+}
+
+.register-link {
+  font-weight: bold;
+  color: #409eff;
 }
 
 .header-text {

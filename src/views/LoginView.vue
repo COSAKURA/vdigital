@@ -111,16 +111,19 @@ const handleLogin = async () => {
 </script>
 
 <style scoped>
+
+
 /* 整体页面样式 */
 .login-page {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100vw;
-  height: 100vh;
+  height: 100vw;
   background-color: #f5faff; /* 浅蓝背景 */
   transform: scale(1.3); /* 放大页面至130% */
   transform-origin: center;
+
 }
 
 /* 内容容器 */
