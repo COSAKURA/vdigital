@@ -5,6 +5,8 @@ import RegisterView from '../views/RegisterView.vue'
 import HomeView from '../views/HomeView.vue'
 import application from '../views/application.vue'
 import WorkView from '../views/WorkView.vue'
+import AuctionView from '../views/AuctionView.vue'
+import AuctionsView from '../views/AuctionsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,6 +31,14 @@ const router = createRouter({
     { path: '/WorkView',
       name: 'WorkView',
       component:WorkView,
+    },
+    { path: '/AuctionView',
+      name: 'AuctionView',
+      component:AuctionView,
+    },
+    { path: '/AuctionsView',
+      name: 'AuctionsView',
+      component:AuctionsView,
     }
 
     

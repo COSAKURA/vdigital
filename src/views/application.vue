@@ -247,6 +247,7 @@ export default {
 }
 
 .upload-banner {
+    margin-top: 180px;
     background-color: #e9f3fd;
     padding: 40px;
     text-align: center;
@@ -329,7 +330,7 @@ export default {
     padding: 20px;
     background: #fff;
     border-radius: 10px;
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 15px rgba(224, 26, 26, 0.1);
 }
 
 .upload-info {
@@ -397,7 +398,7 @@ export default {
 }
 
 .el-button:hover {
-    background-color: #333;
+    background-color: #5375ef;
 }
 .main-header {
   display: flex;
