@@ -11,7 +11,7 @@
         @select="handleMenuSelect"
         class="el-menu-demo"
       >
-        <el-menu-item index="home" class="nav-item">首页</el-menu-item>
+      <el-menu-item index="/home" class="nav-item" @click="navigateTo('/home')">首页</el-menu-item>
         <el-menu-item index="about" class="nav-item">关于我们</el-menu-item>
         <el-menu-item index="services" class="nav-item">服务内容</el-menu-item>
         <el-menu-item index="case-studio" class="nav-item">我的作品</el-menu-item>
@@ -21,7 +21,7 @@
       <div class="header-actions">
         <el-button type="text" class="language-switch">中文</el-button>
         <el-button type="text" class="language-switch">English</el-button>
-        <el-button type="primary" icon="el-icon-user" @click="goToPage('login')">登录</el-button>
+        <el-button type="primary" icon="el-icon-user" @click="goToPage('login')"><el-icon><HomeFilled /></el-icon>登录</el-button>
       </div>
     </el-header>
 

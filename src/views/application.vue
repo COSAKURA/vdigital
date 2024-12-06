@@ -1,4 +1,26 @@
 <template>
+<el-header class="main-header">
+      
+      <el-menu
+        mode="horizontal"
+        @select="handleMenuSelect"
+        class="el-menu-demo"
+      >
+      <el-menu-item index="/home" class="nav-item" @click="navigateTo('/home')">首页</el-menu-item>
+        <el-menu-item index="about" class="nav-item">关于我们</el-menu-item>
+        <el-menu-item index="services" class="nav-item">服务内容</el-menu-item>
+        <el-menu-item index="case-studio" class="nav-item">我的作品</el-menu-item>
+        <el-menu-item index="blog" class="nav-item">侵权监测</el-menu-item>
+        <el-menu-item index="contact" class="nav-item">拍卖市场</el-menu-item>
+      </el-menu>
+      <div class="header-actions">
+        <el-button type="text" class="language-switch">中文</el-button>
+        <el-button type="text" class="language-switch">English</el-button>
+        
+        <el-button type="primary" class="primary" icon="el-icon-user" @click="goToPage('login')"><el-icon><HomeFilled /></el-icon>登录</el-button>
+      </div>
+    </el-header>
+
     <div class="upload-section">
         <!-- 上传作品横幅 -->
         <div class="upload-banner">
@@ -116,9 +138,11 @@ import request from "../utils/reques";
 
 export default {
   name: "UploadSection",
+
   data() {
     return {
       isKeystoreVerified: false, // 标记私钥是否验证成功
+     
       keystoreFormData: {
         email: "", // 邮箱
         password: "", // 密码
@@ -430,6 +454,56 @@ export default {
 .language-switch {
   font-weight: bold;
   background-color:rgba(255, 255, 255);
+  color:dodgerblue;
   
+}
+
+/* 透明主导航栏 */
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 50px;
+  position: fixed;
+  top: 0; /* 保证导航栏固定在页面顶端 */
+  left: 0;
+  width: 100vw; /* 宽度设置为视口宽度，确保铺满 */
+  background-color: rgba(255, 255, 255); /* 透明背景 */
+  z-index: 1000;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.el-menu-demo {
+  background-color: rgba(255, 255, 255, 0.1);
+  flex-grow: 1;
+  margin-left: 50px;
+}
+
+/* 导航项鼠标悬停效果 */
+.nav-item {
+  transition: transform 0.3s ease-in-out;
+}
+
+.nav-item:hover {
+  transform: scale(1.1); /* 鼠标悬停时放大 */
+}
+
+/* 导航栏按钮 */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.language-switch {
+  font-weight: bold;
+}
+
+.el-button.primary {
+  background-color: dodgerblue;
+  color: white;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-weight: bold;
 }
 </style>
