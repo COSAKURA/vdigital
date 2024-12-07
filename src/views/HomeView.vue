@@ -11,19 +11,32 @@
         @select="handleMenuSelect"
         class="el-menu-demo"
       >
-      <el-menu-item index="/home" class="nav-item" @click="navigateTo('/home')">首页</el-menu-item>
-        <el-menu-item index="about" class="nav-item">关于我们</el-menu-item>
-        <el-menu-item index="services" class="nav-item">服务内容</el-menu-item>
-        <el-menu-item index="case-studio" class="nav-item">我的作品</el-menu-item>
-        <el-menu-item index="blog" class="nav-item">侵权监测</el-menu-item>
-        <el-menu-item index="contact" class="nav-item">拍卖市场</el-menu-item>
+      <el-menu-item index="home" class="nav-item">
+      <router-link to="/home">首页</router-link>
+    </el-menu-item>
+    <el-menu-item index="about" class="nav-item">
+      <router-link to="/about">关于我们</router-link>
+    </el-menu-item>
+    <el-menu-item index="services" class="nav-item">
+      <router-link to="/services">服务内容</router-link>
+    </el-menu-item>
+    <el-menu-item index="case-studio" class="nav-item">
+      <router-link to="/WorkView">我的作品</router-link>
+    </el-menu-item>
+    <el-menu-item index="blog" class="nav-item">
+      <router-link to="/blog">侵权监测</router-link>
+    </el-menu-item>
+    <el-menu-item index="contact" class="nav-item">
+      <router-link to="/AuctionView">拍卖市场</router-link>
+    </el-menu-item>
       </el-menu>
       <div class="header-actions">
         <el-button type="text" class="language-switch">中文</el-button>
         <el-button type="text" class="language-switch">English</el-button>
-        <el-button type="primary" icon="el-icon-user" @click="goToPage('login')"><el-icon><HomeFilled /></el-icon>登录</el-button>
+        <el-button type="primary" icon="el-icon-user" @click="logout"><el-icon><HomeFilled /></el-icon>登出</el-button>
       </div>
     </el-header>
+    
 
     <!-- 头部横幅部分 -->
     <section class="header-section">
@@ -146,6 +159,18 @@ export default {
     };
   },
   methods: {
+
+    logout() {
+      // 调用 Vuex action 清除用户数据
+      this.$store.dispatch('logout');
+      // 清除 sessionStorage 或 localStorage 中的用户数据
+      localStorage.removeItem('user'); // 如果你是存储用户信息到 localStorage
+      sessionStorage.removeItem('user'); // 如果你是存储用户信息到 sessionStorage
+
+      // 跳转到登录页面
+      this.$router.push('/login');
+    },
+
     goToPage(page) {
       // 处理页面跳转
       this.$router.push({ name: page });
@@ -164,7 +189,6 @@ export default {
 <style scoped>
 /* 灰色底板铺满页面 */
 .background-overlay {
-  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -222,12 +246,12 @@ export default {
 /* 头部横幅部分 */
 .header-section {
   background-color: #fce5d8; /* 顶部固定颜色 */
-  padding: 800px 0 20px; /* 增加顶部填充以适应固定的导航栏 */
+  padding: 900px 0 10px; /* 增加顶部填充以适应固定的导航栏 */
   width: 100vw; /* 确保铺满整个页面宽度 */
 }
 
 .header-content {
-  width: 100%;
+  width: 1000%;
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
@@ -276,7 +300,7 @@ export default {
 /* 流程部分 */
 .process-flow {
   text-align: center;
-  padding: 50px 0;
+  padding: 100px ;
 }
 
 .process-title {
@@ -309,14 +333,15 @@ export default {
 
 /* 服务部分 */
 .services-section {
-  padding: 100px 0;
+  padding: 70px 0;
 }
 
 .services-panel {
+  margin-top: 100px;
   background: #ffffff; /* 白色背景面板 */
   padding: 50px;
   margin: 50px auto;
-  max-width: 1200px;
+  max-width: 12000px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 

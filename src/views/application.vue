@@ -7,17 +7,29 @@
         @select="handleMenuSelect"
         class="el-menu-demo"
       >
-      <el-menu-item index="/home" class="nav-item" @click="navigateTo('/home')">首页</el-menu-item>
-        <el-menu-item index="about" class="nav-item">关于我们</el-menu-item>
-        <el-menu-item index="services" class="nav-item">服务内容</el-menu-item>
-        <el-menu-item index="case-studio" class="nav-item">我的作品</el-menu-item>
-        <el-menu-item index="blog" class="nav-item">侵权监测</el-menu-item>
-        <el-menu-item index="contact" class="nav-item">拍卖市场</el-menu-item>
+      <el-menu-item index="home" class="nav-item">
+      <router-link to="/home">首页</router-link>
+    </el-menu-item>
+    <el-menu-item index="about" class="nav-item">
+      <router-link to="/about">关于我们</router-link>
+    </el-menu-item>
+    <el-menu-item index="services" class="nav-item">
+      <router-link to="/services">服务内容</router-link>
+    </el-menu-item>
+    <el-menu-item index="case-studio" class="nav-item">
+      <router-link to="/WorkView">我的作品</router-link>
+    </el-menu-item>
+    <el-menu-item index="blog" class="nav-item">
+      <router-link to="/blog">侵权监测</router-link>
+    </el-menu-item>
+    <el-menu-item index="contact" class="nav-item">
+      <router-link to="/AuctionView">拍卖市场</router-link>
+    </el-menu-item>
       </el-menu>
       <div class="header-actions">
         <el-button type="text" class="language-switch">中文</el-button>
         <el-button type="text" class="language-switch">English</el-button>
-        <el-button type="primary" icon="el-icon-user" class="login-button" @click="goToPage('login')"><el-icon><HomeFilled /></el-icon>登录</el-button>
+        <el-button type="primary" icon="el-icon-user" class="login-button" @click="goToPage('login')"><el-icon><HomeFilled /></el-icon>登出</el-button>
       </div>
     </el-header>
 
@@ -247,7 +259,7 @@ export default {
 }
 
 .upload-banner {
-    margin-top: 180px;
+    margin-top: 300px;
     background-color: #e9f3fd;
     padding: 40px;
     text-align: center;
