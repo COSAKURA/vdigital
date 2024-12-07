@@ -25,7 +25,7 @@
       <div class="header-actions">
         <el-button type="text" class="language-switch">中文</el-button>
         <el-button type="text" class="language-switch">English</el-button>
-        <el-button type="primary" icon="el-icon-user" @click="goToPage('login')">登出</el-button>
+        <el-button type="primary" icon="el-icon-user" @click="goToPage('login')"><el-icon><HomeFilled /></el-icon>登出</el-button>
       </div>
     </el-header>
 
