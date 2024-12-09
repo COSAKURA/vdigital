@@ -42,7 +42,7 @@
         >
         <img
             :src="
-              'http://localhost:8888/uploads/' +
+              'http://172.46.225.96:8888/uploads/' +
               encodeURIComponent(work.imagePath)
             "
             :alt="work.title"
