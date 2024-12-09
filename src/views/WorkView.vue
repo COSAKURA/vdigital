@@ -281,15 +281,6 @@ export default {
         console.error("请求失败:", error);
       }
     },
-    // 在组件加载时调用获取用户作品的方法
-    created() {
-      console.log("组件 created 钩子触发");
-      try {
-        this.getUserWorks();
-      } catch (error) {
-        console.error("调用 getUserWorks 时出错:", error);
-      }
-    },
   },
   // 在组件加载时调用获取用户作品的方法
   created() {
