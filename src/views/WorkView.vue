@@ -50,7 +50,7 @@
         >
           <img
             :src="
-              'http://localhost:8888/uploads/' +
+              'http://172.46.225.96:8888/uploads/' +
               encodeURIComponent(item.imagePath)
             "
             :alt="item.title"
@@ -275,7 +275,43 @@ export default {
         });
         this.$message.success('证书下载成功！');
       } else {
-        this.$message.error('未找到版权证书，无法下载。');
+        this.$message.error("该作品没有版权编号，无法下载证书！");
+      }
+    },
+
+    // 获取用户的全部作品
+    async getUserWorks() {
+      const userEmail = localStorage.getItem("email");
+      console.log("getUserWorks 被调用，用户邮箱:", userEmail); // 确认是否调用
+
+      if (!userEmail) {
+        this.$message.error("未找到用户邮箱");
+        return;
+      }
+
+      try {
+        console.log("正在请求作品数据...");
+        const response = await request.get("/work/userWorksAll", {
+          params: { email: userEmail },
+        });
+
+        // 打印响应数据
+        console.log("请求成功，作品数据：", response.data);
+
+        // 假设返回的数据是用户的作品列表
+        this.works = response.data.data; // 确保你的返回数据格式是正确的
+      } catch (error) {
+        this.$message.error("获取作品失败: " + error.message);
+        console.error("请求失败:", error);
+      }
+    },
+    // 在组件加载时调用获取用户作品的方法
+    created() {
+      console.log("组件 created 钩子触发");
+      try {
+        this.getUserWorks();
+      } catch (error) {
+        console.error("调用 getUserWorks 时出错:", error);
       }
     },
   },
