@@ -180,7 +180,12 @@ export default {
       // 点击取消时执行的操作
       console.log('取消退出');
     });
+
   },
+  handleApply() {
+      // 立即申请按钮的点击处理
+      this.$router.push('/application'); // 假设 '/apply' 是申请页面的路径
+    },
   }
 }
 </script>

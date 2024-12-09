@@ -115,13 +115,11 @@
           </el-form>
         </div>
         <template #footer>
-
-          <dis class="dialog-footer">
+          <div class="dialog-footer">
           <el-button @click="uploadDialogVisible = false">取消</el-button>
           <el-button type="primary" @click="submitUploadForm">确定</el-button>
-        </dis>
-
-
+          </div>
+          
         </template>
       </el-dialog>
 
@@ -332,17 +330,10 @@ export default {
   }
 
   .action-btn {
+  
   width: 150px; /* 按钮宽度 */
 }
 
-/* 将弹框底部按钮居中 */
-.dialog-footer {
-  display: flex;
-  justify-content: center;
-  gap: 20px; /* 按钮之间的间距 */
-  width: 100%;
-  padding: 10px 0;
-}
 
   </style>
   
