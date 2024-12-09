@@ -33,7 +33,7 @@
       <div class="header-actions">
         <el-button type="text" class="language-switch">中文</el-button>
         <el-button type="text" class="language-switch">English</el-button>
-        <el-button type="primary" icon="el-icon-user" @click="logout"><el-icon><HomeFilled /></el-icon>登出</el-button>
+        <el-button type="primary" icon="el-icon-user" @click="outlogin"><el-icon><HomeFilled /></el-icon>登出</el-button>
       </div>
     </el-header>
     
@@ -159,31 +159,30 @@ export default {
     };
   },
   methods: {
-
-    logout() {
-      // 调用 Vuex action 清除用户数据
-      this.$store.dispatch('logout');
-      // 清除 sessionStorage 或 localStorage 中的用户数据
-      localStorage.removeItem('user'); // 如果你是存储用户信息到 localStorage
-      sessionStorage.removeItem('user'); // 如果你是存储用户信息到 sessionStorage
-
-      // 跳转到登录页面
-      this.$router.push('/login');
-    },
-
-    goToPage(page) {
-      // 处理页面跳转
-      this.$router.push({ name: page });
-    },
-    handleMenuSelect(index) {
-      this.$router.push({ name: index });
-    },
-    handleApply() {
-      // 跳转到申请页面
-      this.$router.push({ name: 'application' });
-    },
+  outlogin() {
+    // 使用 Element Plus 的 MessageBox 来替代 window.confirm
+    this.$msgbox({
+      title: '确认退出',
+      message: '您确定要退出登录吗？',
+      showCancelButton: true, // 显示取消按钮
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning', // 弹框的样式
+    })
+    .then(() => {
+      // 点击确认时执行
+      localStorage.clear();
+      this.$router.push("/").catch((err) => {
+        console.error("Redirect failed:", err);
+      });
+    })
+    .catch(() => {
+      // 点击取消时执行的操作
+      console.log('取消退出');
+    });
+  },
   }
-};
+}
 </script>
 
 <style scoped>

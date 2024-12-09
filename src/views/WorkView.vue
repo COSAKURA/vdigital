@@ -62,92 +62,173 @@
           <div>
             <h3>{{ selectedWork.title }}</h3>
             <p>{{ selectedWork.description }}</p>
+            <el-button type="primary" @click="onAddListing" class="add-listing-btn">
+      上架拍品
+    </el-button>
           </div>
           <template #footer>
+            <el-button type="success" @click="downloadCertificate" class="action-btn">下载证书</el-button>
             <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
+           
           </template>
         </el-dialog>
+
+        <el-dialog
+        v-model="uploadDialogVisible"
+        title="上传拍品信息"
+        width="50%"
+        @close="resetUploadForm"
+      >
+        <div>
+          <el-form :model="uploadForm" label-width="100px">
+            
+
+            <!-- 竞拍时间范围 -->
+            <el-form-item label="竞拍时间">
+              <el-date-picker
+                v-model="uploadForm.auctionDateRange"
+                type="daterange"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+              />
+            </el-form-item>
+
+            <!-- 竞拍价格 -->
+            <el-form-item label="竞拍价格">
+              <el-input 
+                v-model="uploadForm.auctionPrice"
+                style="width: 240px"
+                placeholder="请输入竞拍价格"
+                :formatter="formatter"
+                :parser="parser"
+                />
+            </el-form-item>
+
+            <el-form-item label="上传信息">
+              <el-input
+                v-model="uploadForm.uploadInfo"
+                type="textarea"
+                placeholder="请输入上传信息"
+                rows="4"
+              />
+            </el-form-item>
+          </el-form>
+        </div>
+        <template #footer>
+
+          <dis class="dialog-footer">
+          <el-button @click="uploadDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="submitUploadForm">确定</el-button>
+        </dis>
+
+
+        </template>
+      </el-dialog>
+
       </main>
     </div>
   </template>
   
-  <script>
+ <script>
 export default {
   name: "App",
   data() {
     return {
       dialogVisible: false,
+      uploadDialogVisible: false, // 控制上传弹框的显示
       selectedWork: {}, // 当前选中的作品
       works: [
         {
           title: "作品 1",
           description: "这是作品 1 的描述内容。",
-          image: "src/assets/images/resource/nft.jpg", // 添加图片路径
+          image: "src/assets/images/resource/nft.jpg",
         },
-        {
-          title: "作品 2",
-          description: "这是作品 2 的描述内容。",
-          image: "src/assets/images/resource/nft.jpg", // 添加图片路径
-        },
-        {
-          title: "作品 3",
-          description: "这是作品 3 的描述内容。",
-          image: "src/assets/images/resource/nft.jpg", // 添加图片路径
-        },
-        {
-          title: "作品 4",
-          description: "这是作品 4 的描述内容。",
-          image: "src/assets/images/resource/nft.jpg", // 添加图片路径
-        },
-        {
-          title: "作品 5",
-          description: "这是作品 5 的描述内容。",
-          image: "src/assets/images/resource/nft.jpg", // 添加图片路径
-        },
-        {
-          title: "作品 6",
-          description: "这是作品 6 的描述内容。",
-          image: "src/assets/images/resource/nft.jpg", // 添加图片路径
-        },
-        {
-          title: "作品 7",
-          description: "这是作品 6 的描述内容。",
-          image: "src/assets/images/resource/nft.jpg", // 添加图片路径
-        },
-        {
-          title: "作品 8",
-          description: "这是作品 6 的描述内容。",
-          image: "src/assets/images/resource/nft.jpg", // 添加图片路径
-        },
+        // 其他作品
       ],
+      uploadForm: {
+        uploadDate: '',
+        uploadInfo: '',
+        auctionDateRange: [], // 用于竞拍日期范围
+        auctionPrice: '', // 用于竞拍价格
+      },
     };
   },
   methods: {
+     // 格式化竞拍价格
+    formatter(value) {
+      if (!value) return '';
+      return `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
+    // 解析竞拍价格
+    parser(value) {
+      return value.replace(/\$\s?|(,*)/g, '');
+    },
+
+
     openDialog(item) {
-      this.selectedWork = item; // 设置当前选中的作品
-      this.dialogVisible = true; // 显示弹框
+      this.selectedWork = item;
+      this.dialogVisible = true;
+    },
+    onAddListing() {
+      // 打开上传拍品信息弹框
+      this.uploadDialogVisible = true;
+    },
+    submitUploadForm() {
+      // 处理提交上传表单的逻辑
+      console.log("上传时间:", this.uploadForm.uploadDate);
+      console.log("竞拍时间范围:", this.uploadForm.auctionDateRange);
+      console.log("竞拍价格:", this.uploadForm.auctionPrice);
+      console.log("上传信息:", this.uploadForm.uploadInfo);
+
+      // 关闭弹框
+      this.uploadDialogVisible = false;
+
+      // 提示上传成功
+      this.$message.success("拍品信息已成功上传！");
+    },
+    resetUploadForm() {
+      // 重置上传表单
+      this.uploadForm.uploadDate = '';
+      this.uploadForm.uploadInfo = '';
+      this.uploadForm.auctionDateRange = [];
+      this.uploadForm.auctionPrice = '';
+    },
+    resetSelectedWork() {
+      // 重置选中的作品
+      this.selectedWork = {};
     },
     navigateTo(path) {
-        console.log("Navigating to:", path);
-      },
-      handleMenuSelect(key) {
-        console.log("Menu selected:", key);
-      },
-      goToPage(page) {
-        console.log("Go to:", page);
-      },
-      openDialog(item) {
-        this.selectedWork = item;
-        this.dialogVisible = true;
-      },
+      console.log("Navigating to:", path);
+    },
+    handleMenuSelect(key) {
+      console.log("Menu selected:", key);
+    },
+    goToPage(page) {
+      console.log("Go to:", page);
+    },
+    
+    downloadCertificate() {
+      // 这里可以实现下载证书的逻辑，暂时简单打印
+      console.log("下载证书");
+      this.$message.success("证书已下载！");
+    },
+
+    
   },
 };
+</script>
 
-  </script>
   
   <style scoped>
+  .add-listing-btn {
+
+    margin-bottom: -46px;
+  margin-top: 150px;
+}
+
   /* 全局布局 */
   .app {
+
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -249,5 +330,19 @@ export default {
     transform: scale(1.05);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
+
+  .action-btn {
+  width: 150px; /* 按钮宽度 */
+}
+
+/* 将弹框底部按钮居中 */
+.dialog-footer {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* 按钮之间的间距 */
+  width: 100%;
+  padding: 10px 0;
+}
+
   </style>
   
