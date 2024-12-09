@@ -45,7 +45,7 @@
           <h2 class="item-title">{{ auctionItem.title }}</h2>
           
 
-         
+        
           <p><strong>距开始：</strong>{{ auctionItem.date }}</p>
           <p><strong>起拍价：</strong> <span class="price">{{ auctionItem.price }}</span></p>
           <p><strong>当前竞拍最高价：</strong> <span class="price">{{ auctionItem.highestBid || '暂无竞拍' }}</span></p>
