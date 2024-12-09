@@ -39,16 +39,9 @@
         <el-col :span="6" class="auction-item-left">
           <el-image :src="auctionItem.image" alt="拍品图片" fit="contain" class="item-image"/>
         </el-col>
-
         <!-- 右侧：拍品信息 -->
         <el-col :span="18" class="auction-item-right">
           <h2 class="item-title">{{ auctionItem.title }}</h2>
-<<<<<<< HEAD
-          
-
-        
-=======
->>>>>>> 4f787e4191cde13a15453ed09c5694ef386dc063
           <p><strong>距开始：</strong>{{ auctionItem.date }}</p>
           <p><strong>起拍价：</strong> <span class="price">{{ auctionItem.price }}</span></p>
           <p><strong>当前竞拍最高价：</strong> <span class="price">{{ auctionItem.highestBid || '暂无竞拍' }}</span></p>
