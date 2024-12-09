@@ -2,11 +2,7 @@
   <div class="app">
     <!-- 顶部导航 -->
     <el-header class="main-header">
-      <el-menu
-        mode="horizontal"
-        @select="handleMenuSelect"
-        class="el-menu-demo"
-      >
+      <el-menu mode="horizontal" @select="handleMenuSelect" class="el-menu-demo">
         <el-menu-item index="home" class="nav-item">
           <router-link to="/home">首页</router-link>
         </el-menu-item>
@@ -29,13 +25,10 @@
       <div class="header-actions">
         <el-button type="text" class="language-switch">中文</el-button>
         <el-button type="text" class="language-switch">English</el-button>
-        <el-button
-          type="primary"
-          icon="el-icon-user"
-          @click="goToPage('login')"
-        >
-          <el-icon><HomeFilled /></el-icon>登出</el-button
-        >
+        <el-button type="primary" icon="el-icon-user" @click="goToPage('login')">
+          <el-icon>
+            <HomeFilled />
+          </el-icon>登出</el-button>
       </div>
     </el-header>
 
@@ -51,31 +44,16 @@
 
       <!-- 网格布局 -->
       <div class="grid">
-        <div
-          class="grid-item"
-          v-for="(item, index) in works"
-          :key="index"
-          @click="openDialog(item)"
-        >
-          <img
-            :src="
-              'http://172.46.225.96:8888/uploads/' +
-              encodeURIComponent(item.imagePath)
-            "
-            :alt="item.title"
-            class="grid-image"
-          />
+        <div class="grid-item" v-for="(item, index) in works" :key="index" @click="openDialog(item)">
+          <img :src="'http://172.46.225.96:8888/uploads/' +
+            encodeURIComponent(item.imagePath)
+            " :alt="item.title" class="grid-image" />
           <p>{{ item.title }}</p>
         </div>
       </div>
 
       <!-- 作品详情弹框 -->
-      <el-dialog
-        v-model="dialogVisible"
-        title="作品详情"
-        width="50%"
-        @close="resetSelectedWork"
-      >
+      <el-dialog v-model="dialogVisible" title="作品详情" width="50%" @close="resetSelectedWork">
         <div>
           <h3>作品序号：{{ selectedWork.workId }}</h3>
           <p>作品名字： {{ selectedWork.title }}</p>
@@ -88,43 +66,26 @@
           <p>是否拍卖：{{ selectedWork.isOnAuction }}</p>
 
           <!-- 上架拍品按钮，只有有版权时可用 -->
-          <el-button
-            type="primary"
-            :disabled="!selectedWork.hasDigitalCopyright"
-            @click="onAddListing"
-            class="add-listing-btn"
-          >
+          <el-button type="primary" :disabled="!selectedWork.hasDigitalCopyright" @click="onAddListing"
+            class="add-listing-btn">
             上架拍品
           </el-button>  
 
           <!-- 下载证书按钮，只有有版权时可用 -->
-          <el-button
-            type="success"
-            :disabled="!selectedWork.digitalCopyrightId"
-            @click="downloadCertificate"
-            class="action-btn"
-          >
+          <el-button type="success" :disabled="!selectedWork.digitalCopyrightId" @click="downloadCertificate"
+            class="action-btn">
             下载证书
           </el-button>
 
           <!-- 版权申请按钮，只有没有版权时可用 -->
-          <el-button
-            type="warning"
-            :disabled="selectedWork.digitalCopyrightId"
-            @click="applyForCopyright"
-            class="apply-copyright-btn"
-          >
+          <el-button type="warning" :disabled="selectedWork.digitalCopyrightId" @click="applyForCopyright"
+            class="apply-copyright-btn">
             申请版权
           </el-button>
         </div>
 
         <template #footer>
-          <el-button
-            type="primary"
-            @click="dialogVisible = false"
-            class="guanbi"
-            >关闭</el-button
-          >
+          <el-button type="primary" @click="dialogVisible = false" class="guanbi">关闭</el-button>
         </template>
       </el-dialog>
       
@@ -167,43 +128,24 @@
       </el-dialog>
 
       <!-- 上传拍品信息弹框 -->
-      <el-dialog
-        v-model="uploadDialogVisible"
-        title="上传拍品信息"
-        width="50%"
-        @close="resetUploadForm"
-      >
+      <el-dialog v-model="uploadDialogVisible" title="上传拍品信息" width="50%" @close="resetUploadForm">
         <div>
           <el-form :model="uploadForm" label-width="100px">
             <!-- 竞拍时间范围 -->
             <el-form-item label="竞拍时间">
-              <el-date-picker
-                v-model="uploadForm.auctionDateRange"
-                type="daterange"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-              />
+              <el-date-picker v-model="uploadForm.auctionDateRange" type="daterange" start-placeholder="开始日期"
+                end-placeholder="结束日期" />
             </el-form-item>
 
             <!-- 竞拍价格 -->
             <el-form-item label="竞拍价格">
-              <el-input
-                v-model="uploadForm.auctionPrice"
-                style="width: 240px"
-                placeholder="请输入竞拍价格"
-                :formatter="formatter"
-                :parser="parser"
-              />
+              <el-input v-model="uploadForm.auctionPrice" style="width: 240px" placeholder="请输入竞拍价格"
+                :formatter="formatter" :parser="parser" />
             </el-form-item>
 
             <!-- 上传信息 -->
             <el-form-item label="上传信息">
-              <el-input
-                v-model="uploadForm.uploadInfo"
-                type="textarea"
-                placeholder="请输入上传信息"
-                rows="4"
-              />
+              <el-input v-model="uploadForm.uploadInfo" type="textarea" placeholder="请输入上传信息" rows="4" />
             </el-form-item>
           </el-form>
         </div>
@@ -271,7 +213,6 @@ export default {
       console.log(files, fileList);
     },
 
-     
 
   
     // 打开作品详情弹框
@@ -340,52 +281,50 @@ export default {
       }
     },
     // 申请版权
-// 申请版权
-applyForCopyright() {
-  if (this.selectedWork.digitalCopyrightId) {
-    this.$message.info("该作品已拥有数字版权，无法重复申请！");
-    return;  // 如果作品已有版权，不发送请求
-  }
+    applyForCopyright() {
+      if (this.selectedWork.digitalCopyrightId) {
+        this.$message.info("该作品已拥有数字版权，无法重复申请！");
+        return;  // 如果作品已有版权，不发送请求
+      }
 
-  // 从本地存储获取用户邮箱
-  const userEmail = localStorage.getItem("email");
-  if (!userEmail) {
-    this.$message.error("未找到用户邮箱，请先登录！");
-    return;
-  }
+      // 从本地存储获取用户邮箱
+      const userEmail = localStorage.getItem("email");
+      if (!userEmail) {
+        this.$message.error("未找到用户邮箱，请先登录！");
+        return;
+      }
 
-  // 显示加载提示，使用 this.$loading 而不是 this.$message.loading
-  const loadingInstance = this.$loading({
-    lock: true,
-    text: "正在申请版权...",
-    spinner: "el-icon-loading", // 可以自定义加载图标
-    background: "rgba(0, 0, 0, 0.7)" // 背景色
-  });
+      // 显示加载提示，使用 this.$loading 而不是 this.$message.loading
+      const loadingInstance = this.$loading({
+        lock: true,
+        text: "正在申请版权...",
+        spinner: "el-icon-loading", // 可以自定义加载图标
+        background: "rgba(0, 0, 0, 0.7)" // 背景色
+      });
 
-  // 请求参数
-  const params = {
-    email: userEmail,              // 用户邮箱
-    workId: this.selectedWork.workId // 作品ID
-  };
+      // 请求参数
+      const params = {
+        email: userEmail,              // 用户邮箱
+        workId: this.selectedWork.workId // 作品ID
+      };
 
-  // 发起请求
-  request.post('/work/applyCopyright', null, { params })  // 通过 `params` 发送查询参数
-    .then(response => {
-      // 如果请求成功
-      this.selectedWork.hasDigitalCopyright = true;  // 更新作品状态
-      this.$message.success("版权申请成功，版权已自动上链！");
-    })
-    .catch(error => {
-      // 如果请求失败
-      console.error("申请版权失败:", error);
-      this.$message.error("申请版权失败，请稍后再试！");
-    })
-    .finally(() => {
-      // 不管请求成功或失败，关闭加载提示
-      loadingInstance.close();
-    });
-},
-
+      // 发起请求
+      request.post('/work/applyCopyright', null, { params })  // 通过 `params` 发送查询参数
+        .then(response => {
+          // 如果请求成功
+          this.selectedWork.hasDigitalCopyright = true;  // 更新作品状态
+          this.$message.success("版权申请成功，版权已自动上链！");
+        })
+        .catch(error => {
+          // 如果请求失败
+          console.error("申请版权失败:", error);
+          this.$message.error("申请版权失败，请稍后再试！");
+        })
+        .finally(() => {
+          // 不管请求成功或失败，关闭加载提示
+          loadingInstance.close();
+        });
+    },
 
 
     // 格式化竞拍价格
@@ -415,19 +354,66 @@ applyForCopyright() {
   });
     },
 
-    submitUploadForm() {
-      // 处理提交上传表单的逻辑
-      console.log("上传时间:", this.uploadForm.uploadDate);
-      console.log("竞拍时间范围:", this.uploadForm.auctionDateRange);
-      console.log("竞拍价格:", this.uploadForm.auctionPrice);
-      console.log("上传信息:", this.uploadForm.uploadInfo);
+   // 提交上传表单并发起拍卖请求
+  async submitUploadForm() {
+    const { auctionDateRange, auctionPrice } = this.uploadForm;
 
-      // 关闭弹框
+    if (!auctionDateRange || auctionDateRange.length !== 2) {
+      this.$message.error("请正确选择竞拍时间范围");
+      return;
+    }
+
+    if (!auctionPrice || isNaN(auctionPrice) || auctionPrice <= 0) {
+      this.$message.error("请输入有效的竞拍价格");
+      return;
+    }
+
+    // 获取用户邮箱（假设已保存到 localStorage）
+    const userEmail = localStorage.getItem("email");
+    if (!userEmail) {
+      this.$message.error("未找到用户邮箱，请先登录！");
+      return;
+    }
+
+    // 获取作品ID
+    const workId = this.selectedWork.workId;
+
+    // 设置拍卖持续时间（单位：秒），基于选择的日期范围
+    const auctionDuration = (new Date(auctionDateRange[1]).getTime() - new Date(auctionDateRange[0]).getTime()) / 1000;
+
+    // 假设用户已经选择了一个私钥
+    const privateKey = localStorage.getItem("privateKey");
+    if (!privateKey) {
+      this.$message.error("未找到私钥，请先设置私钥！");
+      return;
+    }
+
+    // 发送请求到后端，开始拍卖
+    try {
+      const response = await request.post("/auctions/startAuction", null, {
+        params: {
+          email: userEmail,
+          workId: workId,
+          startPrice: auctionPrice,
+          duration: auctionDuration,
+          privateKey: privateKey,
+        },
+      });
+
+      // 处理返回的响应
+      if (response.data.code === 200) {
+        this.$message.success("拍卖成功，作品已上链");
+      } else {
+        this.$message.error("拍卖失败: " + response.data.message);
+      }
+    } catch (error) {
+      console.error("发起拍卖请求失败:", error);
+      this.$message.error("拍卖请求失败，请稍后再试！");
+    } finally {
+      // 关闭上传表单弹框
       this.uploadDialogVisible = false;
-
-      // 提示上传成功
-      this.$message.success("拍品信息已成功上传！");
-    },
+    }
+  },
     resetUploadForm() {
       // 重置上传表单
       this.uploadForm.uploadDate = "";
@@ -530,7 +516,7 @@ applyForCopyright() {
 
 
 
-  <style scoped>
+<style scoped>
 .add-listing-btn {
   margin-bottom: -46px;
   margin-top: 150px;
@@ -591,8 +577,7 @@ applyForCopyright() {
 .hero {
   width: 100vw;
   height: 100vh;
-  background: url("../assets/images/resource/service-4.png") no-repeat center
-    center;
+  background: url("../assets/images/resource/service-4.png") no-repeat center center;
   aspect-ratio: 16 / 9;
   position: relative;
   padding-top: 60px;
@@ -618,6 +603,7 @@ applyForCopyright() {
   margin-left: 50px;
   padding: 20px;
 }
+
 .grid-image {
   width: 100%;
   border-radius: 10px;
@@ -643,37 +629,50 @@ applyForCopyright() {
 
 .action-btn {
   margin-top: 193.6px;
-  width: 150px; /* 按钮宽度 */
+  width: 150px;
+  /* 按钮宽度 */
 }
 
 /* 将弹框底部按钮居中 */
 .dialog-footer {
   display: flex;
   justify-content: center;
-  gap: 20px; /* 按钮之间的间距 */
+  gap: 20px;
+  /* 按钮之间的间距 */
   width: 100%;
   padding: 10px 0;
 }
 
 /* 美化弹框 */
 .el-dialog__wrapper {
-  border-radius: 10px; /* 弹框圆角 */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* 弹框阴影 */
-  background: #f9f9f9; /* 弹框背景颜色 */
+  border-radius: 10px;
+  /* 弹框圆角 */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  /* 弹框阴影 */
+  background: #f9f9f9;
+  /* 弹框背景颜色 */
 }
 
 .el-dialog__header {
-  background-color: #4caf50; /* 标题栏背景色 */
-  color: white; /* 标题文字颜色 */
-  font-size: 20px; /* 标题文字大小 */
-  font-weight: bold; /* 标题加粗 */
-  padding: 20px; /* 标题栏内边距 */
-  border-radius: 10px 10px 0 0; /* 圆角效果 */
+  background-color: #4caf50;
+  /* 标题栏背景色 */
+  color: white;
+  /* 标题文字颜色 */
+  font-size: 20px;
+  /* 标题文字大小 */
+  font-weight: bold;
+  /* 标题加粗 */
+  padding: 20px;
+  /* 标题栏内边距 */
+  border-radius: 10px 10px 0 0;
+  /* 圆角效果 */
 }
 
 .el-dialog__body {
-  padding: 20px; /* 弹框内容区内边距 */
-  color: #333; /* 内容文字颜色 */
+  padding: 20px;
+  /* 弹框内容区内边距 */
+  color: #333;
+  /* 内容文字颜色 */
 }
 
 .el-dialog__body p {
@@ -687,8 +686,10 @@ applyForCopyright() {
   justify-content: center;
   gap: 20px;
   padding: 20px 0;
-  background-color: #f4f4f4; /* 底部区域背景 */
-  border-radius: 0 0 10px 10px; /* 弹框底部圆角 */
+  background-color: #f4f4f4;
+  /* 底部区域背景 */
+  border-radius: 0 0 10px 10px;
+  /* 弹框底部圆角 */
 }
 
 /* 按钮样式 */
@@ -710,7 +711,8 @@ applyForCopyright() {
 }
 
 .el-button--primary:hover {
-  background-color: #45a049; /* 鼠标悬停时变暗 */
+  background-color: #45a049;
+  /* 鼠标悬停时变暗 */
 }
 
 /* 下载证书按钮的样式 */
@@ -766,12 +768,14 @@ p {
 
 .apply-copyright-btn {
   margin-top: 193.6px;
-  width: 150px; /* 按钮宽度 */
+  width: 150px;
+  /* 按钮宽度 */
 }
 
 .guanbi {
   margin-top: -90.2px;
-  width: 150px; /* 按钮宽度 */
+  width: 150px;
+  /* 按钮宽度 */
 }
 
 .aaa{
@@ -780,4 +784,3 @@ p {
 
 
 </style>
-  
