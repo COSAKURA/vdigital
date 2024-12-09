@@ -225,10 +225,34 @@ export default {
       console.log("Go to:", page);
     },
 
-    downloadCertificate() {
-      // 这里可以实现下载证书的逻辑，暂时简单打印
-      console.log("下载证书");
-      this.$message.success("证书已下载！");
+  // 检查版权编号并下载证书
+  async downloadCertificate() {
+      // 检查作品是否有版权编号
+      if (this.selectedWork.digitalCopyrightId) {
+        try {
+          // 构建下载证书请求
+          const response = await request.get("/certificate/download", {
+            params: {
+              workId: this.selectedWork.workId, // 传递作品ID
+            },
+            responseType: "blob", // 设置响应类型为二进制流，以处理文件下载
+          });
+
+          // 创建下载链接
+          const blob = new Blob([response.data], { type: "application/pdf" }); // 下载的是 PDF 格式证书
+          const link = document.createElement("a");
+          link.href = URL.createObjectURL(blob);
+          link.download = `${this.selectedWork.title}_证书.pdf`; // 设定下载文件的名字
+          link.click();
+
+          this.$message.success("证书已下载！");
+        } catch (error) {
+          console.error("下载证书时发生错误:", error);
+          this.$message.error("下载证书失败！");
+        }
+      } else {
+        this.$message.error("该作品没有版权编号，无法下载证书！");
+      }
     },
 
     // 获取用户的全部作品
