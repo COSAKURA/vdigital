@@ -7,28 +7,30 @@
     <el-header class="main-header">
       <el-menu mode="horizontal" @select="handleMenuSelect" class="el-menu-demo">
         <el-menu-item index="home" class="nav-item">
-      <router-link to="/home">首页</router-link>
-    </el-menu-item>
-    <el-menu-item index="about" class="nav-item">
-      <router-link to="/about">关于我们</router-link>
-    </el-menu-item>
-    <el-menu-item index="services" class="nav-item">
-      <router-link to="/services">服务内容</router-link>
-    </el-menu-item>
-    <el-menu-item index="case-studio" class="nav-item">
-      <router-link to="/WorkView">我的作品</router-link>
-    </el-menu-item>
-    <el-menu-item index="blog" class="nav-item">
-      <router-link to="/blog">侵权监测</router-link>
-    </el-menu-item>
-    <el-menu-item index="contact" class="nav-item">
-      <router-link to="/AuctionView">拍卖市场</router-link>
-    </el-menu-item>
+          <router-link to="/home">首页</router-link>
+        </el-menu-item>
+        <el-menu-item index="about" class="nav-item">
+          <router-link to="/about">关于我们</router-link>
+        </el-menu-item>
+        <el-menu-item index="services" class="nav-item">
+          <router-link to="/services">服务内容</router-link>
+        </el-menu-item>
+        <el-menu-item index="case-studio" class="nav-item">
+          <router-link to="/WorkView">我的作品</router-link>
+        </el-menu-item>
+        <el-menu-item index="blog" class="nav-item">
+          <router-link to="/blog">侵权监测</router-link>
+        </el-menu-item>
+        <el-menu-item index="contact" class="nav-item">
+          <router-link to="/AuctionView">拍卖市场</router-link>
+        </el-menu-item>
       </el-menu>
       <div class="header-actions">
         <el-button type="text" class="language-switch">中文</el-button>
         <el-button type="text" class="language-switch">English</el-button>
-        <el-button type="primary" icon="el-icon-user" @click="goToPage('login')"><el-icon><HomeFilled /></el-icon>登出</el-button>
+        <el-button type="primary" icon="el-icon-user" @click="goToPage('login')"><el-icon>
+            <HomeFilled />
+          </el-icon>登出</el-button>
       </div>
     </el-header>
 
@@ -37,7 +39,7 @@
       <el-row :gutter="20">
         <!-- 左侧：图片 -->
         <el-col :span="6" class="auction-item-left">
-          <el-image :src="auctionItem.image" alt="拍品图片" fit="contain" class="item-image"/>
+          <el-image :src="auctionItem.image" alt="拍品图片" fit="contain" class="item-image" />
         </el-col>
         <!-- 右侧：拍品信息 -->
         <el-col :span="18" class="auction-item-right">
@@ -53,31 +55,28 @@
           <p v-if="bidError" class="error-message">{{ bidError }}</p>
         </el-col>
       </el-row>
-      
-      <el-dialog
-      v-model="isBidDialogVisible"
-      title="身份验证"
-      width="400px"
-      @close="resetBidDialog"
-    >
-      <el-form :model="bidForm" ref="bidForm" label-width="100px">
-        <el-form-item label="用户名" :rules="[{ required: true, message: '请输入用户名', trigger: 'blur' }]">
-          <el-input v-model="bidForm.username" placeholder="请输入用户名"></el-input>
-        </el-form-item>
-        <el-form-item label="邮箱" :rules="[{ required: true, message: '请输入邮箱', trigger: 'blur' }]">
-          <el-input v-model="bidForm.password" type="password" placeholder="请输入邮箱"></el-input>
-        </el-form-item>
-        <el-form-item label="密码" :rules="[{ required: true, message: '请输入密码', trigger: 'blur' }]">
-          <el-input v-model="bidForm.verificationCode" placeholder="请输入密码"></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="isBidDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="submitBidForm">确认</el-button>
-      </span>
-    </el-dialog>
 
-      
+      <el-dialog v-model="isBidDialogVisible" title="身份验证" width="400px" @close="resetBidDialog">
+        <el-form :model="bidForm" ref="bidForm" label-width="100px">
+          <el-form-item label="用户名" :rules="[{ required: true, message: '请输入用户名', trigger: 'blur' }]">
+            <el-input v-model="bidForm.username" placeholder="请输入用户名"></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱" :rules="[{ required: true, message: '请输入邮箱', trigger: 'blur' }]">
+            <el-input v-model="bidForm.password" type="password" placeholder="请输入邮箱"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" :rules="[{ required: true, message: '请输入密码', trigger: 'blur' }]">
+            <el-input v-model="bidForm.verificationCode" placeholder="请输入密码"></el-input>
+          </el-form-item>
+        </el-form>
+
+        <template v-slot:footer>
+          <el-button @click="isBidDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="submitBidForm">确认</el-button>
+        </template>
+      </el-dialog>
+
+
+
       <!-- 新增：拍品价值性描述 -->
       <el-row class="value-description">
         <el-col :span="24">
@@ -98,7 +97,6 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { ElButton, ElCol, ElRow, ElImage, ElDialog, ElForm, ElFormItem, ElInput } from 'element-plus';
 
@@ -144,7 +142,7 @@ export default {
   methods: {
     // 点击“参与竞拍”按钮时打开弹框
     openBidDialog() {
-   // 检查竞拍金额是否大于当前最高竞拍价
+      // 检查竞拍金额是否大于当前最高竞拍价
       if (this.bidAmount < this.auctionItem.highestBid) {
         this.bidError = `竞拍金额低于当前最高价 ${this.auctionItem.highestBid}`;
         return;
@@ -197,7 +195,8 @@ export default {
 /* 整体布局样式 */
 .home-view {
   font-family: 'Lato', sans-serif;
-  padding-top: 80px; /* 避免导航栏遮挡内容 */
+  padding-top: 80px;
+  /* 避免导航栏遮挡内容 */
 }
 
 /* 透明主导航栏 */
@@ -207,10 +206,12 @@ export default {
   align-items: center;
   padding: 20px 50px;
   position: fixed;
-  top: 0; /* 保证导航栏固定在页面顶端 */
+  top: 0;
+  /* 保证导航栏固定在页面顶端 */
   left: 0;
   width: 100vw;
-  background-color: rgba(255, 255, 255, 0.9); /* 透明背景 */
+  background-color: rgba(255, 255, 255, 0.9);
+  /* 透明背景 */
   z-index: 1000;
   transition: background-color 0.3s ease-in-out;
 }
@@ -222,7 +223,8 @@ export default {
 }
 
 .nav-item:hover {
-  transform: scale(1.1); /* 鼠标悬停时放大 */
+  transform: scale(1.1);
+  /* 鼠标悬停时放大 */
 }
 
 .header-actions {
@@ -249,11 +251,12 @@ export default {
 /* 拍品信息区域 */
 .auction-item-container {
   position: sticky;
-  margin-top: 300px; /* 保证内容不会被固定的导航栏遮挡 */
+  margin-top: 300px;
+  /* 保证内容不会被固定的导航栏遮挡 */
 }
 
 .auction-item-left {
-  margin-top:70px ;
+  margin-top: 70px;
   position: sticky;
   padding: 20px;
 }
@@ -262,7 +265,8 @@ export default {
   margin-bottom: 100px;
   margin-top: 10px;
   margin-left: 650px;
-  width: 50%; /* 右侧占50%的宽度 */
+  width: 50%;
+  /* 右侧占50%的宽度 */
   padding: 20px;
 }
 
@@ -287,14 +291,22 @@ export default {
 }
 
 .item-image {
-  position: absolute; /* 使用绝对定位 */
-  top: 10px; /* 向下偏移 */
-  left: 300px; /* 向左偏移 */
-  width:90%; /* 放大图片宽度 */
-  max-height: 500px; /* 控制图片的最大高度 */
-  border-radius: 8px; /* 圆角边框 */
-  transform: scale(1.2); /* 放大图片 */
-  z-index: 1; /* 确保图片在最上层 */
+  position: absolute;
+  /* 使用绝对定位 */
+  top: 10px;
+  /* 向下偏移 */
+  left: 300px;
+  /* 向左偏移 */
+  width: 90%;
+  /* 放大图片宽度 */
+  max-height: 500px;
+  /* 控制图片的最大高度 */
+  border-radius: 8px;
+  /* 圆角边框 */
+  transform: scale(1.2);
+  /* 放大图片 */
+  z-index: 1;
+  /* 确保图片在最上层 */
 }
 
 .auction-item-info {
@@ -312,9 +324,11 @@ export default {
 
 .value-description p {
   font-size: 16px;
-  
-  word-wrap: break-word;  /* 自动换行 */
-  text-indent: 2em; /* 添加前空位 */
+
+  word-wrap: break-word;
+  /* 自动换行 */
+  text-indent: 2em;
+  /* 添加前空位 */
 }
 
 
@@ -333,9 +347,10 @@ export default {
 .auction-item-info p {
   margin-top: 15px;
   font-size: 16px;
-  
-  word-wrap: break-word;  /* 自动换行 */
-  text-indent: 2em; /* 添加前空位 */
-}
 
+  word-wrap: break-word;
+  /* 自动换行 */
+  text-indent: 2em;
+  /* 添加前空位 */
+}
 </style>
