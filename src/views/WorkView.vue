@@ -2,11 +2,7 @@
   <div class="app">
     <!-- 顶部导航 -->
     <el-header class="main-header">
-      <el-menu
-        mode="horizontal"
-        @select="handleMenuSelect"
-        class="el-menu-demo"
-      >
+      <el-menu mode="horizontal" @select="handleMenuSelect" class="el-menu-demo">
         <el-menu-item index="home" class="nav-item">
           <router-link to="/home">首页</router-link>
         </el-menu-item>
@@ -29,9 +25,8 @@
       <div class="header-actions">
         <el-button type="text" class="language-switch">中文</el-button>
         <el-button type="text" class="language-switch">English</el-button>
-        <el-button type="primary" icon="el-icon-user" @click="goToPage('login')"
-          ><el-icon><HomeFilled /></el-icon>登出</el-button
-        >
+        <el-button type="primary" icon="el-icon-user" @click="goToPage('login')">
+          <el-icon><HomeFilled /></el-icon>登出</el-button>
       </div>
     </el-header>
 
@@ -61,10 +56,10 @@
             :alt="item.title"
             class="grid-image"
           />
-
           <p>{{ item.title }}</p>
         </div>
       </div>
+      
       <!-- 弹框 -->
       <el-dialog
         v-model="dialogVisible"
@@ -84,25 +79,37 @@
           <p>是否拍卖：{{ selectedWork.isOnAuction }}</p>
           <el-button
             type="primary"
+            :disabled="!selectedWork.hasDigitalCopyright"
             @click="onAddListing"
             class="add-listing-btn"
           >
             上架拍品
           </el-button>
-        </div>
-        <template #footer>
+          
           <el-button
             type="success"
+            :disabled="!selectedWork.hasDigitalCopyright"
             @click="downloadCertificate"
             class="action-btn"
-            >下载证书</el-button
           >
-          <el-button type="primary" @click="dialogVisible = false"
-            >关闭</el-button
+            下载证书
+          </el-button>
+        
+          <el-button
+            type="warning"
+            :disabled="selectedWork.hasDigitalCopyright"
+            @click="applyForCopyright"
+            class="apply-copyright-btn"
           >
+            申请版权
+          </el-button>
+        </div>
+        <template #footer>
+          <el-button type="primary" @click="dialogVisible = false" class="guanbi">关闭</el-button>
         </template>
       </el-dialog>
 
+      <!-- 上传拍品信息弹框 -->
       <el-dialog
         v-model="uploadDialogVisible"
         title="上传拍品信息"
@@ -132,6 +139,7 @@
               />
             </el-form-item>
 
+            <!-- 上传信息 -->
             <el-form-item label="上传信息">
               <el-input
                 v-model="uploadForm.uploadInfo"
@@ -143,17 +151,17 @@
           </el-form>
         </div>
         <template #footer>
-          <dis class="dialog-footer">
+          <div class="dialog-footer">
             <el-button @click="uploadDialogVisible = false">取消</el-button>
             <el-button type="primary" @click="submitUploadForm">确定</el-button>
-          </dis>
+          </div>
         </template>
       </el-dialog>
     </main>
   </div>
 </template>
-  
- <script>
+
+<script>
 import request from "../utils/reques";
 
 export default {
@@ -163,7 +171,14 @@ export default {
       dialogVisible: false,
       uploadDialogVisible: false, // 控制上传弹框的显示
       selectedWork: {}, // 当前选中的作品
-      works: [],
+      works: [
+        {
+          title: "作品1",
+          img: "../assets/img/work1.jpg",
+          desc: "描述1",
+          tags: ["标签1", "标签2"],
+        },
+      ],
       uploadForm: {
         uploadDate: "",
         uploadInfo: "",
@@ -173,6 +188,31 @@ export default {
     };
   },
   methods: {
+    // 打开作品详情弹框
+    openDialog(item) {
+      this.selectedWork = { ...item };
+      this.dialogVisible = true;
+    },
+    // 提交上传拍品表单
+    submitUploadForm() {
+      console.log("表单提交：", this.uploadForm);
+      this.uploadDialogVisible = false;
+      this.$message.success("拍品信息已成功上传！");
+    },
+    // 下载证书
+    downloadCertificate() {
+      if (this.selectedWork.hasDigitalCopyright) {
+        this.$message.success("证书已下载！");
+      } else {
+        this.$message.error("请先申请版权！");
+      }
+    },
+    // 申请版权
+    applyForCopyright() {
+      this.selectedWork.hasDigitalCopyright = true;
+      this.$message.success("版权申请成功！");
+    },
+
     // 格式化竞拍价格
     formatter(value) {
       if (!value) return "";
@@ -225,85 +265,39 @@ export default {
       console.log("Go to:", page);
     },
 
-  // 检查版权编号并下载证书
-  async downloadCertificate() {
-      // 检查作品是否有版权编号
-      if (this.selectedWork.digitalCopyrightId) {
-        try {
-          // 构建下载证书请求
-          const response = await request.get("/certificate/download", {
-            params: {
-              workId: this.selectedWork.workId, // 传递作品ID
-            },
-            responseType: "blob", // 设置响应类型为二进制流，以处理文件下载
-          });
-
-          // 创建下载链接
-          const blob = new Blob([response.data], { type: "application/pdf" }); // 下载的是 PDF 格式证书
-          const link = document.createElement("a");
-          link.href = URL.createObjectURL(blob);
-          link.download = `${this.selectedWork.title}_证书.pdf`; // 设定下载文件的名字
-          link.click();
-
-          this.$message.success("证书已下载！");
-        } catch (error) {
-          console.error("下载证书时发生错误:", error);
-          this.$message.error("下载证书失败！");
-        }
-      } else {
-        this.$message.error("该作品没有版权编号，无法下载证书！");
-      }
-    },
-
-    // 获取用户的全部作品
-    async getUserWorks() {
-      const userEmail = localStorage.getItem("email");
-      console.log("getUserWorks 被调用，用户邮箱:", userEmail); // 确认是否调用
-
-      if (!userEmail) {
-        this.$message.error("未找到用户邮箱");
-        return;
-      }
-
-      try {
-        console.log("正在请求作品数据...");
-        const response = await request.get("/work/userWorksAll", {
-          params: { email: userEmail },
+    // 检查版权编号并下载证书
+    async downloadCertificate() {
+      if (this.selectedWork.hasDigitalCopyright) {
+        await request({
+          method: 'POST',
+          url: '/download-certificate', 
+          data: { workId: this.selectedWork.workId },
         });
-
-        // 打印响应数据
-        console.log("请求成功，作品数据：", response.data);
-
-        // 假设返回的数据是用户的作品列表
-        this.works = response.data.data; // 确保你的返回数据格式是正确的
-      } catch (error) {
-        this.$message.error("获取作品失败: " + error.message);
-        console.error("请求失败:", error);
+        this.$message.success('证书下载成功！');
+      } else {
+        this.$message.error('未找到版权证书，无法下载。');
       }
     },
-    // 在组件加载时调用获取用户作品的方法
-    created() {
-      console.log("组件 created 钩子触发");
-      try {
-        this.getUserWorks();
-      } catch (error) {
-        console.error("调用 getUserWorks 时出错:", error);
-      }
-    },
-  },
-  // 在组件加载时调用获取用户作品的方法
-  created() {
-    console.log("组件 created 钩子触发");
-    try {
-      this.getUserWorks();
-    } catch (error) {
-      console.error("调用 getUserWorks 时出错:", error);
-    }
   },
 };
+
+// 在组件加载时调用获取用户作品的方法
+// created() {
+//   console.log("组件 created 钩子触发");
+//   try {
+//     this.getUserWorks();
+//   } catch (error) {
+//     console.error("调用 getUserWorks 时出错:", error);
+//   }
+// },
+  
 </script>
 
-  
+<style scoped>
+/* 样式部分保持不变 */
+</style>
+
+
   <style scoped>
 .add-listing-btn {
   margin-bottom: -46px;
@@ -416,6 +410,7 @@ export default {
 }
 
 .action-btn {
+  margin-top: 193.6px;
   width: 150px; /* 按钮宽度 */
 }
 
@@ -535,6 +530,16 @@ p {
   font-size: 16px;
   margin: 10px 0;
   color: #333;
+}
+
+.apply-copyright-btn{
+  margin-top: 193.6px;
+  width: 150px; /* 按钮宽度 */
+}
+
+.guanbi{
+  margin-top: -90.2px;
+  width: 150px; /* 按钮宽度 */
 }
 </style>
   
