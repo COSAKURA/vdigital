@@ -53,7 +53,14 @@
           :key="index"
           @click="openDialog(item)"
         >
-        <img :src="'http://localhost:8888/uploads/' + encodeURIComponent(item.imagePath)" :alt="item.title" class="grid-image" />
+          <img
+            :src="
+              'http://localhost:8888/uploads/' +
+              encodeURIComponent(item.imagePath)
+            "
+            :alt="item.title"
+            class="grid-image"
+          />
 
           <p>{{ item.title }}</p>
         </div>
@@ -160,7 +167,8 @@ export default {
         {
           title: "作品 1",
           description: "这是作品 1 的描述内容。",
-          imagePath: "D:/数字创意作品链上版权认证与交易平台/DigitalCopyright/uploads/1733654404120_th (1).jpg",
+          imagePath:
+            "D:/数字创意作品链上版权认证与交易平台/DigitalCopyright/uploads/1733654404120_th (1).jpg",
         },
       ],
       uploadForm: {
@@ -232,50 +240,49 @@ export default {
 
     // 获取用户的全部作品
     async getUserWorks() {
-  const userEmail = localStorage.getItem('email');
-  console.log("getUserWorks 被调用，用户邮箱:", userEmail); // 确认是否调用
+      const userEmail = localStorage.getItem("email");
+      console.log("getUserWorks 被调用，用户邮箱:", userEmail); // 确认是否调用
 
-  if (!userEmail) {
-    this.$message.error("未找到用户邮箱");
-    return;
-  }
+      if (!userEmail) {
+        this.$message.error("未找到用户邮箱");
+        return;
+      }
 
-  try {
-    console.log("正在请求作品数据...");
-    const response = await request.get('/work/userWorksAll', {
-      params: { email: userEmail },
-    });
+      try {
+        console.log("正在请求作品数据...");
+        const response = await request.get("/work/userWorksAll", {
+          params: { email: userEmail },
+        });
 
-    // 打印响应数据
-    console.log("请求成功，作品数据：", response.data);
+        // 打印响应数据
+        console.log("请求成功，作品数据：", response.data);
 
-    // 假设返回的数据是用户的作品列表
-    this.works = response.data.data;  // 确保你的返回数据格式是正确的
-  } catch (error) {
-    this.$message.error("获取作品失败: " + error.message);
-    console.error("请求失败:", error);
-  }
-}
-,
+        // 假设返回的数据是用户的作品列表
+        this.works = response.data.data; // 确保你的返回数据格式是正确的
+      } catch (error) {
+        this.$message.error("获取作品失败: " + error.message);
+        console.error("请求失败:", error);
+      }
+    },
     // 在组件加载时调用获取用户作品的方法
-created() {
-  console.log("组件 created 钩子触发");
-  try {
-    this.getUserWorks();
-  } catch (error) {
-    console.error("调用 getUserWorks 时出错:", error);
-  }
-}
+    created() {
+      console.log("组件 created 钩子触发");
+      try {
+        this.getUserWorks();
+      } catch (error) {
+        console.error("调用 getUserWorks 时出错:", error);
+      }
+    },
   },
-      // 在组件加载时调用获取用户作品的方法
-      created() {
-  console.log("组件 created 钩子触发");
-  try {
-    this.getUserWorks();
-  } catch (error) {
-    console.error("调用 getUserWorks 时出错:", error);
-  }
-}
+  // 在组件加载时调用获取用户作品的方法
+  created() {
+    console.log("组件 created 钩子触发");
+    try {
+      this.getUserWorks();
+    } catch (error) {
+      console.error("调用 getUserWorks 时出错:", error);
+    }
+  },
 };
 </script>
 
@@ -406,23 +413,23 @@ created() {
 
 /* 美化弹框 */
 .el-dialog__wrapper {
-  border-radius: 10px;  /* 弹框圆角 */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);  /* 弹框阴影 */
-  background: #f9f9f9;  /* 弹框背景颜色 */
+  border-radius: 10px; /* 弹框圆角 */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* 弹框阴影 */
+  background: #f9f9f9; /* 弹框背景颜色 */
 }
 
 .el-dialog__header {
-  background-color: #4CAF50;  /* 标题栏背景色 */
-  color: white;  /* 标题文字颜色 */
-  font-size: 20px;  /* 标题文字大小 */
-  font-weight: bold;  /* 标题加粗 */
-  padding: 20px;  /* 标题栏内边距 */
-  border-radius: 10px 10px 0 0;  /* 圆角效果 */
+  background-color: #4caf50; /* 标题栏背景色 */
+  color: white; /* 标题文字颜色 */
+  font-size: 20px; /* 标题文字大小 */
+  font-weight: bold; /* 标题加粗 */
+  padding: 20px; /* 标题栏内边距 */
+  border-radius: 10px 10px 0 0; /* 圆角效果 */
 }
 
 .el-dialog__body {
-  padding: 20px;  /* 弹框内容区内边距 */
-  color: #333;  /* 内容文字颜色 */
+  padding: 20px; /* 弹框内容区内边距 */
+  color: #333; /* 内容文字颜色 */
 }
 
 .el-dialog__body p {
@@ -436,8 +443,8 @@ created() {
   justify-content: center;
   gap: 20px;
   padding: 20px 0;
-  background-color: #f4f4f4;  /* 底部区域背景 */
-  border-radius: 0 0 10px 10px;  /* 弹框底部圆角 */
+  background-color: #f4f4f4; /* 底部区域背景 */
+  border-radius: 0 0 10px 10px; /* 弹框底部圆角 */
 }
 
 /* 按钮样式 */
@@ -454,12 +461,12 @@ created() {
 
 /* 确定按钮的颜色 */
 .el-button--primary {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
 }
 
 .el-button--primary:hover {
-  background-color: #45a049;  /* 鼠标悬停时变暗 */
+  background-color: #45a049; /* 鼠标悬停时变暗 */
 }
 
 /* 下载证书按钮的样式 */
@@ -497,13 +504,13 @@ created() {
 }
 
 .el-input__inner:focus {
-  border-color: #4CAF50;
+  border-color: #4caf50;
 }
 
 /* 作品详情显示项 */
 h3 {
   font-size: 18px;
-  color: #4CAF50;
+  color: #4caf50;
   font-weight: bold;
 }
 
@@ -512,6 +519,5 @@ p {
   margin: 10px 0;
   color: #333;
 }
-
 </style>
   
