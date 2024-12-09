@@ -172,12 +172,12 @@ export default {
       uploadDialogVisible: false, // 控制上传弹框的显示
       selectedWork: {}, // 当前选中的作品
       works: [
-        {
-          title: "作品1",
-          img: "../assets/img/work1.jpg",
-          desc: "描述1",
-          tags: ["标签1", "标签2"],
-        },
+        // {
+        //   title: "作品1",
+        //   img: "../assets/img/work1.jpg",
+        //   desc: "描述1",
+        //   tags: ["标签1", "标签2"],
+        // },
       ],
       uploadForm: {
         uploadDate: "",
