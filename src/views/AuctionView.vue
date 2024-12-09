@@ -40,10 +40,18 @@
           :key="index"
           @click="goToAuctionsView(work)"
         >
-          <img :src="work.image" :alt="work.title" class="grid-image" />
+        <img
+            :src="
+              'http://localhost:8888/uploads/' +
+              encodeURIComponent(work.imagePath)
+            "
+            :alt="work.title"
+            class="grid-image"
+          />
+          <!-- <img :src="work.imagePath" :alt="work.title" class="grid-image" /> -->
           <h3>{{ work.title }}</h3> <!-- 作品标题 -->
           <p class="work-description">{{ work.description }}</p> <!-- 作品描述 -->
-          <p class="work-id">作品ID: {{ work.id }}</p> <!-- 作品ID -->
+          <p class="work-id">区块哈希: {{ work.blockHash }}</p> <!-- 作品ID -->
         </div>
       </div>
     </section>
@@ -51,55 +59,38 @@
 </template>
 
 <script>
+import request from '../utils/reques';
+
 export default {
   name: "HomeView",
   data() {
     return {
-      works: [
-        {
-          title: "作品 1",
-          description: "这是作品 1 的描述内容，描述了作品的特性、风格以及其它相关信息。",
-          image: "src/assets/images/resource/nft.jpg",
-          id: 1, // 作品 ID，用于跳转
-        },
-        {
-          title: "作品 2",
-          description: "这是作品 2 的描述内容，包含更多关于作品的创作背景和特点。",
-          image: "src/assets/images/resource/nft.jpg",
-          id: 2,
-        },
-        {
-          title: "作品 3",
-          description: "这是作品 3 的描述内容，讲述了作品的艺术创作过程。",
-          image: "src/assets/images/resource/nft.jpg",
-          id: 3,
-        },
-        {
-          title: "作品 4",
-          description: "这是作品 4 的描述内容，解释了作品的理念和设计。",
-          image: "src/assets/images/resource/nft.jpg",
-          id: 4,
-        },
-        {
-          title: "作品 5",
-          description: "这是作品 5 的描述内容，讲解了创作灵感及其背后的故事。",
-          image: "src/assets/images/resource/nft.jpg",
-          id: 5,
-        },
-        {
-          title: "作品 6",
-          description: "这是作品 6 的描述内容，涉及作品的艺术风格和表现手法。",
-          image: "src/assets/images/resource/nft.jpg",
-          id: 6,
-        },
-      ],
+      works: [],
     };
   },
   methods: {
     goToAuctionsView(work) {
       // 使用 router.push 跳转到 AuctionsView 页面，并传递作品 ID
-      this.$router.push({ path: '/AuctionsView', query: { id: work.id } });
+      this.$router.push({ path: '/AuctionsView', query: { id: work.blockHash } });
     },
+    // 获取所有拍卖数据的方法
+    async fetchAuctions() {
+      try {
+        const response = await request.get('/auctions/getAllAuctions');
+        // 将返回的拍卖数据赋值给 works
+        if (response.data.code === 0) {
+          this.works = response.data.auctions;
+        } else {
+          console.error("获取拍卖数据失败:", response.data.msg);
+        }
+      } catch (error) {
+        console.error("获取拍卖数据时发生错误:", error);
+      }
+    },
+  },
+  mounted() {
+    // 页面加载完成后调用该方法获取所有拍卖数据
+    this.fetchAuctions();
   },
 };
 </script>
