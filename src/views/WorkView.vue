@@ -171,14 +171,7 @@ export default {
       dialogVisible: false,
       uploadDialogVisible: false, // 控制上传弹框的显示
       selectedWork: {}, // 当前选中的作品
-      works: [
-        // {
-        //   title: "作品1",
-        //   img: "../assets/img/work1.jpg",
-        //   desc: "描述1",
-        //   tags: ["标签1", "标签2"],
-        // },
-      ],
+      works: [],
       uploadForm: {
         uploadDate: "",
         uploadInfo: "",
@@ -265,19 +258,33 @@ export default {
       console.log("Go to:", page);
     },
 
-    // 检查版权编号并下载证书
-    async downloadCertificate() {
-      if (this.selectedWork.hasDigitalCopyright) {
-        await request({
-          method: 'POST',
-          url: '/download-certificate', 
-          data: { workId: this.selectedWork.workId },
-        });
-        this.$message.success('证书下载成功！');
-      } else {
-        this.$message.error("该作品没有版权编号，无法下载证书！");
-      }
-    },
+// 检查版权编号并下载证书
+async downloadCertificate() {
+  if (this.selectedWork.hasDigitalCopyright) {
+    try {
+      // 将workId作为查询参数传递
+      const response = await request({
+        method: 'GET',
+        url: '/certificate/download',
+        params: { workId: this.selectedWork.workId },  // 使用params而不是data
+      });
+
+      // 如果响应成功，触发文件下载
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'copyright_certificate.pdf';
+      link.click();
+
+      this.$message.success('证书下载成功！');
+    } catch (error) {
+      this.$message.error('证书下载失败！');
+    }
+  } else {
+    this.$message.error("该作品没有版权编号，无法下载证书！");
+  }
+},
+
 
     // 获取用户的全部作品
     async getUserWorks() {
