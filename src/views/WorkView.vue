@@ -95,7 +95,7 @@
             class="add-listing-btn"
           >
             上架拍品
-          </el-button>
+          </el-button>  
 
           <!-- 下载证书按钮，只有有版权时可用 -->
           <el-button
@@ -125,6 +125,44 @@
             class="guanbi"
             >关闭</el-button
           >
+        </template>
+      </el-dialog>
+      
+
+       <!-- 身份验证弹框 -->
+       <el-dialog v-model="authDialogVisible" title="身份验证" width="50%" @close="resetAuthForm">
+        
+
+       
+        <div class="aaa">
+          <el-upload
+    class="upload-demo"
+    drag
+    :auto-upload="false"
+    multiple
+  >
+    <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+    <div class="el-upload__text">
+      Drop file here or <em>click to upload</em>
+    </div>
+    <template #tip>
+      <div class="el-upload__tip">
+        files with a size less than 500kb
+      </div>
+    </template>
+  </el-upload>
+          <el-form :model="authForm" label-width="100px">
+            <el-form-item  label="私钥密码">
+              
+              <el-input v-model="authForm.code" type="password" show-password placeholder="请输入私钥加密密码" />
+            </el-form-item>
+          </el-form>
+        </div>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="authDialogVisible = false">取消</el-button>
+            <el-button type="primary" @click="verifyIdentity">验证</el-button>
+          </div>
         </template>
       </el-dialog>
 
@@ -183,27 +221,101 @@
 <script>
 import request from "../utils/reques";
 
+
+
 export default {
   name: "App",
   data() {
     return {
       dialogVisible: false,
       uploadDialogVisible: false, // 控制上传弹框的显示
+      authDialogVisible: false,  // 控制身份验证弹框的显示
       selectedWork: {}, // 当前选中的作品
       works: [],
+      authForm: {
+       
+        password: '',  // 用户输入的密码
+        code: "", // 验证码
+      },
       uploadForm: {
         uploadDate: "",
         uploadInfo: "",
         auctionDateRange: [], // 用于竞拍日期范围
         auctionPrice: "", // 用于竞拍价格
       },
+      authRules: {
+        email: [
+          { required: true, message: '请输入邮箱', trigger: 'blur' },
+          {
+            type: 'email',
+            message: '请输入正确的邮箱格式',
+            trigger: ['blur', 'change'],
+          },
+        ],
+      },
     };
   },
   methods: {
+  
+          
+    handlePreview(file) {
+      console.log(file);
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    beforeRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handleExceed(files, fileList) {
+      console.log(files, fileList);
+    },
+
+     
+
+  
     // 打开作品详情弹框
     openDialog(item) {
       this.selectedWork = { ...item };
       this.dialogVisible = true;
+    },
+
+    onAddListing() {
+      // 先弹身份验证框
+      this.authDialogVisible = true;
+
+      // 在上传拍品时，先清空邮箱和密码字段
+      this.authForm.email = '';
+      this.authForm.password = '';
+
+      // 如果您想重置整个表单，包括字段和验证状态，可以使用 resetFields 方法
+      this.$refs.authForm.resetFields();
+
+      // 显示消息（可以根据需要移除）
+      this.$message.success('已重置邮箱和密码，准备上传拍品');
+      
+      // 在这里添加上传拍品的逻辑
+    
+    },
+
+    verifyIdentity() {
+      const code = this.authForm.code;
+      if (!code) {
+        this.$message.error("请输入验证码");
+        return;
+      }
+
+      // 验证码验证逻辑（这里可以加入实际的验证码验证逻辑）
+      if (code !== "1234") { // 假设“1234”是正确的验证码
+        this.$message.error("验证码错误");
+        return;
+      }
+
+      this.$message.success("验证通过");
+
+      // 关闭身份验证弹框，打开上传拍品弹框
+      this.authDialogVisible = false;
+      this.uploadDialogVisible = true;
     },
     // 提交上传拍品表单
     submitUploadForm() {
@@ -211,7 +323,15 @@ export default {
       this.uploadDialogVisible = false;
       this.$message.success("拍品信息已成功上传！");
     },
-    // 下载证书
+
+
+    resetAuthForm() {
+      this.authForm.code = "";
+    },
+    resetSelectedWork() {
+      this.selectedWork = {};
+    },
+        // 下载证书
     downloadCertificate() {
       if (this.selectedWork.digitalCopyrightId) {
         this.$message.success("证书已下载！");
@@ -288,12 +408,11 @@ applyForCopyright() {
     },
 
     onAddListing() {
-      if (!this.selectedWork.hasDigitalCopyright) {
-        this.$message.error("作品未拥有版权，无法上架！");
-        return; // 防止没有版权的作品上架
-      }
-      // 如果有版权，允许上传
-      this.uploadDialogVisible = true;
+      
+  this.authDialogVisible = true;
+  this.$nextTick(() => {
+    console.log("弹框显示了");
+  });
     },
 
     submitUploadForm() {
@@ -654,5 +773,11 @@ p {
   margin-top: -90.2px;
   width: 150px; /* 按钮宽度 */
 }
+
+.aaa{
+  width: 720px;
+}
+
+
 </style>
   
