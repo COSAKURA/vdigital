@@ -163,14 +163,7 @@ export default {
       dialogVisible: false,
       uploadDialogVisible: false, // 控制上传弹框的显示
       selectedWork: {}, // 当前选中的作品
-      works: [
-        {
-          title: "作品 1",
-          description: "这是作品 1 的描述内容。",
-          imagePath:
-            "D:/数字创意作品链上版权认证与交易平台/DigitalCopyright/uploads/1733654404120_th (1).jpg",
-        },
-      ],
+      works: [],
       uploadForm: {
         uploadDate: "",
         uploadInfo: "",
