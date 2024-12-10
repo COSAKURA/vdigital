@@ -66,11 +66,10 @@
           <p>是否拍卖：{{ selectedWork.isOnAuction }}</p>
 
           <!-- 上架拍品按钮，只有有版权时可用 -->
-          <el-button type="primary" :disabled="!selectedWork.hasDigitalCopyright" @click="onAddListing"
-            class="add-listing-btn">
-            上架拍品
-          </el-button>  
-
+          <el-button type="primary" :disabled="!selectedWork.hasDigitalCopyright || selectedWork.isOnAuction"
+            @click="onAddListing" class="add-listing-btn">
+            {{ selectedWork.isOnAuction ? '拍卖中' : '上架拍品' }}
+          </el-button>
           <!-- 下载证书按钮，只有有版权时可用 -->
           <el-button type="success" :disabled="!selectedWork.digitalCopyrightId" @click="downloadCertificate"
             class="action-btn">
@@ -88,33 +87,26 @@
           <el-button type="primary" @click="dialogVisible = false" class="guanbi">关闭</el-button>
         </template>
       </el-dialog>
-      
 
-       <!-- 身份验证弹框 -->
-       <el-dialog v-model="authDialogVisible" title="身份验证" width="50%" @close="resetAuthForm">
-        
 
-       
+      <!-- 身份验证弹框 -->
+      <el-dialog v-model="authDialogVisible" title="身份验证" width="50%" @close="resetAuthForm">
         <div class="aaa">
-          <el-upload
-    class="upload-demo"
-    drag
-    :auto-upload="false"
-    multiple
-  >
-    <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-    <div class="el-upload__text">
-      Drop file here or <em>click to upload</em>
-    </div>
-    <template #tip>
-      <div class="el-upload__tip">
-        files with a size less than 500kb
-      </div>
-    </template>
-  </el-upload>
+          <el-upload class="upload-demo" drag :auto-upload="false" multiple :before-upload="handleBeforeUpload"
+            @change="handleFileChange">
+            <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+            <div class="el-upload__text">
+              请上传私钥文件 <em>click to upload</em>
+            </div>
+            <template #tip>
+              <div class="el-upload__tip">
+                files with a size less than 500kb
+              </div>
+            </template>
+          </el-upload>
+
           <el-form :model="authForm" label-width="100px">
-            <el-form-item  label="私钥密码">
-              
+            <el-form-item label="私钥密码">
               <el-input v-model="authForm.code" type="password" show-password placeholder="请输入私钥加密密码" />
             </el-form-item>
           </el-form>
@@ -173,12 +165,12 @@ export default {
       uploadDialogVisible: false, // 控制上传弹框的显示
       authDialogVisible: false,  // 控制身份验证弹框的显示
       selectedWork: {}, // 当前选中的作品
+      isOnAuction: false, // Set this to true when the work is on auction
       works: [],
       authForm: {
-       
-        password: '',  // 用户输入的密码
-        code: "", // 验证码
+        code: "", // 私钥密码
       },
+      file: null, // 保存上传的私钥文件
       uploadForm: {
         uploadDate: "",
         uploadInfo: "",
@@ -198,8 +190,24 @@ export default {
     };
   },
   methods: {
-  
-          
+
+    // 处理文件上传
+    handleBeforeUpload(file) {
+      // 这里可以进行文件大小等检查
+      const isValidSize = file.size < 500 * 1024; // 500KB
+      if (!isValidSize) {
+        this.$message.error("文件大小不得超过 500KB");
+      }
+      return isValidSize; // 返回 true 允许上传，false 不允许上传
+    },
+
+    handleFileChange(file) {
+      this.file = file.raw;  // 保存上传的文件
+    },
+
+
+
+
     handlePreview(file) {
       console.log(file);
     },
@@ -213,8 +221,50 @@ export default {
       console.log(files, fileList);
     },
 
+    verifyIdentity() {
+  if (!this.file) {
+    this.$message.error("请上传私钥文件");
+    return;
+  }
+  if (!this.authForm.code) {
+    this.$message.error("请输入私钥加密密码");
+    return;
+  }
+  if (!localStorage.getItem("email")) {
+    this.$message.error("请输入邮箱");
+    return;
+  }
 
-  
+  const formData = new FormData();
+  formData.append("file", this.file);
+  formData.append("email", localStorage.getItem("email"));  // 获取邮箱
+  formData.append("password", this.authForm.code);
+
+  request
+    .post("/keystore/uploadKeystore", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .then((response) => {
+      const data = response.data;
+      if (data.code === 0) {
+        this.$message.success(data.msg);
+        localStorage.setItem("privateKey",data.privateKey)
+
+        // 关闭对话框
+        this.authDialogVisible = false;
+        this.uploadDialogVisible = true;
+      } else {
+        this.$message.error(data.msg);
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      this.$message.error("验证失败，请重试");
+    });
+},
+
     // 打开作品详情弹框
     openDialog(item) {
       this.selectedWork = { ...item };
@@ -234,29 +284,9 @@ export default {
 
       // 显示消息（可以根据需要移除）
       this.$message.success('已重置邮箱和密码，准备上传拍品');
-      
+
       // 在这里添加上传拍品的逻辑
-    
-    },
 
-    verifyIdentity() {
-      const code = this.authForm.code;
-      if (!code) {
-        this.$message.error("请输入验证码");
-        return;
-      }
-
-      // 验证码验证逻辑（这里可以加入实际的验证码验证逻辑）
-      if (code !== "1234") { // 假设“1234”是正确的验证码
-        this.$message.error("验证码错误");
-        return;
-      }
-
-      this.$message.success("验证通过");
-
-      // 关闭身份验证弹框，打开上传拍品弹框
-      this.authDialogVisible = false;
-      this.uploadDialogVisible = true;
     },
     // 提交上传拍品表单
     submitUploadForm() {
@@ -272,7 +302,7 @@ export default {
     resetSelectedWork() {
       this.selectedWork = {};
     },
-        // 下载证书
+    // 下载证书
     downloadCertificate() {
       if (this.selectedWork.digitalCopyrightId) {
         this.$message.success("证书已下载！");
@@ -347,73 +377,79 @@ export default {
     },
 
     onAddListing() {
-      
-  this.authDialogVisible = true;
-  this.$nextTick(() => {
-    console.log("弹框显示了");
-  });
+
+      this.authDialogVisible = true;
+      this.$nextTick(() => {
+        console.log("弹框显示了");
+      });
     },
 
-   // 提交上传表单并发起拍卖请求
-  async submitUploadForm() {
-    const { auctionDateRange, auctionPrice } = this.uploadForm;
+    // 提交上传表单并发起拍卖请求
+async submitUploadForm() {
+  const { auctionDateRange, auctionPrice } = this.uploadForm;
 
-    if (!auctionDateRange || auctionDateRange.length !== 2) {
-      this.$message.error("请正确选择竞拍时间范围");
-      return;
+  // 校验拍卖时间范围
+  if (!auctionDateRange || auctionDateRange.length !== 2) {
+    this.$message.error("请正确选择竞拍时间范围");
+    return;
+  }
+
+  // 校验竞拍价格
+  if (!auctionPrice || isNaN(auctionPrice) || auctionPrice <= 0) {
+    this.$message.error("请输入有效的竞拍价格");
+    return;
+  }
+
+  // 获取用户邮箱（假设已保存到 localStorage）
+  const userEmail = localStorage.getItem("email");
+  if (!userEmail) {
+    this.$message.error("未找到用户邮箱，请先登录！");
+    return;
+  }
+
+  // 获取作品ID
+  const workId = this.selectedWork.workId;
+
+  // 设置拍卖持续时间（单位：秒），基于选择的日期范围
+  const auctionDuration = (new Date(auctionDateRange[1]).getTime() - new Date(auctionDateRange[0]).getTime()) / 1000;
+
+  // 假设用户已经选择了一个私钥
+  const privateKey = localStorage.getItem("privateKey");
+  if (!privateKey) {
+    this.$message.error("未找到私钥，请先设置私钥！");
+    return;
+  }
+
+  // 发送请求到后端，开始拍卖
+  try {
+    const response = await request.post("/auctions/startAuction", null, {
+      params: {
+        email: userEmail,
+        workId: workId,
+        startPrice: auctionPrice,
+        duration: auctionDuration,
+        privateKey: privateKey,
+      },
+    });
+
+    // 处理返回的响应
+    if (response.data.code === 0) {
+      this.$message.success("拍卖成功，作品已上链");
+    } else {
+      this.$message.error("拍卖失败: " + response.data.message);
     }
+  } catch (error) {
+    console.error("发起拍卖请求失败:", error);
+    this.$message.error("拍卖请求失败，请稍后再试！");
+  } finally {
+    // 关闭上传表单弹框
+    this.uploadDialogVisible = false;
 
-    if (!auctionPrice || isNaN(auctionPrice) || auctionPrice <= 0) {
-      this.$message.error("请输入有效的竞拍价格");
-      return;
-    }
+    // 清除本地存储的私钥
+    localStorage.removeItem("privateKey");
+  }
+},
 
-    // 获取用户邮箱（假设已保存到 localStorage）
-    const userEmail = localStorage.getItem("email");
-    if (!userEmail) {
-      this.$message.error("未找到用户邮箱，请先登录！");
-      return;
-    }
-
-    // 获取作品ID
-    const workId = this.selectedWork.workId;
-
-    // 设置拍卖持续时间（单位：秒），基于选择的日期范围
-    const auctionDuration = (new Date(auctionDateRange[1]).getTime() - new Date(auctionDateRange[0]).getTime()) / 1000;
-
-    // 假设用户已经选择了一个私钥
-    const privateKey = localStorage.getItem("privateKey");
-    if (!privateKey) {
-      this.$message.error("未找到私钥，请先设置私钥！");
-      return;
-    }
-
-    // 发送请求到后端，开始拍卖
-    try {
-      const response = await request.post("/auctions/startAuction", null, {
-        params: {
-          email: userEmail,
-          workId: workId,
-          startPrice: auctionPrice,
-          duration: auctionDuration,
-          privateKey: privateKey,
-        },
-      });
-
-      // 处理返回的响应
-      if (response.data.code === 200) {
-        this.$message.success("拍卖成功，作品已上链");
-      } else {
-        this.$message.error("拍卖失败: " + response.data.message);
-      }
-    } catch (error) {
-      console.error("发起拍卖请求失败:", error);
-      this.$message.error("拍卖请求失败，请稍后再试！");
-    } finally {
-      // 关闭上传表单弹框
-      this.uploadDialogVisible = false;
-    }
-  },
     resetUploadForm() {
       // 重置上传表单
       this.uploadForm.uploadDate = "";
@@ -490,15 +526,6 @@ export default {
       } catch (error) {
         this.$message.error("获取作品失败: " + error.message);
         console.error("请求失败:", error);
-      }
-    },
-    // 在组件加载时调用获取用户作品的方法
-    created() {
-      console.log("组件 created 钩子触发");
-      try {
-        this.getUserWorks();
-      } catch (error) {
-        console.error("调用 getUserWorks 时出错:", error);
       }
     },
   },
@@ -778,9 +805,7 @@ p {
   /* 按钮宽度 */
 }
 
-.aaa{
+.aaa {
   width: 720px;
 }
-
-
 </style>
