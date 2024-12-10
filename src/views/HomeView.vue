@@ -1,10 +1,12 @@
 <template>
   <div class="home-view">
-    <!-- 灰色底板 -->
-    <div class="background-overlay"></div>
 
     <!-- 透明主导航栏 -->
     <el-header class="main-header">
+   <!-- 图片放置在导航栏左侧 -->
+   <div class="logo-container">
+      <img src="@/assets/images/lll.png" alt="Logo" class="logo-image" />
+    </div>
       <el-menu
         mode="horizontal"
         @select="handleMenuSelect"
@@ -95,6 +97,26 @@
       </div>
     </div>
 
+     <!-- 行业现状与痛点 -->
+     <div class="industry-status">
+      <h2 class="section-title">行业现状与痛点</h2>
+      <el-row :gutter="20" class="content-cards">
+        <el-col v-for="(item, index) in painPoints" :key="index" :span="8">
+          <el-card class="pain-point-card" shadow="hover">
+            <!-- 图标 -->
+            <div class="icon-container">
+              <img :src="item.icon" :alt="item.title" class="icon-image" />
+            </div>
+            <!-- 标题 -->
+            <h3 class="card-title">{{ item.title }}</h3>
+            <!-- 描述 -->
+            <p class="card-description">{{ item.description }}</p>
+          </el-card>
+        </el-col>
+      </el-row>
+    </div>
+
+
     <!-- 服务部分，放在独立白色面板下面 -->
     <section class="services-section">
       <div class="services-panel">
@@ -108,9 +130,8 @@
               />
               <h3>{{ service.title }}</h3>
               <p>{{ service.description }}</p>
-              <el-button type="text" @click="goToPage(service.link)"
-                >了解更多 ></el-button
-              >
+              
+              
             </el-card>
           </el-col>
         </el-row>
@@ -172,6 +193,9 @@ import request from '../utils/reques';
 export default {
   name: "HomeView",
   data() {
+
+
+    
     return {
       isPrivateKeyDialogVisible: false, // 控制弹框显示
       privateKeyForm: {
@@ -181,6 +205,30 @@ export default {
       },
       activeMenu: "home", // 默认选中的菜单项
       activeStep: 4, // 当前步骤
+      painPoints: [
+        {
+          title: "内容管理方",
+          icon: "src/assets/images/resource/process-1.png",
+          description: "缺乏行业规范化服务，版权交易过程中信息不联通，版权收益难以公平有效地在原创作者和相关机构间分配。",
+        },
+        {
+          title: "内容平台方",
+          icon: "src/assets/images/resource/process-2.png",
+          description: "传统保护费时费力成本高，海量内容难以全量保护，内容分发难以掌控传播安全问题。",
+        },
+        {
+          title: "原创作者",
+          icon: "src/assets/images/resource/process-3.png",
+          description: "传统模式权属自证繁琐，需奔波于多个部门/组织之间，侵权发现难，维权耗时久成本高，多数作品难以被有效保护。",
+        },
+      ],
+      steps: [
+        { stepNumber: "01", title: "平台注册", description: "", icon: "el-icon-user-solid" },
+        { stepNumber: "02", title: "地址绑定", description: "", icon: "el-icon-s-check" },
+        { stepNumber: "03", title: "上传作品", description: "", icon: "el-icon-upload2" },
+        { stepNumber: "04", title: "申请作品登记与存证证书", description: "", icon: "el-icon-document" },
+      ],
+
       services: [
         {
           title: "版权咨询与解决方案",
@@ -396,7 +444,7 @@ body, html, #app {
 /* 头部横幅部分 */
 .header-section {
   background-color: #fce5d8; /* 顶部固定颜色 */
-  padding: 900px 0 10px; /* 增加顶部填充以适应固定的导航栏 */
+  padding: 1550px 0 10px; /* 增加顶部填充以适应固定的导航栏 */
   width: 100vw; /* 确保铺满整个页面宽度 */
 }
 
@@ -448,6 +496,7 @@ body, html, #app {
 
 /* 流程部分 */
 .process-flow {
+  height: 20%;
   text-align: center;
   padding: 80px;
 }
@@ -516,5 +565,132 @@ body, html, #app {
   font-size: 1rem;
   color: #666;
   margin-bottom: 20px;
+}
+
+.industry-status {
+  margin-top: 100px;
+  background: #f0f0f0; /* 灰色背景面板 */
+  padding: 100px;
+  margin: 50px auto;
+  max-width: 12000px; 
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.content-cards {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pain-point-card {
+  width: 100%;
+  margin-left: 150px;
+  text-align: center;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.pain-point-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.icon-image {
+  width: 60px;
+  height: 60px;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.card-description {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+.industry-status {
+  padding: 50px 20px;
+  background-color: #f8f9fa;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.content-cards {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pain-point-card {
+  text-align: center;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.pain-point-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.icon-image {
+  width: 60px;
+  height: 60px;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.card-description {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+.industry-text {
+  margin-top: 40px;
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.8;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.logo-container{
+  margin-right: -80px;
+  width: 10%;
+}
+
+.logo-image{
+  width: 80%;
 }
 </style>

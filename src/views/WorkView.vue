@@ -2,6 +2,12 @@
   <div class="app">
     <!-- 顶部导航 -->
     <el-header class="main-header">
+
+      <div class="logo-container">
+      <img src="@/assets/images/lll.png" alt="Logo" class="logo-image" />
+    </div>
+
+
       <el-menu mode="horizontal" @select="handleMenuSelect" class="el-menu-demo">
         <el-menu-item v-for="(menu, index) in menuItems" :key="index" :index="menu.index" class="nav-item">
           <router-link :to="menu.path">{{ menu.label }}</router-link>
@@ -27,8 +33,7 @@
       <!-- 网格布局 -->
       <div class="grid">
         <div v-for="(item, index) in works" :key="index" class="grid-item" @click="openDialog(item)">
-          <img :src="`http://172.46.225.96:8888/uploads/${encodeURIComponent(item.imagePath)}`" :alt="item.title"
-            class="grid-image" />
+          <img :src="`http://172.46.225.96:8888/uploads/${encodeURIComponent(item.imagePath)}`" :alt="item.title" class="grid-image" />
           <p>{{ item.title }}</p>
         </div>
       </div>
@@ -48,14 +53,25 @@
 
           <!-- 动作按钮 -->
           <div class="action-buttons">
-            <el-button type="primary" :disabled="!selectedWork.hasDigitalCopyright || selectedWork.isOnAuction"
-              @click="onAddListing">
+            <el-button
+              type="primary"
+              :disabled="!selectedWork.hasDigitalCopyright || selectedWork.isOnAuction"
+              @click="onAddListing"
+            >
               {{ selectedWork.isOnAuction ? '拍卖中' : '上架拍品' }}
             </el-button>
-            <el-button type="success" :disabled="!selectedWork.digitalCopyrightId" @click="downloadCertificate">
+            <el-button
+              type="success"
+              :disabled="!selectedWork.digitalCopyrightId"
+              @click="downloadCertificate"
+            >
               下载证书
             </el-button>
-            <el-button type="warning" :disabled="selectedWork.digitalCopyrightId" @click="applyForCopyright">
+            <el-button
+              type="warning"
+              :disabled="selectedWork.digitalCopyrightId"
+              @click="applyForCopyright"
+            >
               申请版权
             </el-button>
           </div>
@@ -69,11 +85,15 @@
       <el-dialog v-model="uploadDialogVisible" title="上传拍品信息" width="50%" @close="resetUploadForm">
         <el-form :model="uploadForm" label-width="100px">
           <el-form-item label="竞拍时间">
-            <el-date-picker v-model="uploadForm.auctionDateRange" type="daterange" start-placeholder="开始日期"
-              end-placeholder="结束日期" />
+            <el-date-picker v-model="uploadForm.auctionDateRange" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期" />
           </el-form-item>
           <el-form-item label="竞拍价格">
-            <el-input v-model="uploadForm.auctionPrice" placeholder="请输入竞拍价格" :formatter="formatter" :parser="parser" />
+            <el-input
+              v-model="uploadForm.auctionPrice"
+              placeholder="请输入竞拍价格"
+              :formatter="formatter"
+              :parser="parser"
+            />
           </el-form-item>
           <el-form-item label="上传信息">
             <el-input v-model="uploadForm.uploadInfo" type="textarea" placeholder="请输入上传信息" rows="4" />
@@ -401,7 +421,8 @@ export default {
 
 /* hero 背景图片区域 */
 .hero {
-  width: 100%;
+  margin-left: 200px;
+  width: 70%;
   height: 100vh;
   background: url("../assets/images/resource/service-4.png") no-repeat center center;
   background-size: cover;
@@ -560,5 +581,19 @@ p {
   font-size: 16px;
   margin: 10px 0;
   color: #333;
+}
+
+.main-content{
+  margin-top: 50px;
+}
+
+
+.logo-container{
+  margin-right: -80px;
+  width: 10%;
+}
+
+.logo-image{
+  width: 80%;
 }
 </style>

@@ -5,6 +5,12 @@
 
     <!-- 透明主导航栏 -->
     <el-header class="main-header">
+
+      <!-- 图片放置在导航栏左侧 -->
+   <div class="logo-container">
+      <img src="@/assets/images/lll.png" alt="Logo" class="logo-image" />
+    </div>
+    
       <el-menu mode="horizontal" @select="handleMenuSelect" class="el-menu-demo">
         <el-menu-item index="home" class="nav-item">
           <router-link to="/home">首页</router-link>
@@ -354,4 +360,13 @@ export default {
   font-weight: bold;
 }
 
+
+.logo-container{
+  margin-right: -80px;
+  width: 10%;
+}
+
+.logo-image{
+  width: 80%;
+}
 </style>
