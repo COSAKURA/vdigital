@@ -3,32 +3,14 @@
     <!-- 顶部导航 -->
     <el-header class="main-header">
       <el-menu mode="horizontal" @select="handleMenuSelect" class="el-menu-demo">
-        <el-menu-item index="home" class="nav-item">
-          <router-link to="/home">首页</router-link>
-        </el-menu-item>
-        <el-menu-item index="about" class="nav-item">
-          <router-link to="/about">关于我们</router-link>
-        </el-menu-item>
-        <el-menu-item index="services" class="nav-item">
-          <router-link to="/services">服务内容</router-link>
-        </el-menu-item>
-        <el-menu-item index="case-studio" class="nav-item">
-          <router-link to="/WorkView">我的作品</router-link>
-        </el-menu-item>
-        <el-menu-item index="blog" class="nav-item">
-          <router-link to="/blog">侵权监测</router-link>
-        </el-menu-item>
-        <el-menu-item index="contact" class="nav-item">
-          <router-link to="/AuctionView">拍卖市场</router-link>
+        <el-menu-item v-for="(menu, index) in menuItems" :key="index" :index="menu.index" class="nav-item">
+          <router-link :to="menu.path">{{ menu.label }}</router-link>
         </el-menu-item>
       </el-menu>
       <div class="header-actions">
         <el-button type="text" class="language-switch">中文</el-button>
         <el-button type="text" class="language-switch">English</el-button>
-        <el-button type="primary" icon="el-icon-user" @click="goToPage('login')">
-          <el-icon>
-            <HomeFilled />
-          </el-icon>登出</el-button>
+        <el-button type="primary" icon="el-icon-user" @click="goToPage('login')">登出</el-button>
       </div>
     </el-header>
 
@@ -37,17 +19,15 @@
       <!-- 背景图片区域 -->
       <div class="hero">
         <div class="hero-content">
-          <h1>PORTFOLIO</h1>
+          <h1>作品中心</h1>
           <p>Portfolio 3 Column Masonry</p>
         </div>
       </div>
 
       <!-- 网格布局 -->
       <div class="grid">
-        <div class="grid-item" v-for="(item, index) in works" :key="index" @click="openDialog(item)">
-          <img :src="'http://172.46.225.96:8888/uploads/' +
-            encodeURIComponent(item.imagePath)
-            " :alt="item.title" class="grid-image" />
+        <div v-for="(item, index) in works" :key="index" class="grid-item" @click="openDialog(item)">
+          <img :src="`http://172.46.225.96:8888/uploads/${encodeURIComponent(item.imagePath)}`" :alt="item.title" class="grid-image" />
           <p>{{ item.title }}</p>
         </div>
       </div>
@@ -55,61 +35,64 @@
       <!-- 作品详情弹框 -->
       <el-dialog v-model="dialogVisible" title="作品详情" width="50%" @close="resetSelectedWork">
         <div>
-          <h3>作品序号：{{ selectedWork.workId }}</h3>
-          <p>作品名字： {{ selectedWork.title }}</p>
-          <p>作品描述：{{ selectedWork.description }}</p>
-          <p>作品哈希值：{{ selectedWork.workHash }}</p>
-          <p>版权编号：{{ selectedWork.digitalCopyrightId }}</p>
-          <p>区块哈希值：{{ selectedWork.blockchainHash }}</p>
-          <p>交易哈希值：{{ selectedWork.transactionHash }}</p>
-          <p>创建时间：{{ selectedWork.createdAt }}</p>
-          <p>是否拍卖：{{ selectedWork.isOnAuction }}</p>
+          <p><strong>作品序号：</strong>{{ selectedWork.workId }}</p>
+          <p><strong>作品名字：</strong>{{ selectedWork.title }}</p>
+          <p><strong>作品描述：</strong>{{ selectedWork.description }}</p>
+          <p><strong>作品哈希值：</strong>{{ selectedWork.workHash }}</p>
+          <p><strong>版权编号：</strong>{{ selectedWork.digitalCopyrightId }}</p>
+          <p><strong>区块哈希值：</strong>{{ selectedWork.blockchainHash }}</p>
+          <p><strong>交易哈希值：</strong>{{ selectedWork.transactionHash }}</p>
+          <p><strong>创建时间：</strong>{{ selectedWork.createdAt }}</p>
+          <p><strong>是否拍卖：</strong>{{ selectedWork.isOnAuction }}</p>
 
-          <!-- 上架拍品按钮，只有有版权时可用 -->
-          <el-button type="primary" :disabled="!selectedWork.hasDigitalCopyright || selectedWork.isOnAuction"
-            @click="onAddListing" class="add-listing-btn">
-            {{ selectedWork.isOnAuction ? '拍卖中' : '上架拍品' }}
-          </el-button>
-          <!-- 下载证书按钮，只有有版权时可用 -->
-          <el-button type="success" :disabled="!selectedWork.digitalCopyrightId" @click="downloadCertificate"
-            class="action-btn">
-            下载证书
-          </el-button>
-
-          <!-- 版权申请按钮，只有没有版权时可用 -->
-          <el-button type="warning" :disabled="selectedWork.digitalCopyrightId" @click="applyForCopyright"
-            class="apply-copyright-btn">
-            申请版权
-          </el-button>
+          <!-- 动作按钮 -->
+          <div class="action-buttons">
+            <el-button
+              type="primary"
+              :disabled="!selectedWork.hasDigitalCopyright || selectedWork.isOnAuction"
+              @click="onAddListing"
+            >
+              {{ selectedWork.isOnAuction ? '拍卖中' : '上架拍品' }}
+            </el-button>
+            <el-button
+              type="success"
+              :disabled="!selectedWork.digitalCopyrightId"
+              @click="downloadCertificate"
+            >
+              下载证书
+            </el-button>
+            <el-button
+              type="warning"
+              :disabled="selectedWork.digitalCopyrightId"
+              @click="applyForCopyright"
+            >
+              申请版权
+            </el-button>
+          </div>
         </div>
-
         <template #footer>
-          <el-button type="primary" @click="dialogVisible = false" class="guanbi">关闭</el-button>
+          <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
         </template>
       </el-dialog>
 
       <!-- 上传拍品信息弹框 -->
       <el-dialog v-model="uploadDialogVisible" title="上传拍品信息" width="50%" @close="resetUploadForm">
-        <div>
-          <el-form :model="uploadForm" label-width="100px">
-            <!-- 竞拍时间范围 -->
-            <el-form-item label="竞拍时间">
-              <el-date-picker v-model="uploadForm.auctionDateRange" type="daterange" start-placeholder="开始日期"
-                end-placeholder="结束日期" />
-            </el-form-item>
-
-            <!-- 竞拍价格 -->
-            <el-form-item label="竞拍价格">
-              <el-input v-model="uploadForm.auctionPrice" style="width: 240px" placeholder="请输入竞拍价格"
-                :formatter="formatter" :parser="parser" />
-            </el-form-item>
-
-            <!-- 上传信息 -->
-            <el-form-item label="上传信息">
-              <el-input v-model="uploadForm.uploadInfo" type="textarea" placeholder="请输入上传信息" rows="4" />
-            </el-form-item>
-          </el-form>
-        </div>
+        <el-form :model="uploadForm" label-width="100px">
+          <el-form-item label="竞拍时间">
+            <el-date-picker v-model="uploadForm.auctionDateRange" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期" />
+          </el-form-item>
+          <el-form-item label="竞拍价格">
+            <el-input
+              v-model="uploadForm.auctionPrice"
+              placeholder="请输入竞拍价格"
+              :formatter="formatter"
+              :parser="parser"
+            />
+          </el-form-item>
+          <el-form-item label="上传信息">
+            <el-input v-model="uploadForm.uploadInfo" type="textarea" placeholder="请输入上传信息" rows="4" />
+          </el-form-item>
+        </el-form>
         <template #footer>
           <div class="dialog-footer">
             <el-button @click="uploadDialogVisible = false">取消</el-button>
@@ -130,10 +113,16 @@ export default {
       dialogVisible: false,
       uploadDialogVisible: false, // 控制上传弹框的显示
       selectedWork: {}, // 当前选中的作品
-      isOnAuction: false, // Set this to true when the work is on auction
       works: [],
+      menuItems: [
+        { label: "首页", path: "/home", index: "home" },
+        { label: "关于我们", path: "/about", index: "about" },
+        { label: "服务内容", path: "/services", index: "services" },
+        { label: "我的作品", path: "/WorkView", index: "case-studio" },
+        { label: "侵权监测", path: "/blog", index: "blog" },
+        { label: "拍卖市场", path: "/AuctionView", index: "contact" },
+      ],
       uploadForm: {
-        uploadDate: "",
         uploadInfo: "",
         auctionDateRange: [], // 用于竞拍日期范围
         auctionPrice: "", // 用于竞拍价格
@@ -148,16 +137,7 @@ export default {
       this.dialogVisible = true;
     },
 
-    // 提交上传拍品表单
-    submitUploadForm() {
-      console.log("表单提交：", this.uploadForm);
-      this.uploadDialogVisible = false;
-      this.$message.success("拍品信息已成功上传！");
-    },
 
-    resetAuthForm() {
-      this.authForm.code = "";
-    },
     resetSelectedWork() {
       this.selectedWork = {};
     },
@@ -230,12 +210,9 @@ export default {
 
     onAddListing() {
       this.uploadDialogVisible = true;
-      this.$nextTick(() => {
-        console.log("弹框显示了");
-      });
     },
 
-    // 提交上传表单并发起拍卖请求
+    // 发起拍卖请求
     async submitUploadForm() {
       const { auctionDateRange, auctionPrice } = this.uploadForm;
 
@@ -292,16 +269,16 @@ export default {
       } finally {
         // 关闭上传表单弹框
         this.uploadDialogVisible = false;
-        localStorage.removeItem("privateKey")
       }
     },
+    // 重置上传表单
     resetUploadForm() {
-      // 重置上传表单
       this.uploadForm.uploadDate = "";
       this.uploadForm.uploadInfo = "";
       this.uploadForm.auctionDateRange = [];
       this.uploadForm.auctionPrice = "";
     },
+
     resetSelectedWork() {
       // 重置选中的作品
       this.selectedWork = {};
@@ -346,6 +323,7 @@ export default {
         this.$message.error("证书下载失败！");
       }
     },
+
     // 获取用户的全部作品
     async getUserWorks() {
       const userEmail = localStorage.getItem("email");
@@ -374,7 +352,6 @@ export default {
   },
   // 在组件加载时调用获取用户作品的方法
   created() {
-    console.log("组件 created 钩子触发");
     try {
       this.getUserWorks();
     } catch (error) {
@@ -409,19 +386,14 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  background: rgba(255, 255, 255, 1);
+  width: 100%;
+  background: #fff;
   z-index: 1000;
-  box-sizing: border-box;
   transition: background-color 0.3s ease-in-out;
 }
 
 .el-menu-demo {
   display: flex;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  overflow: hidden;
-  white-space: nowrap;
   flex-grow: 1;
   margin-left: 50px;
 }
@@ -443,12 +415,11 @@ export default {
 
 /* hero 背景图片区域 */
 .hero {
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   background: url("../assets/images/resource/service-4.png") no-repeat center center;
-  aspect-ratio: 16 / 9;
+  background-size: cover;
   position: relative;
-  padding-top: 60px;
 }
 
 .hero-content {
@@ -464,17 +435,11 @@ export default {
 /* 网格布局 */
 .grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
   max-width: 1200px;
-  margin: 0 auto;
-  margin-left: 50px;
+  margin: 20px auto;
   padding: 20px;
-}
-
-.grid-image {
-  width: 100%;
-  border-radius: 10px;
 }
 
 .grid-item {
@@ -483,11 +448,9 @@ export default {
   border-radius: 8px;
   padding: 20px;
   text-align: center;
-  width: 20vw;
-  height: 22vw;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
 }
 
 .grid-item:hover {
@@ -495,52 +458,47 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.action-btn {
-  margin-top: 193.6px;
-  width: 150px;
-  /* 按钮宽度 */
+/* 优化图片样式，防止溢出 */
+.grid-image {
+  width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 }
 
-/* 将弹框底部按钮居中 */
+.grid-image:hover {
+  transform: scale(1.05);
+}
+
 .dialog-footer {
   display: flex;
   justify-content: center;
   gap: 20px;
-  /* 按钮之间的间距 */
-  width: 100%;
   padding: 10px 0;
 }
 
 /* 美化弹框 */
 .el-dialog__wrapper {
   border-radius: 10px;
-  /* 弹框圆角 */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  /* 弹框阴影 */
   background: #f9f9f9;
-  /* 弹框背景颜色 */
 }
 
 .el-dialog__header {
   background-color: #4caf50;
-  /* 标题栏背景色 */
   color: white;
-  /* 标题文字颜色 */
   font-size: 20px;
-  /* 标题文字大小 */
   font-weight: bold;
-  /* 标题加粗 */
   padding: 20px;
-  /* 标题栏内边距 */
   border-radius: 10px 10px 0 0;
-  /* 圆角效果 */
 }
 
 .el-dialog__body {
   padding: 20px;
-  /* 弹框内容区内边距 */
   color: #333;
-  /* 内容文字颜色 */
 }
 
 .el-dialog__body p {
@@ -555,9 +513,7 @@ export default {
   gap: 20px;
   padding: 20px 0;
   background-color: #f4f4f4;
-  /* 底部区域背景 */
   border-radius: 0 0 10px 10px;
-  /* 弹框底部圆角 */
 }
 
 /* 按钮样式 */
@@ -572,7 +528,6 @@ export default {
   transform: scale(1.05);
 }
 
-/* 确定按钮的颜色 */
 .el-button--primary {
   background-color: #4caf50;
   color: white;
@@ -580,10 +535,8 @@ export default {
 
 .el-button--primary:hover {
   background-color: #45a049;
-  /* 鼠标悬停时变暗 */
 }
 
-/* 下载证书按钮的样式 */
 .el-button--success {
   background-color: #009688;
   color: white;
@@ -593,26 +546,15 @@ export default {
   background-color: #00796b;
 }
 
-/* 弹框关闭按钮 */
-.el-dialog__header .el-button--close {
-  color: white;
-}
-
 /* 调整输入框和选择框 */
 .el-form-item {
   margin-bottom: 20px;
 }
 
-.el-input,
-.el-date-picker,
-.el-select {
-  font-size: 16px;
-  border-radius: 5px;
-}
-
 .el-input__inner {
   padding: 10px;
   border: 1px solid #ddd;
+  border-radius: 5px;
   background-color: #fff;
   transition: border 0.3s ease;
 }
@@ -632,21 +574,5 @@ p {
   font-size: 16px;
   margin: 10px 0;
   color: #333;
-}
-
-.apply-copyright-btn {
-  margin-top: 193.6px;
-  width: 150px;
-  /* 按钮宽度 */
-}
-
-.guanbi {
-  margin-top: -90.2px;
-  width: 150px;
-  /* 按钮宽度 */
-}
-
-.aaa {
-  width: 720px;
 }
 </style>

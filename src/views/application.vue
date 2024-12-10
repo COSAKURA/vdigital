@@ -1,47 +1,13 @@
 <template>
-<!-- 透明主导航栏 -->
-<el-header class="main-header">
-      
-      <el-menu
-        mode="horizontal"
-        @select="handleMenuSelect"
-        class="el-menu-demo"
-      >
-      <el-menu-item index="home" class="nav-item">
-      <router-link to="/home">首页</router-link>
-    </el-menu-item>
-    <el-menu-item index="about" class="nav-item">
-      <router-link to="/about">关于我们</router-link>
-    </el-menu-item>
-    <el-menu-item index="services" class="nav-item">
-      <router-link to="/services">服务内容</router-link>
-    </el-menu-item>
-    <el-menu-item index="case-studio" class="nav-item">
-      <router-link to="/WorkView">我的作品</router-link>
-    </el-menu-item>
-    <el-menu-item index="blog" class="nav-item">
-      <router-link to="/blog">侵权监测</router-link>
-    </el-menu-item>
-    <el-menu-item index="contact" class="nav-item">
-      <router-link to="/AuctionView">拍卖市场</router-link>
-    </el-menu-item>
-      </el-menu>
-      <div class="header-actions">
-        <el-button type="text" class="language-switch">中文</el-button>
-        <el-button type="text" class="language-switch">English</el-button>
-        <el-button type="primary" icon="el-icon-user" class="login-button" @click="goToPage('login')"><el-icon><HomeFilled /></el-icon>登出</el-button>
-      </div>
-    </el-header>
-
-  <div class="upload-section">
-    <!-- 上传作品横幅 -->
-    <div class="upload-banner">
-      <div class="banner-content">
-        <h2>上传您的作品</h2>
-        <h1>展示您的创作</h1>
-        <p>请填写以下信息并上传您的作品。我们会对您的创作进行版权保护。</p>
-      </div>
-    </div>
+    <div class="upload-section">
+        <!-- 上传作品横幅 -->
+        <div class="upload-banner">
+            <div class="banner-content">
+                <h2>上传您的作品</h2>
+                <h1>展示您的创作</h1>
+                <p>请填写以下信息并上传您的作品。我们会对您的创作进行版权保护。</p>
+            </div>
+        </div>
 
         <!-- 上传信息和表单 -->
         <div class="upload-form-container">
@@ -61,59 +27,55 @@
                     <div class="info-item">
                         <el-icon><i class="el-icon-help"></i></el-icon>
                         <h3>帮助与支持</h3>
-                        <p>如有问题，请联系我们：847070349@qq.com</p>
+                        <p>如有问题，请联系我们：<a href="mailto:847070349@qq.com">847070349@qq.com</a></p>
                     </div>
                 </el-col>
 
-                <!-- 验证私钥 -->
+                <!-- 作品上传表单 -->
                 <el-col :span="16">
                     <div class="form-section">
-                        <h2 class="form-section-title">身份认证</h2>
-                        <el-form :model="keystoreFormData" @submit.prevent="handleKeystoreSubmit" class="form-content">
-                            <el-form-item prop="email">
-                                <el-input v-model="keystoreFormData.email" placeholder="请输入邮箱"></el-input>
-                            </el-form-item>
-                            <el-form-item prop="password">
-                                <el-input v-model="keystoreFormData.password" type="password"
-                                    placeholder="请输入密码"></el-input>
-                            </el-form-item>
-                            <div class="center-upload-and-button">
-                                <el-upload :on-change="handleKeystoreFileChange" list-type="text" :limit="1"
-                                    :auto-upload="false" class="upload-area">
-                                    <el-button type="primary" class="uniform-button">上传私钥文件</el-button>
-                                </el-upload>
-                                <el-button type="success" class="uniform-button"
-                                    @click="handleKeystoreSubmit">验证身份</el-button>
-                            </div>
-                        </el-form>
-                    </div>
-
-                    <!-- 验证成功后显示作品上传表单 -->
-                    <div v-if="isKeystoreVerified" class="form-section">
                         <h2 class="form-section-title">填写作品信息</h2>
-                        <p>请完善以下信息，确保作品能够被正确识别和保护。</p>
+                        <p class="form-description">请完善以下信息，确保作品能够被正确识别和保护。</p>
                         <el-form :model="formData" @submit.prevent="handleSubmit" ref="form">
                             <el-row :gutter="20">
                                 <el-col :span="24">
                                     <el-form-item prop="title">
-                                        <el-input v-model="formData.title" placeholder="作品标题"></el-input>
+                                        <el-input
+                                            v-model="formData.title"
+                                            placeholder="作品标题"
+                                            class="form-input"
+                                        ></el-input>
                                     </el-form-item>
                                 </el-col>
                             </el-row>
                             <el-form-item prop="description">
-                                <el-input type="textarea" v-model="formData.description" placeholder="作品描述"></el-input>
+                                <el-input
+                                    type="textarea"
+                                    v-model="formData.description"
+                                    placeholder="作品描述"
+                                    class="form-textarea"
+                                ></el-input>
                             </el-form-item>
                             <!-- 上传图片和按钮 -->
                             <div class="center-upload-and-button">
                                 <!-- 文件上传 -->
-                                <el-upload list-type="picture-card" :on-change="handleFileChange"
-                                    :on-remove="handleRemove" :auto-upload="false" :limit="1">
+                                <el-upload
+                                    ref="upload"
+                                    list-type="picture-card"
+                                    :on-change="handleFileChange"
+                                    :on-remove="handleRemove"
+                                    :auto-upload="false"
+                                    :limit="1"
+                                >
                                     <div class="upload-plus-icon">
                                         <el-icon><i class="el-icon-plus"></i></el-icon>
                                     </div>
                                 </el-upload>
+
                                 <!-- 提交作品按钮 -->
-                                <el-button type="success" @click="handleSubmit">提交作品</el-button>
+                                <el-button type="success" class="submit-button" @click="handleSubmit">
+                                    提交作品
+                                </el-button>
                             </div>
                         </el-form>
                     </div>
@@ -127,67 +89,19 @@
 import request from "../utils/reques";
 
 export default {
-  name: "UploadSection",
-  data() {
-    return {
-      isKeystoreVerified: false, // 标记私钥是否验证成功
-      keystoreFormData: {
-        email: "", // 邮箱
-        password: "", // 密码
-        file: null, // 私钥文件
-      },
-      formData: {
-        email: "",
-        title: "",
-        description: "",
-        file: null, // 作品文件
-        privateKey: "", // 私钥，验证成功后后端返回
-      },
-    };
-  },
-  methods: {
-    // 处理私钥文件选择
-    handleKeystoreFileChange(file) {
-      this.keystoreFormData.file = file.raw; // 存储文件对象
+    name: "UploadSection",
+    data() {
+        return {
+            formData: {
+                email: "",
+                title: "",
+                description: "",
+                file: null, // 作品文件
+                privateKey: "", // 私钥（可以从本地存储中获取）
+            },
+        };
     },
-
-        // 提交私钥验证
-        async handleKeystoreSubmit() {
-            if (
-                !this.keystoreFormData.file ||
-                !this.keystoreFormData.email ||
-                !this.keystoreFormData.password
-            ) {
-                this.$message.error("请填写所有信息并上传私钥文件！");
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append("email", this.keystoreFormData.email);
-            formData.append("password", this.keystoreFormData.password);
-            formData.append("file", this.keystoreFormData.file);
-
-            try {
-                const response = await request.post(
-                    "/keystore/uploadKeystore",
-                    formData,
-                    {
-                        headers: { "Content-Type": "multipart/form-data" },
-                    }
-                );
-
-                if (response.data.code === 0) {
-                    this.isKeystoreVerified = true;
-                    this.formData.privateKey = response.data.privateKey; // 保存私钥信息
-                    this.$message.success("私钥验证成功！");
-                } else {
-                    this.$message.error(response.data.message || "验证失败！");
-                }
-            } catch (error) {
-                this.$message.error("私钥验证失败，请重试！");
-            }
-        },
-
+    methods: {
         // 处理文件选择
         handleFileChange(file) {
             this.formData.file = file.raw; // 存储作品文件对象
@@ -210,7 +124,7 @@ export default {
             formData.append("description", this.formData.description);
             formData.append("file", this.formData.file);
             formData.append("email", localStorage.getItem("email"));
-            formData.append("privateKey", this.formData.privateKey);
+            formData.append("privateKey", localStorage.getItem("privateKey"));
 
             try {
                 const response = await request.post("/work/registerWork", formData, {
@@ -231,12 +145,6 @@ export default {
 
         // 清理表单
         resetForm() {
-            // 清空验证表单
-            this.keystoreFormData = {
-                email: "",
-                password: "",
-                file: null,
-            };
             this.formData = {
                 email: "",
                 title: "",
@@ -244,7 +152,11 @@ export default {
                 file: null,
                 privateKey: "",
             };
-            this.isKeystoreVerified = false;
+
+            // 清空文件列表
+            if (this.$refs.upload) {
+                this.$refs.upload.clearFiles();
+            }
         },
     },
 };
@@ -259,81 +171,31 @@ export default {
 }
 
 .upload-banner {
-    margin-top: 300px;
-    background-color: #e9f3fd;
-    padding: 40px;
+    margin-top: 50px;
+    background-color: #edf2fa;
+    padding: 40px 20px;
     text-align: center;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .banner-content h2 {
-    color: #333;
-    font-size: 1.2rem;
-    font-weight: 600;
-}
-
-/* 标题样式，居中显示 */
-.form-section-title {
+    color: #4a90e2;
     font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-    text-align: center;
-    /* 标题居中 */
-}
-
-/* 表单内容居中 */
-.form-content {
-    max-width: 400px;
-    margin: 0 auto;
-    /* 表单居中 */
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    /* 控件之间的间距 */
-}
-
-/* 按钮容器 */
-.center-upload-and-button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* 按钮居中 */
-    justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-/* 上传区域样式 */
-.upload-area {
-    text-align: center;
-    width: 100%;
-}
-
-/* 统一按钮样式 */
-.uniform-button {
-    width: 100%;
-    max-width: 200px;
-    text-align: center;
-    /* 按钮文字居中 */
-    text-transform: uppercase;
-    /* 文本大写 */
-    font-weight: bold;
-    /* 加粗 */
-    border-radius: 8px;
-    /* 按钮圆角 */
-    padding: 10px;
-    /* 内边距 */
+    font-weight: 600;
+    margin-bottom: 10px;
 }
 
 .banner-content h1 {
-    color: #000;
+    color: #222;
     font-size: 2.5rem;
     font-weight: bold;
+    margin-bottom: 20px;
 }
 
 .banner-content p {
-    color: #666;
-    margin-top: 20px;
-    font-size: 1.1rem;
+    color: #555;
+    font-size: 1rem;
 }
 
 .upload-form-container {
@@ -342,47 +204,68 @@ export default {
     padding: 20px;
     background: #fff;
     border-radius: 10px;
-    box-shadow: 0px 0px 15px rgba(224, 26, 26, 0.1);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .upload-info {
     padding: 20px;
-    background-color: #fce5d8;
+    background-color: #f7f9fc;
     border-radius: 10px;
+    border: 1px solid #d9e5f3;
 }
 
 .info-item {
     margin-bottom: 20px;
     display: flex;
     align-items: center;
+    gap: 10px;
 }
 
 .info-item h3 {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: bold;
-    margin: 10px 0 0 10px;
+    margin: 0;
 }
 
 .info-item p {
     color: #666;
     font-size: 1rem;
-    margin-left: 40px;
 }
 
 .form-section {
     padding: 20px;
 }
 
-.form-section h2 {
+.form-section-title {
     font-weight: bold;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.form-description {
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #555;
 }
 
 .el-form-item {
     margin-bottom: 20px;
 }
 
-/* 居中上传图片框和按钮 */
+.form-input {
+    font-size: 1rem;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.form-textarea {
+    font-size: 1rem;
+    padding: 10px;
+    border-radius: 6px;
+}
+
 .center-upload-and-button {
     display: flex;
     flex-direction: column;
@@ -391,121 +274,24 @@ export default {
 }
 
 .upload-plus-icon {
+    font-size: 32px;
+    color: #999;
     display: flex;
-    align-items: center;
     justify-content: center;
-    font-size: 32px;
-    color: #999;
+    align-items: center;
 }
 
-.el-upload .el-icon {
-    font-size: 32px;
-    color: #999;
+.submit-button {
+    background-color: #4caf50;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
 }
 
-.el-button {
-    background-color: #06f129;
-    color: #fff;
-    text-align: center;
-}
-
-.el-button:hover {
-    background-color: #5375ef;
-}
-.main-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 50px;
-  position: fixed;
-  top: 0; /* 保证导航栏固定在页面顶端 */
-  left: 0;
-  width: 100vw; /* 宽度设置为视口宽度，确保铺满 */
-  background-color: rgba(255, 255, 255); /* 透明背景 */
-  z-index: 1000;
-  transition: background-color 0.3s ease-in-out;
-}
-
-.el-menu-demo {
-  background-color:rgba(255, 255, 255);
-  flex-grow: 1;
-  margin-left: 50px;
-}
-
-/* 导航项鼠标悬停效果 */
-.nav-item {
-  transition: transform 0.3s ease-in-out;
-}
-
-.nav-item:hover {
-  transform: scale(1.1); /* 鼠标悬停时放大 */
-}
-
-/* 导航栏按钮 */
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  background-color:rgba(255, 255, 255);
-}
-
-.language-switch {
-  font-weight: bold;
-  background-color:rgba(255, 255, 255);
-  color:dodgerblue;
-  
-}
-
-/* 透明主导航栏 */
-.main-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 50px;
-  position: fixed;
-  top: 0; /* 保证导航栏固定在页面顶端 */
-  left: 0;
-  width: 100vw; /* 宽度设置为视口宽度，确保铺满 */
-  background-color: rgba(255, 255, 255); /* 透明背景 */
-  z-index: 1000;
-  transition: background-color 0.3s ease-in-out;
-}
-
-.el-menu-demo {
-  background-color: rgba(255, 255, 255, 0.1);
-  flex-grow: 1;
-  margin-left: 50px;
-}
-
-/* 导航项鼠标悬停效果 */
-.nav-item {
-  transition: transform 0.3s ease-in-out;
-}
-
-.nav-item:hover {
-  transform: scale(1.1); /* 鼠标悬停时放大 */
-}
-
-/* 导航栏按钮 */
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.language-switch {
-  font-weight: bold;
-}
-
-.el-button.primary {
-  background-color: dodgerblue;
-  color: white;
-  border-radius: 5px;
-  padding: 10px 20px;
-  font-weight: bold;
-}
-
-.login-button{
-  background-color: dodgerblue;
+.submit-button:hover {
+    background-color: #43a047;
 }
 </style>

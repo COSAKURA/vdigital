@@ -119,12 +119,6 @@
   </div>
 
   <div class="home-view">
-    <!-- 页面内容 -->
-    <div class="content">
-      <h1>欢迎来到拍卖平台</h1>
-      <p>这里是首页内容。</p>
-    </div>
-
     <!-- 身份验证弹框 -->
     <el-dialog
       v-model="isPrivateKeyDialogVisible"
@@ -320,9 +314,13 @@ export default {
 
 <style scoped>
 
-.home-view {
-  padding: 50px;
-  text-align: center;
+body, html, #app {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden; /* 禁止水平滚动 */
+  box-sizing: border-box;
 }
 
 .upload-demo {
@@ -403,15 +401,14 @@ export default {
 }
 
 .header-content {
-  width: 1000%;
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 100%; /* 限制宽度 */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 10vw; /* 留出两边空白 */
+  padding: 0 5%; /* 留出两边空白 */
   box-sizing: border-box;
 }
+
 
 .register-link {
   font-size: 12px;
@@ -452,7 +449,7 @@ export default {
 /* 流程部分 */
 .process-flow {
   text-align: center;
-  padding: 100px;
+  padding: 80px;
 }
 
 .process-title {
@@ -491,7 +488,7 @@ export default {
 .services-panel {
   margin-top: 100px;
   background: #ffffff; /* 白色背景面板 */
-  padding: 50px;
+  padding: 100px;
   margin: 50px auto;
   max-width: 12000px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

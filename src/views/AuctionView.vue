@@ -51,7 +51,15 @@
           <!-- <img :src="work.imagePath" :alt="work.title" class="grid-image" /> -->
           <h3>{{ work.title }}</h3> <!-- 作品标题 -->
           <p class="work-description">{{ work.description }}</p> <!-- 作品描述 -->
-          <p class="work-id">区块哈希: {{ work.blockHash }}</p> <!-- 作品ID -->
+          <p 
+  class="work-id" 
+  :class="{ breakable: showFullHash }" 
+  @mouseover="showFullHash = true" 
+  @mouseleave="showFullHash = false"
+>
+  区块哈希: {{ work.blockHash }}
+</p>
+
         </div>
       </div>
     </section>
@@ -66,6 +74,7 @@ export default {
   data() {
     return {
       works: [],
+      showFullHash: false, // 控制哈希的换行与溢出
     };
   },
   methods: {
@@ -200,4 +209,41 @@ export default {
   font-size: 12px;
   color: #888;
 }
+
+/* 作品标题和描述溢出优化 */
+.grid-item h3,
+.work-description {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 10px;
+  text-overflow: ellipsis; /* 文本溢出时显示省略号 */
+  overflow: hidden;
+  white-space: nowrap; /* 禁止换行 */
+}
+
+/* 区块哈希溢出优化 */
+.work-id {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 10px;
+  text-overflow: ellipsis; /* 超出宽度时显示省略号 */
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%; /* 限制宽度为父容器宽度 */
+}
+
+/* 如果需要换行显示的情况下 */
+.work-id.breakable {
+  white-space: normal; /* 允许换行 */
+  word-wrap: break-word; /* 自动换行 */
+  word-break: break-all; /* 长单词强制断行 */
+  overflow-wrap: break-word; /* 支持非英文单词换行 */
+}
+
+/* 网格项溢出保护 */
+.grid-item {
+  max-width: 100%; /* 限制卡片宽度 */
+  box-sizing: border-box;
+}
+
 </style>
