@@ -155,7 +155,6 @@ export default {
       this.$message.success("拍品信息已成功上传！");
     },
 
-
     resetAuthForm() {
       this.authForm.code = "";
     },
@@ -178,7 +177,7 @@ export default {
         return;
       }
 
-      // 显示加载提示，使用 this.$loading 而不是 this.$message.loading
+      // 显示加载提示，使用 this.$loading
       const loadingInstance = this.$loading({
         lock: true,
         text: "正在申请版权...",

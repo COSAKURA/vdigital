@@ -75,8 +75,6 @@
         </template>
       </el-dialog>
 
-
-
       <!-- 新增：拍品价值性描述 -->
       <el-row class="value-description">
         <el-col :span="24">
