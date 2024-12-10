@@ -40,6 +40,7 @@ const router = createRouter({
       name: 'AuctionsView',
       component:AuctionsView,
     }
+    
 
     
 ]})

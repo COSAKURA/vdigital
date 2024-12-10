@@ -40,33 +40,20 @@
                             <el-row :gutter="20">
                                 <el-col :span="24">
                                     <el-form-item prop="title">
-                                        <el-input
-                                            v-model="formData.title"
-                                            placeholder="作品标题"
-                                            class="form-input"
-                                        ></el-input>
+                                        <el-input v-model="formData.title" placeholder="作品标题"
+                                            class="form-input"></el-input>
                                     </el-form-item>
                                 </el-col>
                             </el-row>
                             <el-form-item prop="description">
-                                <el-input
-                                    type="textarea"
-                                    v-model="formData.description"
-                                    placeholder="作品描述"
-                                    class="form-textarea"
-                                ></el-input>
+                                <el-input type="textarea" v-model="formData.description" placeholder="作品描述"
+                                    class="form-textarea"></el-input>
                             </el-form-item>
                             <!-- 上传图片和按钮 -->
                             <div class="center-upload-and-button">
                                 <!-- 文件上传 -->
-                                <el-upload
-                                    ref="upload"
-                                    list-type="picture-card"
-                                    :on-change="handleFileChange"
-                                    :on-remove="handleRemove"
-                                    :auto-upload="false"
-                                    :limit="1"
-                                >
+                                <el-upload ref="upload" list-type="picture-card" :on-change="handleFileChange"
+                                    :on-remove="handleRemove" :auto-upload="false" :limit="1">
                                     <div class="upload-plus-icon">
                                         <el-icon><i class="el-icon-plus"></i></el-icon>
                                     </div>

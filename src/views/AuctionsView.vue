@@ -39,14 +39,15 @@
       <el-row :gutter="20">
         <!-- 左侧：图片 -->
         <el-col :span="6" class="auction-item-left">
-          <el-image :src="auctionItem.image" alt="拍品图片" fit="contain" class="item-image" />
+          <el-image :src="`http://172.46.225.96:8888/uploads/${encodeURIComponent(auctions.imgUrl)}`" alt="拍品图片"
+            fit="contain" class="item-image" />
         </el-col>
         <!-- 右侧：拍品信息 -->
         <el-col :span="18" class="auction-item-right">
-          <h2 class="item-title">{{ auctionItem.title }}</h2>
-          <p><strong>距开始：</strong>{{ auctionItem.date }}</p>
-          <p><strong>起拍价：</strong> <span class="price">{{ auctionItem.price }}</span></p>
-          <p><strong>当前竞拍最高价：</strong> <span class="price">{{ auctionItem.highestBid || '暂无竞拍' }}</span></p>
+          <h2 class="item-title">{{ auctions.title }}</h2>
+          <p><strong>距结束：</strong><span class="countdown">{{ remainingTime }}</span></p>
+          <p><strong>起拍价：</strong> <span class="price">{{ auctions.startPrice }}</span></p>
+          <p><strong>当前竞拍最高价：</strong> <span class="price">{{ auctions.currentPrice || '暂无竞拍' }}</span></p>
 
           <div class="buttons">
             <el-input v-model="bidAmount" placeholder="输入竞拍金额" style="width: 150px; margin-right: 10px;" />
@@ -55,39 +56,19 @@
           <p v-if="bidError" class="error-message">{{ bidError }}</p>
         </el-col>
       </el-row>
-
-      <el-dialog v-model="isBidDialogVisible" title="身份验证" width="400px" @close="resetBidDialog">
-        <el-form :model="bidForm" ref="bidForm" label-width="100px">
-          <el-form-item label="用户名" :rules="[{ required: true, message: '请输入用户名', trigger: 'blur' }]">
-            <el-input v-model="bidForm.username" placeholder="请输入用户名"></el-input>
-          </el-form-item>
-          <el-form-item label="邮箱" :rules="[{ required: true, message: '请输入邮箱', trigger: 'blur' }]">
-            <el-input v-model="bidForm.password" type="password" placeholder="请输入邮箱"></el-input>
-          </el-form-item>
-          <el-form-item label="密码" :rules="[{ required: true, message: '请输入密码', trigger: 'blur' }]">
-            <el-input v-model="bidForm.verificationCode" placeholder="请输入密码"></el-input>
-          </el-form-item>
-        </el-form>
-
-        <template v-slot:footer>
-          <el-button @click="isBidDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="submitBidForm">确认</el-button>
-        </template>
-      </el-dialog>
-
       <!-- 新增：拍品价值性描述 -->
       <el-row class="value-description">
         <el-col :span="24">
           <h3>拍品价值性</h3>
-          <p>{{ auctionItem.valueDescription }}</p>
+          <p>{{ valueDescription }}</p>
         </el-col>
       </el-row>
 
       <!-- 下方：描述信息 -->
       <el-row class="auction-item-info">
         <el-col :span="24">
-          <h3>描述：</h3>
-          <p><strong></strong><span v-html="auctionItem.description"></span></p>
+          <h3>用户作品描述：</h3>
+          <p><strong></strong><span v-html="auctions.description"></span></p>
         </el-col>
       </el-row>
     </div>
@@ -95,8 +76,8 @@
 </template>
 
 <script>
-import axios from 'axios';
 import { ElButton, ElCol, ElRow, ElImage, ElDialog, ElForm, ElFormItem, ElInput } from 'element-plus';
+import request from '../utils/reques';
 
 export default {
   name: 'AuctionItemPage',
@@ -112,32 +93,54 @@ export default {
   },
   data() {
     return {
-      auctionItem: {
-        title: '拍品标题示例',
-        image: 'src/assets/images/resource/discuss.png',  // 随机图片URL
-        price: '',
+      workId: "", // 用于存储接收到的作品 ID
+      auctions: [], // 用于存储拍卖数据
 
-        date: '',
-        valueDescription: '此艺术品由著名艺术家创作，具有的关此艺术品由著名艺术家创作，具有极高的历史文化价值，长期以来一直是拍卖市场的热点。它不仅代表着艺术风格的转变，也是某个历史时期艺术流派的经典之作，因此其估价不断上涨，吸引着全球收藏家的关历史时期艺术流派的经典之作，因此其估价不断上涨，吸引着全球收藏家的关期以来一直是拍卖市场的热点。它不仅代表着艺术风格的转变，也是某个历史时期艺术流派的经典之作，因此其估价不断上涨，吸引着全球收藏家的关注。',
-        description: '这是一件非常期以来一直是拍卖市场的热点。它不仅代表着艺术风格的转变，也是某个历史时期艺术流派的经典之作，因此其估价不断上涨，吸引着全球收藏家的关此艺术品由著名艺术家创作，具有极高的历史文化价值，长期以来一直是拍卖市场的热点。它不仅代表着艺术风格的转变，也是某个历史时期艺术流派的经典之作，因此其估价不断上涨，吸引着全球收藏家的关此艺术品由著名艺术家创作，具有极高的历史文化价值，长期以来一直是拍卖市场的热点。它不仅代表着艺术风格的转变，也是某个历史时期艺术流派的经典之作，因此其估价不断上涨，吸引着全球收藏家的关历史时期艺术流派的经典之作，因此其估价不断上涨，吸引着全球收藏家的关',
-      },
-
+      valueDescription: '此艺术品由著名艺术家创作，具有的关此艺术品由著名艺术家创作，具有极高的历史文化价值，长期以来一直是拍卖市场的热点。它不仅代表着艺术风格的转变，也是某个历史时期艺术流派的经典之作，因此其估价不断上涨，吸引着全球收藏家的关历史时期艺术流派的经典之作，因此其估价不断上涨，吸引着全球收藏家的关期以来一直是拍卖市场的热点。它不仅代表着艺术风格的转变，也是某个历史时期艺术流派的经典之作，因此其估价不断上涨，吸引着全球收藏家的关注。',
       bidAmount: '',
+      remainingTime: "", // 存储倒计时剩余时间
+      countdownInterval: null, // 用于清除倒计时的定时器
       isBidDialogVisible: false, // 控制弹框显示
-      bidForm: {
-        username: '',
-        password: '',
-        verificationCode: ''
-      },
       bidError: '', // 竞拍价格错误提示
     };
   },
-  mounted() {
-    // 模拟拍品数据加载
-    // const auctionId = this.$route.params.id;  // 获取路由参数中的拍品ID
-    // this.fetchAuctionItem(auctionId);
+  created() {
+    // 在组件加载时接收参数并调用相关方法
+    this.workId = this.$route.query.id;
+    if (this.workId) {
+      this.fetchAuctionsByWorkId(this.workId);
+    } else {
+      console.error('未接收到作品 ID');
+    }
   },
+
   methods: {
+    // 计算倒计时
+  calculateRemainingTime(endTime) {
+    const now = new Date();
+    const end = new Date(endTime);
+    const diff = end - now; // 计算时间差（毫秒）
+
+    if (diff <= 0) {
+      this.remainingTime = "已结束";
+      clearInterval(this.countdownInterval); // 倒计时结束，清除定时器
+      return;
+    }
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    this.remainingTime = `${hours}小时 ${minutes}分钟 ${seconds}秒`;
+  },
+
+    // 开始倒计时
+  startCountdown(endTime) {
+    this.calculateRemainingTime(endTime); // 初始化计算
+    this.countdownInterval = setInterval(() => {
+      this.calculateRemainingTime(endTime);
+    }, 1000); // 每秒更新一次
+  },
     // 点击“参与竞拍”按钮时打开弹框
     openBidDialog() {
       // 检查竞拍金额是否大于当前最高竞拍价
@@ -149,19 +152,6 @@ export default {
       this.bidError = ''; // 清空错误提示
     },
 
-    // 提交竞拍身份验证表单
-    submitBidForm() {
-      this.$refs.bidForm.validate((valid) => {
-        if (valid) {
-          console.log('验证通过，参与竞拍！');
-          // 执行竞拍的逻辑，例如向服务器提交竞拍请求
-          this.isBidDialogVisible = false; // 关闭弹框
-        } else {
-          console.log('表单验证失败');
-          return false;
-        }
-      });
-    },
     // 重置弹框表单
     resetBidDialog() {
       this.bidForm = {
@@ -170,21 +160,29 @@ export default {
         verificationCode: ''
       };
     },
-    // 获取拍品数据
-    async fetchAuctionItem(id) {
+    async fetchAuctionsByWorkId(workId) {
       try {
-        const response = await axios.get(`https://example.com/api/auction/${id}`);
-        this.auctionItem = response.data;  // 获取拍品数据并存储
+        const response = await request.get('/auctions/getAuctionById', {
+          params: { workId }, // 将作品 ID 传递到后端
+        });
+        if (response.data.code === 0) {
+          this.auctions = response.data.auction; // 成功获取数据
+          // 开始倒计时
+        this.startCountdown(this.auctions.endTime);
+        } else {
+          console.error('获取拍卖数据失败:', response.data.msg);
+        }
       } catch (error) {
-        console.error('获取拍品数据失败：', error);
+        console.error('获取拍卖数据时发生错误:', error);
       }
     },
-
-    addToWishlist() {
-      console.log('加入收藏');
-      // 实现加入收藏的逻辑
+  },
+  beforeDestroy() {
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
     }
   }
+
 };
 </script>
 
@@ -351,4 +349,9 @@ export default {
   text-indent: 2em;
   /* 添加前空位 */
 }
+.countdown {
+  color: red;
+  font-weight: bold;
+}
+
 </style>

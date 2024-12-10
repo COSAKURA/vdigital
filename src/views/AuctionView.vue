@@ -80,7 +80,7 @@ export default {
   methods: {
     goToAuctionsView(work) {
       // 使用 router.push 跳转到 AuctionsView 页面，并传递作品 ID
-      this.$router.push({ path: '/AuctionsView', query: { id: work.blockHash } });
+      this.$router.push({ path: '/AuctionsView', query: { id: work.workId } });
     },
     // 获取所有拍卖数据的方法
     async fetchAuctions() {
