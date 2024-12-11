@@ -1,45 +1,7 @@
 <template>
   <div class="home-view">
 
-    <!-- 透明主导航栏 -->
-    <el-header class="main-header">
-   <!-- 图片放置在导航栏左侧 -->
-   <div class="logo-container">
-      <img src="@/assets/images/lll.png" alt="Logo" class="logo-image" />
-    </div>
-      <el-menu
-        mode="horizontal"
-        @select="handleMenuSelect"
-        class="el-menu-demo"
-      >
-        <el-menu-item index="home" class="nav-item">
-          <router-link to="/home">首页</router-link>
-        </el-menu-item>
-        <el-menu-item index="about" class="nav-item">
-          <router-link to="/about">关于我们</router-link>
-        </el-menu-item>
-        <el-menu-item index="services" class="nav-item">
-          <router-link to="/services">服务内容</router-link>
-        </el-menu-item>
-        <el-menu-item index="case-studio" class="nav-item">
-          <router-link to="/WorkView">我的作品</router-link>
-        </el-menu-item>
-        <el-menu-item index="blog" class="nav-item">
-          <router-link to="/blog">侵权监测</router-link>
-        </el-menu-item>
-        <el-menu-item index="contact" class="nav-item">
-          <router-link to="/AuctionView">拍卖市场</router-link>
-        </el-menu-item>
-      </el-menu>
-      <div class="header-actions">
-        <el-button type="text" class="language-switch">中文</el-button>
-        <el-button type="text" class="language-switch">English</el-button>
-        <el-button type="primary" icon="el-icon-user" @click="outlogin"
-          ><el-icon><HomeFilled /></el-icon>登出</el-button
-        >
-      </div>
-    </el-header>
-
+    <Navbar />
     <!-- 头部横幅部分 -->
     <section class="header-section">
       <el-row class="header-content" type="flex" align="middle">
@@ -47,20 +9,13 @@
           <div class="header-text">
             <h1>我们为您的原创内容提供全方位的版权保护。</h1>
             <p>数字版权认证与保护平台</p>
-            <el-button type="primary" @click="goToPage('get-started')"
-              >立即开始</el-button
-            >
-            <el-button type="success" @click="goToPage('solution')"
-              >解决方案</el-button
-            >
+            <el-button type="primary" @click="goToPage('get-started')">立即开始</el-button>
+            <el-button type="success" @click="goToPage('solution')">解决方案</el-button>
           </div>
         </el-col>
         <el-col :span="12">
           <div class="header-image">
-            <img
-              src="@/assets/images/main-slider/image-3.png"
-              alt="Header Image"
-            />
+            <img src="@/assets/images/main-slider/image-3.png" alt="Header Image" />
           </div>
         </el-col>
       </el-row>
@@ -72,19 +27,9 @@
       <h2 class="process-title">作品登记流程</h2>
 
       <!-- 流程步骤 -->
-      <el-steps
-        :active="activeStep"
-        align-center
-        class="steps-container"
-        finish-status="success"
-      >
-        <el-step
-          v-for="(step, index) in steps"
-          :key="index"
-          :title="step.title"
-          :description="step.description"
-          :icon="step.icon"
-        >
+      <el-steps :active="activeStep" align-center class="steps-container" finish-status="success">
+        <el-step v-for="(step, index) in steps" :key="index" :title="step.title" :description="step.description"
+          :icon="step.icon">
           <template #icon>
             <div class="step-number">{{ step.stepNumber }}</div>
           </template>
@@ -97,8 +42,8 @@
       </div>
     </div>
 
-     <!-- 行业现状与痛点 -->
-     <div class="industry-status">
+    <!-- 行业现状与痛点 -->
+    <div class="industry-status">
       <h2 class="section-title">行业现状与痛点</h2>
       <el-row :gutter="20" class="content-cards">
         <el-col v-for="(item, index) in painPoints" :key="index" :span="8">
@@ -123,15 +68,11 @@
         <el-row :gutter="20" class="services-content">
           <el-col v-for="(service, index) in services" :key="index" :span="8">
             <el-card class="service-card" shadow="hover">
-              <img
-                :src="service.image"
-                alt="Service Image"
-                class="service-image"
-              />
+              <img :src="service.image" alt="Service Image" class="service-image" />
               <h3>{{ service.title }}</h3>
               <p>{{ service.description }}</p>
-              
-              
+
+
             </el-card>
           </el-col>
         </el-row>
@@ -141,40 +82,19 @@
 
   <div class="home-view">
     <!-- 身份验证弹框 -->
-    <el-dialog
-      v-model="isPrivateKeyDialogVisible"
-      title="上传私钥文件进行身份验证"
-      width="400px"
-      :close-on-click-modal="false"
-    >
+    <el-dialog v-model="isPrivateKeyDialogVisible" title="上传私钥文件进行身份验证" width="400px" :close-on-click-modal="false">
       <el-form :model="privateKeyForm" ref="privateKeyForm" label-width="100px">
         <!-- 私钥文件上传 -->
-        <el-form-item
-          label="私钥文件"
-          :rules="[{ required: true, message: '请上传私钥文件', trigger: 'change' }]"
-        >
-          <el-upload
-            class="upload-demo"
-            drag
-            :on-change="handleFileChange"
-            :before-upload="() => false"
-            :auto-upload = "false"
-            limit="1"
-          >
+        <el-form-item label="私钥文件" :rules="[{ required: true, message: '请上传私钥文件', trigger: 'change' }]">
+          <el-upload class="upload-demo" drag :on-change="handleFileChange" :before-upload="() => false"
+            :auto-upload="false" limit="1">
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">拖拽文件到这里，或点击上传</div>
           </el-upload>
         </el-form-item>
         <!-- 密码输入 -->
-        <el-form-item
-          label="密码"
-          :rules="[{ required: true, message: '请输入密码', trigger: 'blur' }]"
-        >
-          <el-input
-            v-model="privateKeyForm.password"
-            type="password"
-            placeholder="请输入密码"
-          ></el-input>
+        <el-form-item label="密码" :rules="[{ required: true, message: '请输入密码', trigger: 'blur' }]">
+          <el-input v-model="privateKeyForm.password" type="password" placeholder="请输入密码"></el-input>
         </el-form-item>
       </el-form>
 
@@ -189,13 +109,15 @@
 
 <script>
 import request from '../utils/reques';
+import Navbar from "@/components/Navbar.vue";
+
 
 export default {
   name: "HomeView",
+  components: {
+    Navbar,
+  },
   data() {
-
-
-    
     return {
       isPrivateKeyDialogVisible: false, // 控制弹框显示
       privateKeyForm: {
@@ -291,8 +213,7 @@ export default {
       this.privateKeyForm.privateKeyFile = file.raw; // 获取原始文件数据
     },
 
-
-     // 提交私钥表单
+    // 提交私钥表单
     async submitPrivateKeyForm() {
       // 验证表单内容是否完整
       if (
@@ -315,7 +236,7 @@ export default {
           headers: { "Content-Type": "multipart/form-data" },
         });
 
-        if (response.data.code === 0 ) {
+        if (response.data.code === 0) {
           // 验证成功，将私钥存储到本地
           localStorage.setItem("privateKey", response.data.privateKey);
           localStorage.setItem("blockchainAddress", response.data.address); // 保存区块链地址
@@ -329,29 +250,6 @@ export default {
         this.$message.error("验证失败，请检查输入信息！");
       }
     },
-
-    outlogin() {
-      // 使用 Element Plus 的 MessageBox 来替代 window.confirm
-      this.$msgbox({
-        title: "确认退出",
-        message: "您确定要退出登录吗？",
-        showCancelButton: true, // 显示取消按钮
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning", // 弹框的样式
-      })
-        .then(() => {
-          // 点击确认时执行
-          localStorage.clear();
-          this.$router.push("/").catch((err) => {
-            console.error("Redirect failed:", err);
-          });
-        })
-        .catch(() => {
-          // 点击取消时执行的操作
-          console.log("取消退出");
-        });
-    },
     handleApply() {
       // 立即申请按钮的点击处理
       this.$router.push("/application"); // 假设 '/apply' 是申请页面的路径
@@ -361,7 +259,6 @@ export default {
 </script>
 
 <style scoped>
-
 .upload-demo {
   display: flex;
   justify-content: center;
@@ -376,13 +273,15 @@ export default {
 .el-dialog {
   width: 400px;
 }
+
 /* 灰色底板铺满页面 */
 .background-overlay {
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #f0f0f0; /* 灰色背景颜色 */
+  background-color: #f0f0f0;
+  /* 灰色背景颜色 */
   z-index: -1;
 }
 
@@ -398,10 +297,13 @@ export default {
   align-items: center;
   padding: 20px 50px;
   position: fixed;
-  top: 0; /* 保证导航栏固定在页面顶端 */
+  top: 0;
+  /* 保证导航栏固定在页面顶端 */
   left: 0;
-  width: 100vw; /* 宽度设置为视口宽度，确保铺满 */
-  background-color: rgba(255, 255, 255); /* 透明背景 */
+  width: 100vw;
+  /* 宽度设置为视口宽度，确保铺满 */
+  background-color: rgba(255, 255, 255);
+  /* 透明背景 */
   z-index: 1000;
   transition: background-color 0.3s ease-in-out;
 }
@@ -418,7 +320,8 @@ export default {
 }
 
 .nav-item:hover {
-  transform: scale(1.1); /* 鼠标悬停时放大 */
+  transform: scale(1.1);
+  /* 鼠标悬停时放大 */
 }
 
 /* 导航栏按钮 */
@@ -434,17 +337,22 @@ export default {
 
 /* 头部横幅部分 */
 .header-section {
-  background-color: #fce5d8; /* 顶部固定颜色 */
-  padding: 1550px 0 10px; /* 增加顶部填充以适应固定的导航栏 */
-  width: 100vw; /* 确保铺满整个页面宽度 */
+  background-color: #fce5d8;
+  /* 顶部固定颜色 */
+  padding: 1550px 0 10px;
+  /* 增加顶部填充以适应固定的导航栏 */
+  width: 100vw;
+  /* 确保铺满整个页面宽度 */
 }
 
 .header-content {
-  max-width: 100%; /* 限制宽度 */
+  max-width: 100%;
+  /* 限制宽度 */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 5%; /* 留出两边空白 */
+  padding: 0 5%;
+  /* 留出两边空白 */
   box-sizing: border-box;
 }
 
@@ -505,8 +413,10 @@ export default {
 }
 
 .step-number {
-  background-color: #006eff; /* 数字圆圈的背景颜色 */
-  color: #ffffff; /* 数字的字体颜色 */
+  background-color: #006eff;
+  /* 数字圆圈的背景颜色 */
+  color: #ffffff;
+  /* 数字的字体颜色 */
   width: 45px;
   height: 28px;
   border-radius: 50%;
@@ -527,7 +437,8 @@ export default {
 
 .services-panel {
   margin-top: 100px;
-  background: #ffffff; /* 白色背景面板 */
+  background: #ffffff;
+  /* 白色背景面板 */
   padding: 100px;
   margin: 50px auto;
   max-width: 12000px;
@@ -560,10 +471,11 @@ export default {
 
 .industry-status {
   margin-top: 100px;
-  background: #f0f0f0; /* 灰色背景面板 */
+  background: #f0f0f0;
+  /* 灰色背景面板 */
   padding: 100px;
   margin: 50px auto;
-  max-width: 12000px; 
+  max-width: 12000px;
 }
 
 .section-title {
@@ -676,12 +588,13 @@ export default {
   margin-left: auto;
   margin-right: auto;
 }
-.logo-container{
+
+.logo-container {
   margin-right: -80px;
   width: 10%;
 }
 
-.logo-image{
+.logo-image {
   width: 80%;
 }
 </style>

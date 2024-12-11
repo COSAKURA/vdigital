@@ -1,41 +1,6 @@
 <template>
   <div class="home-view">
-    <!-- 透明主导航栏 -->
-    <el-header class="main-header">
-
-      <!-- 图片放置在导航栏左侧 -->
-      <div class="logo-container">
-        <img src="@/assets/images/lll.png" alt="Logo" class="logo-image" />
-      </div>
-      <el-menu mode="horizontal" class="el-menu-demo">
-        <el-menu-item index="home" class="nav-item">
-          <router-link to="/home">首页</router-link>
-        </el-menu-item>
-        <el-menu-item index="about" class="nav-item">
-          <router-link to="/about">关于我们</router-link>
-        </el-menu-item>
-        <el-menu-item index="services" class="nav-item">
-          <router-link to="/services">服务内容</router-link>
-        </el-menu-item>
-        <el-menu-item index="case-studio" class="nav-item">
-          <router-link to="/WorkView">我的作品</router-link>
-        </el-menu-item>
-        <el-menu-item index="blog" class="nav-item">
-          <router-link to="/blog">侵权监测</router-link>
-        </el-menu-item>
-        <el-menu-item index="contact" class="nav-item">
-          <router-link to="/AuctionView">拍卖市场</router-link>
-        </el-menu-item>
-      </el-menu>
-      <div class="header-actions">
-        <el-button type="text" class="language-switch">中文</el-button>
-        <el-button type="text" class="language-switch">English</el-button>
-        <el-button type="primary" icon="el-icon-user" @click="goToPage('login')"><el-icon>
-            <HomeFilled />
-          </el-icon>登出</el-button>
-      </div>
-    </el-header>
-
+    <Navbar />
     <!-- 拍品推荐部分 -->
     <section class="auction-recommendation">
       <h2 class="section-title">拍品推荐</h2>
@@ -61,9 +26,13 @@
 
 <script>
 import request from '../utils/reques';
+import Navbar from "@/components/Navbar.vue";
 
 export default {
   name: "HomeView",
+  components: {
+    Navbar,
+  },
   data() {
     return {
       works: [],

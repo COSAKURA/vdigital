@@ -1,49 +1,56 @@
-import { createRouter, createWebHistory } from 'vue-router'
-// import HomeView from '../views/HomeView.vue'
-import LoginView from '@/views/LoginView.vue'
-import RegisterView from '../views/RegisterView.vue'
-import HomeView from '../views/HomeView.vue'
-import application from '../views/application.vue'
-import WorkView from '../views/WorkView.vue'
-import AuctionView from '../views/AuctionView.vue'
-import AuctionsView from '../views/AuctionsView.vue'
+import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    // 重定向根路径到登录页面
     {
       path: '/',
+      redirect: '/login',
+    },
+    // 登录页面
+    {
+      path: '/login',
       name: 'LoginView',
-      component: LoginView,
+      component: () => import('@/views/LoginView.vue'), // 动态加载
     },
-    { path: '/register',
+    // 注册页面
+    {
+      path: '/register',
       name: 'RegisterView',
-      component:RegisterView,
+      component: () => import('@/views/RegisterView.vue'), // 动态加载
     },
-    { path: '/home',
+    // 首页
+    {
+      path: '/home',
       name: 'HomeView',
-      component:HomeView,
+      component: () => import('@/views/HomeView.vue'), // 动态加载
     },
-    { path: '/application',
-      name: 'application',
-      component:application,
+    // 申请页面
+    {
+      path: '/application',
+      name: 'ApplicationView',
+      component: () => import('@/views/application.vue'), // 动态加载
     },
-    { path: '/WorkView',
+    // 作品页面
+    {
+      path: '/workview',
       name: 'WorkView',
-      component:WorkView,
+      component: () => import('@/views/WorkView.vue'), // 动态加载
     },
-    { path: '/AuctionView',
+    // 拍卖市场页面
+    {
+      path: '/auctionview',
       name: 'AuctionView',
-      component:AuctionView,
+      component: () => import('@/views/AuctionView.vue'), // 动态加载
     },
-    { path: '/AuctionsView',
+    // 拍品详情页面
+    {
+      path: '/auctionsview',
       name: 'AuctionsView',
-      component:AuctionsView,
-    }
-    
+      component: () => import('@/views/AuctionsView.vue'), // 动态加载
+    },
+  ],
+});
 
-    
-]})
-
-
-export default router
+export default router;

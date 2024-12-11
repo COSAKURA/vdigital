@@ -2,44 +2,7 @@
   <div class="home-view">
     <!-- 灰色底板 -->
     <div class="background-overlay"></div>
-
-    <!-- 透明主导航栏 -->
-    <el-header class="main-header">
-
-      <!-- 图片放置在导航栏左侧 -->
-   <div class="logo-container">
-      <img src="@/assets/images/lll.png" alt="Logo" class="logo-image" />
-    </div>
-    
-      <el-menu mode="horizontal" @select="handleMenuSelect" class="el-menu-demo">
-        <el-menu-item index="home" class="nav-item">
-          <router-link to="/home">首页</router-link>
-        </el-menu-item>
-        <el-menu-item index="about" class="nav-item">
-          <router-link to="/about">关于我们</router-link>
-        </el-menu-item>
-        <el-menu-item index="services" class="nav-item">
-          <router-link to="/services">服务内容</router-link>
-        </el-menu-item>
-        <el-menu-item index="case-studio" class="nav-item">
-          <router-link to="/WorkView">我的作品</router-link>
-        </el-menu-item>
-        <el-menu-item index="blog" class="nav-item">
-          <router-link to="/blog">侵权监测</router-link>
-        </el-menu-item>
-        <el-menu-item index="contact" class="nav-item">
-          <router-link to="/AuctionView">拍卖市场</router-link>
-        </el-menu-item>
-      </el-menu>
-      <div class="header-actions">
-        <el-button type="text" class="language-switch">中文</el-button>
-        <el-button type="text" class="language-switch">English</el-button>
-        <el-button type="primary" icon="el-icon-user" @click="goToPage('login')"><el-icon>
-            <HomeFilled />
-          </el-icon>登出</el-button>
-      </div>
-    </el-header>
-
+    <Navbar />
     <!-- 拍品内容部分 -->
     <div class="auction-item-container">
       <el-row :gutter="20">
@@ -56,21 +19,13 @@
           <p><strong>当前竞拍最高价：</strong> <span class="price">{{ auctions.currentPrice || '暂无竞拍' }}</span></p>
 
           <div class="buttons">
-  <el-input
-    v-model="bidAmount"
-    placeholder="输入竞拍金额"
-    style="width: 150px; margin-right: 10px;"
-    :disabled="isAuctionEnded"
-  />
-  <el-button
-    type="primary"
-    @click="openBidDialog"
-    :disabled="isAuctionEnded"
-  >
-    参与竞拍
-  </el-button>
-</div>
-<p v-if="isAuctionEnded" class="error-message">拍卖已结束，无法竞拍。</p>
+            <el-input v-model="bidAmount" placeholder="输入竞拍金额" style="width: 150px; margin-right: 10px;"
+              :disabled="isAuctionEnded" />
+            <el-button type="primary" @click="openBidDialog" :disabled="isAuctionEnded">
+              参与竞拍
+            </el-button>
+          </div>
+          <p v-if="isAuctionEnded" class="error-message">拍卖已结束，无法竞拍。</p>
 
           <p v-if="bidError" class="error-message">{{ bidError }}</p>
         </el-col>
@@ -97,10 +52,12 @@
 <script>
 import { ElButton, ElCol, ElRow, ElImage, ElDialog, ElForm, ElFormItem, ElInput } from 'element-plus';
 import request from '../utils/reques';
+import Navbar from "@/components/Navbar.vue";
 
 export default {
   name: 'AuctionItemPage',
   components: {
+    Navbar,
     ElButton,
     ElCol,
     ElRow,
@@ -136,82 +93,82 @@ export default {
 
   methods: {
     // 计算倒计时
-  calculateRemainingTime(endTime) {
-    const now = new Date();
-    const end = new Date(endTime);
-    const diff = end - now; // 计算时间差（毫秒）
+    calculateRemainingTime(endTime) {
+      const now = new Date();
+      const end = new Date(endTime);
+      const diff = end - now; // 计算时间差（毫秒）
 
-    if (diff <= 0) {
-      this.remainingTime = "已结束";
-      this.isAuctionEnded = true; // 标记拍卖已结束
-      clearInterval(this.countdownInterval); // 倒计时结束，清除定时器
-      return;
-    }
+      if (diff <= 0) {
+        this.remainingTime = "已结束";
+        this.isAuctionEnded = true; // 标记拍卖已结束
+        clearInterval(this.countdownInterval); // 倒计时结束，清除定时器
+        return;
+      }
 
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-    this.remainingTime = `${hours}小时 ${minutes}分钟 ${seconds}秒`;
-    this.isAuctionEnded = false; // 拍卖进行中
-  },
+      this.remainingTime = `${hours}小时 ${minutes}分钟 ${seconds}秒`;
+      this.isAuctionEnded = false; // 拍卖进行中
+    },
 
     // 开始倒计时
-  startCountdown(endTime) {
-    this.calculateRemainingTime(endTime); // 初始化计算
-    this.countdownInterval = setInterval(() => {
-      this.calculateRemainingTime(endTime);
-    }, 1000); // 每秒更新一次
-  },
- // 点击“参与竞拍”按钮时打开弹框
- openBidDialog() {
-  if (!this.auctions || !this.auctions.startPrice) {
-    this.bidError = "拍卖数据加载错误，请稍后重试！";
-    console.error("拍卖数据未正确加载:", this.auctions);
-    return;
-  }
-
-  const highestBid = this.auctions.currentPrice || this.auctions.startPrice;
-
-  // 检查竞拍金额是否大于当前最高竞拍价
-  if (!this.bidAmount || this.bidAmount <= highestBid) {
-    this.bidError = `竞拍金额必须高于当前最高价 ${highestBid}`;
-    return;
-  }
-
-  this.bidError = ''; // 清空错误提示
-  this.submitBid(); // 提交竞拍
-},
-
-
- // 提交竞拍
-async submitBid() {
-  try {
-    const response = await request.post(
-      '/auctions/placeBid', 
-      null, // POST 请求体为空时可以传递 null
-      {
-        params: {
-          auctionId: this.auctions.auctionId,
-          bidAmount: this.bidAmount,
-          email: localStorage.getItem("email"),
-          privateKey: localStorage.getItem("privateKey"),
-        },
+    startCountdown(endTime) {
+      this.calculateRemainingTime(endTime); // 初始化计算
+      this.countdownInterval = setInterval(() => {
+        this.calculateRemainingTime(endTime);
+      }, 1000); // 每秒更新一次
+    },
+    // 点击“参与竞拍”按钮时打开弹框
+    openBidDialog() {
+      if (!this.auctions || !this.auctions.startPrice) {
+        this.bidError = "拍卖数据加载错误，请稍后重试！";
+        console.error("拍卖数据未正确加载:", this.auctions);
+        return;
       }
-    );
 
-    if (response.data.code === 0) {
-      this.$message.success("竞拍成功！");
-      this.bidAmount = ''; // 清空竞拍金额
-      this.fetchAuctionsByWorkId(this.workId); // 更新拍卖数据
-    } else {
-      this.$message.error(response.data.msg || "竞拍失败！");
-    }
-  } catch (error) {
-    console.error("提交竞拍时发生错误:", error);
-    this.$message.error("竞拍失败，请稍后再试！");
-  }
-},
+      const highestBid = this.auctions.currentPrice || this.auctions.startPrice;
+
+      // 检查竞拍金额是否大于当前最高竞拍价
+      if (!this.bidAmount || this.bidAmount <= highestBid) {
+        this.bidError = `竞拍金额必须高于当前最高价 ${highestBid}`;
+        return;
+      }
+
+      this.bidError = ''; // 清空错误提示
+      this.submitBid(); // 提交竞拍
+    },
+
+
+    // 提交竞拍
+    async submitBid() {
+      try {
+        const response = await request.post(
+          '/auctions/placeBid',
+          null, // POST 请求体为空时可以传递 null
+          {
+            params: {
+              auctionId: this.auctions.auctionId,
+              bidAmount: this.bidAmount,
+              email: localStorage.getItem("email"),
+              privateKey: localStorage.getItem("privateKey"),
+            },
+          }
+        );
+
+        if (response.data.code === 0) {
+          this.$message.success("竞拍成功！");
+          this.bidAmount = ''; // 清空竞拍金额
+          this.fetchAuctionsByWorkId(this.workId); // 更新拍卖数据
+        } else {
+          this.$message.error(response.data.msg || "竞拍失败！");
+        }
+      } catch (error) {
+        console.error("提交竞拍时发生错误:", error);
+        this.$message.error("竞拍失败，请稍后再试！");
+      }
+    },
 
 
     // 重置弹框表单
@@ -230,7 +187,7 @@ async submitBid() {
         if (response.data.code === 0) {
           this.auctions = response.data.auction; // 成功获取数据
           // 开始倒计时
-        this.startCountdown(this.auctions.endTime);
+          this.startCountdown(this.auctions.endTime);
         } else {
           console.error('获取拍卖数据失败:', response.data.msg);
         }
@@ -250,21 +207,28 @@ async submitBid() {
 
 
 <style scoped>
-html, body {
-  overflow-x: hidden; /* 禁止页面水平滚动 */
+html,
+body {
+  overflow-x: hidden;
+  /* 禁止页面水平滚动 */
   width: 100%;
   margin: 0;
   padding: 0;
 }
 
-.main-header, .auction-item-container {
-  max-width: 100%; /* 确保内容不会超出屏幕 */
-  overflow-x: hidden; /* 禁止容器水平滚动 */
+.main-header,
+.auction-item-container {
+  max-width: 100%;
+  /* 确保内容不会超出屏幕 */
+  overflow-x: hidden;
+  /* 禁止容器水平滚动 */
 }
 
 .item-image {
-  left: 50%; /* 居中图片 */
-  transform: translateX(-50%); /* 防止图片超出页面边界 */
+  left: 50%;
+  /* 居中图片 */
+  transform: translateX(-50%);
+  /* 防止图片超出页面边界 */
 }
 
 /* 整体布局样式 */
@@ -428,18 +392,19 @@ html, body {
   text-indent: 2em;
   /* 添加前空位 */
 }
+
 .countdown {
   color: red;
   font-weight: bold;
 }
 
 
-.logo-container{
+.logo-container {
   margin-right: -80px;
   width: 10%;
 }
 
-.logo-image{
+.logo-image {
   width: 80%;
 }
 </style>
