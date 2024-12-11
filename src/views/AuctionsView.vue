@@ -56,9 +56,22 @@
           <p><strong>当前竞拍最高价：</strong> <span class="price">{{ auctions.currentPrice || '暂无竞拍' }}</span></p>
 
           <div class="buttons">
-            <el-input v-model="bidAmount" placeholder="输入竞拍金额" style="width: 150px; margin-right: 10px;" />
-            <el-button type="primary" @click="openBidDialog">参与竞拍</el-button>
-          </div>
+  <el-input
+    v-model="bidAmount"
+    placeholder="输入竞拍金额"
+    style="width: 150px; margin-right: 10px;"
+    :disabled="isAuctionEnded"
+  />
+  <el-button
+    type="primary"
+    @click="openBidDialog"
+    :disabled="isAuctionEnded"
+  >
+    参与竞拍
+  </el-button>
+</div>
+<p v-if="isAuctionEnded" class="error-message">拍卖已结束，无法竞拍。</p>
+
           <p v-if="bidError" class="error-message">{{ bidError }}</p>
         </el-col>
       </el-row>
@@ -108,6 +121,7 @@ export default {
       countdownInterval: null, // 用于清除倒计时的定时器
       isBidDialogVisible: false, // 控制弹框显示
       bidError: '', // 竞拍价格错误提示
+      isAuctionEnded: false, // 表示拍卖是否结束
     };
   },
   created() {
@@ -129,6 +143,7 @@ export default {
 
     if (diff <= 0) {
       this.remainingTime = "已结束";
+      this.isAuctionEnded = true; // 标记拍卖已结束
       clearInterval(this.countdownInterval); // 倒计时结束，清除定时器
       return;
     }
@@ -138,6 +153,7 @@ export default {
     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
     this.remainingTime = `${hours}小时 ${minutes}分钟 ${seconds}秒`;
+    this.isAuctionEnded = false; // 拍卖进行中
   },
 
     // 开始倒计时
@@ -147,16 +163,56 @@ export default {
       this.calculateRemainingTime(endTime);
     }, 1000); // 每秒更新一次
   },
-    // 点击“参与竞拍”按钮时打开弹框
-    openBidDialog() {
-      // 检查竞拍金额是否大于当前最高竞拍价
-      if (this.bidAmount < this.auctionItem.highestBid) {
-        this.bidError = `竞拍金额低于当前最高价 ${this.auctionItem.highestBid}`;
-        return;
+ // 点击“参与竞拍”按钮时打开弹框
+ openBidDialog() {
+  if (!this.auctions || !this.auctions.startPrice) {
+    this.bidError = "拍卖数据加载错误，请稍后重试！";
+    console.error("拍卖数据未正确加载:", this.auctions);
+    return;
+  }
+
+  const highestBid = this.auctions.currentPrice || this.auctions.startPrice;
+
+  // 检查竞拍金额是否大于当前最高竞拍价
+  if (!this.bidAmount || this.bidAmount <= highestBid) {
+    this.bidError = `竞拍金额必须高于当前最高价 ${highestBid}`;
+    return;
+  }
+
+  this.bidError = ''; // 清空错误提示
+  this.submitBid(); // 提交竞拍
+},
+
+
+ // 提交竞拍
+async submitBid() {
+  try {
+    const response = await request.post(
+      '/auctions/placeBid', 
+      null, // POST 请求体为空时可以传递 null
+      {
+        params: {
+          auctionId: this.auctions.auctionId,
+          bidAmount: this.bidAmount,
+          email: localStorage.getItem("email"),
+          privateKey: localStorage.getItem("privateKey"),
+        },
       }
-      this.isBidDialogVisible = true;
-      this.bidError = ''; // 清空错误提示
-    },
+    );
+
+    if (response.data.code === 0) {
+      this.$message.success("竞拍成功！");
+      this.bidAmount = ''; // 清空竞拍金额
+      this.fetchAuctionsByWorkId(this.workId); // 更新拍卖数据
+    } else {
+      this.$message.error(response.data.msg || "竞拍失败！");
+    }
+  } catch (error) {
+    console.error("提交竞拍时发生错误:", error);
+    this.$message.error("竞拍失败，请稍后再试！");
+  }
+},
+
 
     // 重置弹框表单
     resetBidDialog() {
@@ -194,6 +250,23 @@ export default {
 
 
 <style scoped>
+html, body {
+  overflow-x: hidden; /* 禁止页面水平滚动 */
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.main-header, .auction-item-container {
+  max-width: 100%; /* 确保内容不会超出屏幕 */
+  overflow-x: hidden; /* 禁止容器水平滚动 */
+}
+
+.item-image {
+  left: 50%; /* 居中图片 */
+  transform: translateX(-50%); /* 防止图片超出页面边界 */
+}
+
 /* 整体布局样式 */
 .home-view {
   font-family: 'Lato', sans-serif;

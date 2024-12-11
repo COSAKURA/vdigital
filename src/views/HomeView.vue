@@ -362,15 +362,6 @@ export default {
 
 <style scoped>
 
-body, html, #app {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden; /* 禁止水平滚动 */
-  box-sizing: border-box;
-}
-
 .upload-demo {
   display: flex;
   justify-content: center;

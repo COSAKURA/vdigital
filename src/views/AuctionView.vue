@@ -3,10 +3,10 @@
     <!-- 透明主导航栏 -->
     <el-header class="main-header">
 
-           <!-- 图片放置在导航栏左侧 -->
-   <div class="logo-container">
-      <img src="@/assets/images/lll.png" alt="Logo" class="logo-image" />
-    </div>
+      <!-- 图片放置在导航栏左侧 -->
+      <div class="logo-container">
+        <img src="@/assets/images/lll.png" alt="Logo" class="logo-image" />
+      </div>
       <el-menu mode="horizontal" class="el-menu-demo">
         <el-menu-item index="home" class="nav-item">
           <router-link to="/home">首页</router-link>
@@ -30,7 +30,9 @@
       <div class="header-actions">
         <el-button type="text" class="language-switch">中文</el-button>
         <el-button type="text" class="language-switch">English</el-button>
-        <el-button type="primary" icon="el-icon-user" @click="goToPage('login')"><el-icon><HomeFilled /></el-icon>登出</el-button>
+        <el-button type="primary" icon="el-icon-user" @click="goToPage('login')"><el-icon>
+            <HomeFilled />
+          </el-icon>登出</el-button>
       </div>
     </el-header>
 
@@ -39,31 +41,17 @@
       <h2 class="section-title">拍品推荐</h2>
       <!-- 网格布局 -->
       <div class="grid">
-        <div
-          class="grid-item"
-          v-for="(work, index) in works"
-          :key="index"
-          @click="goToAuctionsView(work)"
-        >
-        <img
-            :src="
-              'http://172.46.225.96:8888/uploads/' +
-              encodeURIComponent(work.imagePath)
-            "
-            :alt="work.title"
-            class="grid-image"
-          />
+        <div class="grid-item" v-for="(work, index) in works" :key="index" @click="goToAuctionsView(work)">
+          <img :src="'http://172.46.225.96:8888/uploads/' +
+            encodeURIComponent(work.imagePath)
+            " :alt="work.title" class="grid-image" />
           <!-- <img :src="work.imagePath" :alt="work.title" class="grid-image" /> -->
           <h3>{{ work.title }}</h3> <!-- 作品标题 -->
           <p class="work-description">{{ work.description }}</p> <!-- 作品描述 -->
-          <p 
-  class="work-id" 
-  :class="{ breakable: showFullHash }" 
-  @mouseover="showFullHash = true" 
-  @mouseleave="showFullHash = false"
->
-  区块哈希: {{ work.blockHash }}
-</p>
+          <p class="work-id" :class="{ breakable: showFullHash }" @mouseover="showFullHash = true"
+            @mouseleave="showFullHash = false">
+            区块哈希: {{ work.blockHash }}
+          </p>
 
         </div>
       </div>
@@ -116,7 +104,8 @@ export default {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding-top: 80px; /* 需要确保内容不会被导航栏遮挡 */
+  padding-top: 80px;
+  /* 需要确保内容不会被导航栏遮挡 */
 }
 
 /* 透明主导航栏 */
@@ -160,7 +149,8 @@ export default {
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  margin-top: 120px; /* 确保拍品推荐部分不会被导航栏遮挡 */
+  margin-top: 120px;
+  /* 确保拍品推荐部分不会被导航栏遮挡 */
 }
 
 .section-title {
@@ -221,9 +211,11 @@ export default {
   font-size: 14px;
   color: #333;
   margin-bottom: 10px;
-  text-overflow: ellipsis; /* 文本溢出时显示省略号 */
+  text-overflow: ellipsis;
+  /* 文本溢出时显示省略号 */
   overflow: hidden;
-  white-space: nowrap; /* 禁止换行 */
+  white-space: nowrap;
+  /* 禁止换行 */
 }
 
 /* 区块哈希溢出优化 */
@@ -231,33 +223,68 @@ export default {
   font-size: 12px;
   color: #888;
   margin-bottom: 10px;
-  text-overflow: ellipsis; /* 超出宽度时显示省略号 */
+  text-overflow: ellipsis;
+  /* 超出宽度时显示省略号 */
   overflow: hidden;
   white-space: nowrap;
-  width: 100%; /* 限制宽度为父容器宽度 */
+  width: 100%;
+  /* 限制宽度为父容器宽度 */
 }
 
 /* 如果需要换行显示的情况下 */
 .work-id.breakable {
-  white-space: normal; /* 允许换行 */
-  word-wrap: break-word; /* 自动换行 */
-  word-break: break-all; /* 长单词强制断行 */
-  overflow-wrap: break-word; /* 支持非英文单词换行 */
+  white-space: normal;
+  /* 允许换行 */
+  word-wrap: break-word;
+  /* 自动换行 */
+  word-break: break-all;
+  /* 长单词强制断行 */
+  overflow-wrap: break-word;
+  /* 支持非英文单词换行 */
 }
 
 /* 网格项溢出保护 */
 .grid-item {
-  max-width: 100%; /* 限制卡片宽度 */
+  max-width: 100%;
+  /* 限制卡片宽度 */
   box-sizing: border-box;
 }
 
 
-.logo-container{
+.logo-container {
   margin-right: -80px;
   width: 10%;
 }
 
-.logo-image{
+.logo-image {
   width: 80%;
 }
+.grid-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* 保证顶部内容正常排列 */
+  align-items: center;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.grid-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: auto; /* 推动文本部分到卡片底部 */
+}
+
+.grid-item h3,
+.work-description,
+.work-id {
+  margin-top: auto; /* 保证这些元素固定在卡片底部 */
+}
+
 </style>
