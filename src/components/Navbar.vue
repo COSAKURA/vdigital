@@ -11,9 +11,6 @@
             <el-menu-item index="about" class="nav-item">
                 <router-link to="/about">关于我们</router-link>
             </el-menu-item>
-            <el-menu-item index="services" class="nav-item">
-                <router-link to="/services">服务内容</router-link>
-            </el-menu-item>
             <el-menu-item index="case-studio" class="nav-item">
                 <router-link to="/WorkView">我的作品</router-link>
             </el-menu-item>
