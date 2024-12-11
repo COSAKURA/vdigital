@@ -50,6 +50,12 @@ const router = createRouter({
       name: 'AuctionsView',
       component: () => import('@/views/AuctionsView.vue'), // 动态加载
     },
+    // 用户详情页面
+    {
+      path: '/userInfoView',
+      name: 'UserInfoView',
+      component: () => import('@/views/UserInfoView.vue'), // 动态加载
+    },
   ],
 });
 

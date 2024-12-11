@@ -21,23 +21,48 @@
                 <router-link to="/AuctionView">拍卖市场</router-link>
             </el-menu-item>
         </el-menu>
-        <div class="header-actions">
-            <el-button type="text" class="language-switch">中文</el-button>
-            <el-button type="text" class="language-switch">English</el-button>
-            <el-button type="primary" icon="el-icon-user" @click="outlogin">
-                <el-icon>
-                    <HomeFilled />
-                </el-icon>
-                登出
-            </el-button>
 
-        </div>
+
+              <!-- 用户头像及信息弹框 -->
+              <el-popover placement="bottom" width="200" trigger="hover">
+          <template #reference>
+            <div class="avatar-container">
+                <router-link to="/userInfoView"><el-avatar :size="50" :src="circleUrl" class="touxiang" /></router-link>
+            </div>
+          </template>
+          <div class="user-info">
+            <p><strong>用户名：</strong>{{ userName }}</p>
+            <p><strong>状态：</strong>{{ userStatus }}</p>
+            <el-button type="danger" size="small" @click="outlogin">👉退出登录</el-button>
+          </div>
+
+        </el-popover>
     </el-header>
 </template>
 
 <script>
+import { reactive, toRefs } from 'vue'
+import request from '../utils/reques';
+
 export default {
     name: "Navbar",
+    setup() {
+    const state = reactive({
+      circleUrl: 'src/assets/images/resource/service-2.png',
+      userName: localStorage.getItem('userName') || '未知用户',
+      userStatus: '正常',
+      activeStep: 4,
+    });
+
+    const outlogin = () => {
+      localStorage.clear();
+      window.location.href = '/login';
+    };
+
+    return { ...toRefs(state), outlogin };
+  },
+
+    
     methods: {
         goToPage(page) {
             this.$router.push({ path: `/${page}` });
@@ -94,11 +119,7 @@ export default {
     transition: transform 0.3s ease-in-out;
 }
 
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
+
 
 .language-switch {
     font-weight: bold;
@@ -111,5 +132,48 @@ export default {
 
 .logo-image {
     width: 80%;
+}
+
+/* 信息框样式 */
+.user-info {
+    text-align: center;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.8;
+}
+
+.user-info p {
+  margin: 5px 0;
+}
+
+.avatar-container {
+  display: inline-block;
+  transition: transform 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.avatar-container:hover {
+  transform: scale(1.2); /* 鼠标悬停时放大 */
+}
+
+.touxiang {
+    margin-top: 5px;
+  border: 2px solid #409eff;
+  border-radius: 50%;
+}
+
+.upload-demo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px dashed #d9d9d9;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+  padding: 20px;
+  cursor: pointer;
+}
+
+.el-dialog {
+  width: 400px;
 }
 </style>
