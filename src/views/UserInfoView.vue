@@ -14,16 +14,17 @@
       <!-- 右侧部分 -->
       <el-main class="card-container">
         <el-card class="user-info">
-          <h4>个人信息</h4>
+          
+          <h4 class="user">个人信息</h4>
           <el-divider />
-          <p><strong>姓名：</strong> {{ user.name }}</p>
-          <p><strong>邮箱：</strong> {{ user.email }}</p>
-          <p><strong>手机号：</strong> {{ user.phone }}</p>
-          <p><strong>公司：</strong> {{ user.company }}</p>
-          <p><strong>职位：</strong> {{ user.title }}</p>
-    
+          <div  class="userinfo">
+          <p><strong>用户名：</strong> {{ user.name }}</p>
+          <p><strong>邮箱号：</strong> {{ user.email }}</p>
+          <p><strong>区块链账号：</strong> {{ user.phone }}</p>
+          <p><strong>状态：</strong> {{ user.title }}</p>
+        </div>
           <el-divider />
-          <el-button type="success" @click="showDialog">注册区块链</el-button>
+          <el-button class="button" type="success" @click="showDialog">注册区块链</el-button>
         </el-card>
       </el-main>
     
@@ -65,7 +66,7 @@
         name: "张三",
         email: "zhangsan@example.com",
         phone: "1008610086",
-        company: "上海无距", 
+        
         title: "经理",
       });
   
@@ -150,12 +151,26 @@
   
   .card-container {
     margin-top: 250px;
-    margin-left: 200px;
+    margin-left: 120px;
   }
   
   .user-info p {
-    margin: 25px 0;
+    
+    margin: 32px 0;
     font-size: 16px;
   }
+
+
+  .button{
+    margin-left: 270px;
+}
+  .user{
+    font-size: 25px;
+    text-align: center;
+  }
+
+.userinfo{
+  margin-left: 250px;
+}
   </style>
   

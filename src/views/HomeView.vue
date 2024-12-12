@@ -9,8 +9,6 @@
           <div class="header-text">
             <h1>我们为您的原创内容提供全方位的版权保护。</h1>
             <p>数字版权认证与保护平台</p>
-            <el-button type="primary" @click="goToPage('get-started')">立即开始</el-button>
-            <el-button type="success" @click="goToPage('solution')">解决方案</el-button>
           </div>
         </el-col>
         <el-col :span="12">
@@ -65,6 +63,7 @@
     <!-- 服务部分，放在独立白色面板下面 -->
     <section class="services-section">
       <div class="services-panel">
+        <h2 class="section-title">提供支持</h2>
         <el-row :gutter="20" class="services-content">
           <el-col v-for="(service, index) in services" :key="index" :span="8">
             <el-card class="service-card" shadow="hover">

@@ -8,14 +8,11 @@
             <el-menu-item index="home" class="nav-item">
                 <router-link to="/home">首页</router-link>
             </el-menu-item>
-            <el-menu-item index="about" class="nav-item">
-                <router-link to="/about">关于我们</router-link>
-            </el-menu-item>
             <el-menu-item index="case-studio" class="nav-item">
                 <router-link to="/WorkView">我的作品</router-link>
             </el-menu-item>
             <el-menu-item index="blog" class="nav-item">
-                <router-link to="/blog">侵权监测</router-link>
+                <router-link to="/blog">AI咨询</router-link>
             </el-menu-item>
             <el-menu-item index="contact" class="nav-item">
                 <router-link to="/AuctionView">拍卖市场</router-link>
