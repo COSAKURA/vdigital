@@ -24,7 +24,7 @@
           <el-row :gutter="20" class="overview">
             <!-- 左侧信息 -->
             <el-col :span="12">
-              <p><strong>交易结果:</strong> 
+              <p><strong>交易结果：</strong> 
                 <el-tag v-if="transactionData.Message === 'Transaction succeeded'" type="success">成功</el-tag>
                 <el-tag v-else type="danger">失败</el-tag>
               </p>
