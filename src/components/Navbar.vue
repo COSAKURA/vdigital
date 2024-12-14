@@ -18,7 +18,7 @@
                 <router-link to="/AuctionView">拍卖市场</router-link>
             </el-menu-item>
             <el-menu-item index="blockH" class="nav-item">
-                <router-link to="/BlockHashView">溯源</router-link>
+                <router-link to="/BlockHashView">链上溯源</router-link>
             </el-menu-item>
         </el-menu>
 
@@ -31,7 +31,7 @@
             </div>
           </template>
           <div class="user-info">
-            <p><strong>用户名：</strong>{{ userName }}</p>
+            <p><strong>邮箱：</strong>{{ userName }}</p>
             <p><strong>状态：</strong>{{ userStatus }}</p>
             <el-button type="danger" size="small" @click="outlogin">👉退出登录</el-button>
           </div>
@@ -42,14 +42,13 @@
 
 <script>
 import { reactive, toRefs } from 'vue'
-import request from '../utils/reques';
 
 export default {
     name: "Navbar",
     setup() {
     const state = reactive({
       circleUrl: 'src/assets/images/resource/service-2.png',
-      userName: localStorage.getItem('userName') || '未知用户',
+      userName: localStorage.getItem('email') || '未知用户',
       userStatus: '正常',
       activeStep: 4,
     });
