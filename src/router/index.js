@@ -29,7 +29,7 @@ const router = createRouter({
     // 申请页面
     {
       path: '/application',
-      name: 'ApplicationView',
+      name: 'ApplicationView', 
       component: () => import('@/views/application.vue'), // 动态加载
     },
     // 作品页面
@@ -55,6 +55,16 @@ const router = createRouter({
       path: '/userInfoView',
       name: 'UserInfoView',
       component: () => import('@/views/UserInfoView.vue'), // 动态加载
+    },
+    {
+      path: '/AilView',
+      name: 'AilView',
+      component: () => import('@/views/AilView.vue'), // 动态加载
+    },
+    {
+      path: '/BlockHashView',
+      name: 'BlockHashView',
+      component: () => import('@/views/BlockHashView.vue'), // 动态加载
     },
   ],
 });
