@@ -58,7 +58,7 @@
         <el-table :data="transactions" border class="custom-table">
           <el-table-column label="块高" prop="blockNumber" width="100" align="center">
             <template #default="{ row }">
-              <el-link type="primary">{{ row.blockNumber }}</el-link>
+              <span>{{ row.blockNumber }}</span>
             </template>
           </el-table-column>
           <el-table-column label="交易哈希" prop="transactionHash" width="250" align="center">
@@ -276,7 +276,7 @@ export default {
   flex: 1;
   background: #fff;
   border: 1px solid #ebebeb;
-  border-radius: 5px;
+  border-radius: 15px;
   padding: 20px;
 }
 

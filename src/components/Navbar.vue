@@ -12,7 +12,7 @@
                 <router-link to="/WorkView">我的作品</router-link>
             </el-menu-item>
             <el-menu-item index="blog" class="nav-item">
-                <router-link to="/blog">AI咨询</router-link>
+                <router-link to="/AilView">AI咨询</router-link>
             </el-menu-item>
             <el-menu-item index="contact" class="nav-item">
                 <router-link to="/AuctionView">拍卖市场</router-link>
