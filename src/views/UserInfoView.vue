@@ -17,42 +17,59 @@
         <h4 class="user">个人信息</h4>
         <el-divider />
         <div class="userinfo">
-          <p><strong>用户名：</strong> {{ user.name }}</p>
+          <p><strong>用户名：</strong> {{ user.username }}</p>
           <p><strong>邮箱号：</strong> {{ user.email }}</p>
-          <p><strong>区块链账号：</strong> {{ user.phone }}</p>
-          <p><strong>状态：</strong> {{ user.title }}</p>
+          <p><strong>区块链账号：</strong> {{ user.blockchainAddress }}</p>
+          <p><strong>状态：</strong> {{ user.status }}</p>
+          <p><strong>创建时间：</strong> {{ user.createdAt }}</p>
         </div>
         <el-divider />
-        <el-button class="button" type="success" @click="showDialog">注册区块链</el-button>
+        <el-button 
+          class="button" 
+          type="success" 
+          @click="showDialog" 
+          :disabled="!!user.blockchainAddress"
+        >
+          注册区块链
+        </el-button>
+        <p v-if="user.blockchainAddress" class="info-text">
+          您已注册区块链账户，无法重复注册。
+        </p>
       </el-card>
     </el-main>
   </el-container>
 
   <!-- 注册区块链弹框 -->
-  <el-dialog  v-model="dialogVisible" width="27%" >
-
-<div class="timu">
-    <p >欢迎注册您的区块链账户！</p>
-  </div>
-    <el-form label-width="100px">
-      <el-form-item label="密码">
-        <el-input v-model="registerForm.password" type="password" placeholder="请输入密码" />
-      </el-form-item>
-      <el-form-item label="确认密码">
-        <el-input v-model="registerForm.confirmPassword" type="password" placeholder="请确认密码" />
+  <el-dialog v-model="dialogVisible" width="35%" :close-on-click-modal="false">
+    <div class="dialog-header">
+      <p>欢迎注册您的区块链账户</p>
+      <p class="dialog-subtitle">请输入加密私钥密码以完成注册</p>
+    </div>
+    <el-form label-width="120px">
+      <el-form-item label="加密私钥密码">
+        <el-input
+          v-model="registerForm.privateKeyPassword"
+          type="password"
+          placeholder="请输入加密私钥密码"
+          show-password
+        />
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="dialogVisible = false">取消</el-button>
-      <el-button type="primary" @click="registerBlockchain">注册</el-button>
+      <div class="dialog-footer">
+        <el-button @click="dialogVisible = false" size="medium">取消</el-button>
+        <el-button type="primary" size="medium" @click="downloadPrivateKey">确认注册</el-button>
+      </div>
     </template>
   </el-dialog>
 </template>
 
+
 <script>
 import { reactive, ref, onMounted } from "vue";
-import axios from "axios";
+import { ElMessage } from "element-plus";
 import Navbar from "@/components/Navbar.vue";
+import request from "../utils/reques";
 
 export default {
   name: "UserProfile",
@@ -62,17 +79,16 @@ export default {
   setup() {
     const user = reactive({
       avatar: "src/assets/images/resource/service-2.png",
-      name: "张三",
-      email: "zhangsan@example.com",
-      phone: "1008610086",
-      title: "经理",
+      username: "",
+      email: "",
+      blockchainAddress: "",
+      status: "",
+      createdAt: "",
     });
 
     const dialogVisible = ref(false); // 控制弹框的显示与隐藏
     const registerForm = reactive({
-      username: "",
-      password: "",
-      confirmPassword: "",
+      privateKeyPassword: "",
     });
 
     const showDialog = () => {
@@ -81,36 +97,66 @@ export default {
 
     const fetchUser = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/user");
-        Object.assign(user, response.data);
+        const email = localStorage.getItem("email");
+
+        if (!email) {
+          ElMessage.warning("用户邮箱未找到，请先登录！");
+          return;
+        }
+
+        const response = await request.get("/user/getUserInfo", {
+          params: { email },
+        });
+
+        Object.assign(user, response.data.user);
       } catch (error) {
+        ElMessage.error("获取用户信息失败，请稍后重试！");
         console.error("获取用户信息失败：", error);
       }
     };
 
-    const registerBlockchain = () => {
-      if (!registerForm.username || !registerForm.password || !registerForm.confirmPassword) {
-        alert("请填写完整信息！");
+    const downloadPrivateKey = async () => {
+      if (!registerForm.privateKeyPassword) {
+        ElMessage.warning("请输入加密私钥密码！");
         return;
       }
-      if (registerForm.password !== registerForm.confirmPassword) {
-        alert("两次输入的密码不一致！");
-        return;
+
+      try {
+        const response = await request.get('/keystore/generateKeystore', {
+          params: {
+            email: user.email,
+            password: registerForm.privateKeyPassword,
+          },
+          responseType: 'blob', // 确保返回的是文件流
+        });
+
+        // 创建文件下载链接
+        const blob = new Blob([response.data], { type: 'application/json' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'encrypted-private-key.json'; // 下载的文件名
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        ElMessage.success("加密私钥文件已成功下载！");
+        dialogVisible.value = false; // 关闭弹框
+        await fetchUser(); // 刷新用户信息
+      } catch (error) {
+        console.error('下载加密私钥失败:', error);
+        ElMessage.error("下载加密私钥失败");
       }
-      // 模拟注册成功
-      alert(`区块链账户 ${registerForm.username} 注册成功！`);
-      dialogVisible.value = false; // 关闭弹框
     };
 
     onMounted(() => {
       fetchUser();
     });
 
-    return { user, dialogVisible, registerForm, showDialog, registerBlockchain };
+    return { user, dialogVisible, registerForm, showDialog, downloadPrivateKey };
   },
 };
 </script>
-
 
 
 <style scoped>
@@ -128,13 +174,12 @@ export default {
   text-align: center;
 }
 
-/* 圆形头像样式 */
 .profile-image {
   width: 150px;
   height: 150px;
   background-size: cover;
   background-position: center;
-  border-radius: 50%; /* 圆形效果 */
+  border-radius: 50%;
   margin: 0 auto 20px auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -159,8 +204,11 @@ export default {
   font-size: 16px;
 }
 
-.button {
-  margin-left: 270px;
+.button[disabled] {
+  background-color: #dcdcdc;
+  color: #999;
+  cursor: not-allowed;
+  border-color: #dcdcdc;
 }
 
 .user {
@@ -172,11 +220,30 @@ export default {
   margin-left: 250px;
 }
 
-.timu{
-  margin-bottom: 40px; /* 与下方表单间距 */
+.dialog-header {
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+}
 
-  font-size: 22px;
+.dialog-subtitle {
+  font-size: 14px;
+  color: #999;
+  margin-top: 5px;
   text-align: center;
 }
 
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.info-text {
+  color: #999;
+  font-size: 12px;
+  margin-top: 5px;
+}
 </style>

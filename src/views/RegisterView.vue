@@ -13,11 +13,7 @@
           <li>🔒 版权保护：解决侵权问题</li>
           <li>📈 内容出海：增加变现机会</li>
         </ul>
-        <img
-          src="../assets/images/resource/service-2.png"
-          alt="Illustration"
-          class="illustration"
-        />
+        <img src="../assets/images/resource/service-2.png" alt="Illustration" class="illustration" />
       </div>
 
       <!-- 右侧注册表单 -->
@@ -37,23 +33,14 @@
             <el-form-item label="验证码" prop="code">
               <div class="code-input-wrapper">
                 <el-input v-model="registerForm.code" placeholder="请输入验证码" />
-                <el-button
-                  class="send-code-btn"
-                  :disabled="!isFormValid || isSending"
-                  @click="sendCode"
-                >
+                <el-button class="send-code-btn" :disabled="!isFormValid || isSending" @click="sendCode">
                   {{ isSending ? `${countdown}s 后重试` : "获取验证码" }}
                 </el-button>
               </div>
             </el-form-item>
             <!-- 密码 -->
             <el-form-item label="新密码" prop="password">
-              <el-input
-                v-model="registerForm.password"
-                placeholder="请输入密码"
-                type="password"
-                show-password
-              />
+              <el-input v-model="registerForm.password" placeholder="请输入密码" type="password" show-password />
             </el-form-item>
             <!-- 同意协议 -->
             <el-form-item>
@@ -66,12 +53,8 @@
             </el-form-item>
             <!-- 注册按钮 -->
             <el-form-item>
-              <el-button
-                type="primary"
-                class="register-button"
-                @click="handleRegister"
-                :disabled="!registerForm.agreement"
-              >
+              <el-button type="primary" class="register-button" @click="handleRegister"
+                :disabled="!registerForm.agreement">
                 注 册
               </el-button>
             </el-form-item>
@@ -204,7 +187,8 @@ const handleRegister = async () => {
   width: 100vw;
   height: 100vh;
   background-color: #f5faff;
-  transform: scale(1.3); /* 整体放大比例 */
+  transform: scale(1.3);
+  /* 整体放大比例 */
   transform-origin: center;
 }
 

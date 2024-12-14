@@ -23,12 +23,7 @@
                   <el-input v-model="loginForm.email" placeholder="请输入邮箱" />
                 </el-form-item>
                 <el-form-item label="密码" prop="password">
-                  <el-input
-                    v-model="loginForm.password"
-                    type="password"
-                    placeholder="请输入密码"
-                    show-password
-                  />
+                  <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" show-password />
                 </el-form-item>
                 <div class="form-actions">
                   <router-link to="/register" class="register-link">没有账号?👉 点击注册</router-link>
@@ -111,8 +106,6 @@ const handleLogin = async () => {
 </script>
 
 <style scoped>
-
-
 /* 整体页面样式 */
 .login-page {
   display: flex;
@@ -120,8 +113,10 @@ const handleLogin = async () => {
   align-items: center;
   width: 100vw;
   height: 100vw;
-  background-color: #f5faff; /* 浅蓝背景 */
-  transform: scale(1.3); /* 放大页面至130% */
+  background-color: #f5faff;
+  /* 浅蓝背景 */
+  transform: scale(1.3);
+  /* 放大页面至130% */
   transform-origin: center;
 
 }
