@@ -17,6 +17,9 @@
             <el-menu-item index="contact" class="nav-item">
                 <router-link to="/AuctionView">拍卖市场</router-link>
             </el-menu-item>
+            <el-menu-item index="blockH" class="nav-item">
+                <router-link to="/BlockHashView">溯源</router-link>
+            </el-menu-item>
         </el-menu>
 
 
