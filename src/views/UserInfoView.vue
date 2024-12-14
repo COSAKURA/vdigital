@@ -29,12 +29,12 @@
   </el-container>
 
   <!-- 注册区块链弹框 -->
-  <el-dialog title="注册区块链账户" :visible.sync="dialogVisible" width="50%">
-    <p>欢迎注册您的区块链账户！</p>
+  <el-dialog  v-model="dialogVisible" width="27%" >
+
+<div class="timu">
+    <p >欢迎注册您的区块链账户！</p>
+  </div>
     <el-form label-width="100px">
-      <el-form-item label="用户名">
-        <el-input v-model="registerForm.username" placeholder="请输入用户名" />
-      </el-form-item>
       <el-form-item label="密码">
         <el-input v-model="registerForm.password" type="password" placeholder="请输入密码" />
       </el-form-item>
@@ -61,7 +61,7 @@ export default {
   },
   setup() {
     const user = reactive({
-      avatar: "src/assets/images/resource/service-2.png", // 替换为更大的图片链接
+      avatar: "src/assets/images/resource/service-2.png",
       name: "张三",
       email: "zhangsan@example.com",
       phone: "1008610086",
@@ -74,6 +74,7 @@ export default {
       password: "",
       confirmPassword: "",
     });
+
     const showDialog = () => {
       dialogVisible.value = true; // 显示弹框
     };
@@ -86,8 +87,6 @@ export default {
         console.error("获取用户信息失败：", error);
       }
     };
-
-   
 
     const registerBlockchain = () => {
       if (!registerForm.username || !registerForm.password || !registerForm.confirmPassword) {
@@ -111,6 +110,8 @@ export default {
   },
 };
 </script>
+
+
 
 <style scoped>
 .user-container {
@@ -170,4 +171,12 @@ export default {
 .userinfo {
   margin-left: 250px;
 }
+
+.timu{
+  margin-bottom: 40px; /* 与下方表单间距 */
+
+  font-size: 22px;
+  text-align: center;
+}
+
 </style>

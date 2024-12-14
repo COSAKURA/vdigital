@@ -35,10 +35,13 @@
 
           <!-- 动作按钮 -->
           <div class="action-buttons">
-            <el-button type="primary" :disabled="!selectedWork.hasDigitalCopyright || selectedWork.isOnAuction"
+
+            <el-button type="primary" 
+            :disabled="!selectedWork.hasDigitalCopyright || selectedWork.isOnAuction"
               @click="onAddListing">
               {{ selectedWork.isOnAuction ? '拍卖中' : '上架拍品' }}
             </el-button>
+            
             <el-button type="success" :disabled="!selectedWork.digitalCopyrightId" @click="downloadCertificate">
               下载证书
             </el-button>

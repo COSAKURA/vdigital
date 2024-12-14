@@ -12,10 +12,10 @@
             " :alt="work.title" class="grid-image" />
           <!-- <img :src="work.imagePath" :alt="work.title" class="grid-image" /> -->
           <h3>{{ work.title }}</h3> <!-- 作品标题 -->
-          <p class="work-description">{{ work.description }}</p> <!-- 作品描述 -->
+          <p class="work-description">{{ work.description }}</p> <!-- 作品描述 -->6-
           <p class="work-id" :class="{ breakable: showFullHash }" @mouseover="showFullHash = true"
             @mouseleave="showFullHash = false">
-            区块哈希: {{ work.blockHash }}
+            区块哈希: {{ work.blockHash }} 
           </p>
 
         </div>
