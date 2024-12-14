@@ -157,6 +157,7 @@ export default {
           // 如果请求成功
           this.selectedWork.hasDigitalCopyright = true;  // 更新作品状态
           this.$message.success("版权申请成功，版权已自动上链！");
+          this.getUserWorks();
         })
         .catch(error => {
           // 如果请求失败
