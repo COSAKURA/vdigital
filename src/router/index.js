@@ -66,7 +66,12 @@ const router = createRouter({
       name: 'BlockHashView',
       component: () => import('@/views/BlockHashView.vue'), // 动态加载
     },
-  ],
+    {
+      path: '/TransactionInfoView',
+      name: 'TransactionInfoView',
+      component: () => import('@/views/TransactionInfoView.vue'), // 动态加载
+    },
+  ],                       
 });
 
 export default router;
