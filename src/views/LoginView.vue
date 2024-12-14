@@ -15,7 +15,7 @@
       <!-- 右侧登录表单 -->
       <div class="right-form">
         <el-card class="form-card">
-          <h2 class="form-title">欢迎登录数字存证平台</h2>
+          <h2 class="form-title">欢迎来到艺溯之链</h2>
           <el-tabs v-model="activeTab" class="login-tabs">
             <el-tab-pane label="账号密码登录" name="account">
               <el-form :model="loginForm" :rules="rules" ref="loginFormRef">

@@ -8,7 +8,7 @@
         <el-col :span="12">
           <div class="header-text">
             <h1>我们为您的原创内容提供全方位的版权保护。</h1>
-            <p>数字版权认证与保护平台</p>
+            <p>艺溯之链平台</p>
           </div>
         </el-col>
         <el-col :span="12">
