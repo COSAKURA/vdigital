@@ -18,7 +18,7 @@
     <div class="dashboard">
       <!-- 区块部分 -->
       <div class="section">
-        <h3 class="section-title">区块</h3>
+        <h2 class="section-title">区块</h2>
         <el-table :data="blocks" border class="custom-table">
           <el-table-column label="块高" prop="blockNumber" width="100" align="center">
             <template #default="{ row }">
@@ -54,7 +54,7 @@
 
       <!-- 交易部分 -->
       <div class="section">
-        <h3 class="section-title">交易</h3>
+        <h2 class="section-title">交易</h2>
         <el-table :data="transactions" border class="custom-table">
           <el-table-column label="块高" prop="blockNumber" width="100" align="center">
             <template #default="{ row }">
