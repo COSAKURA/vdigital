@@ -13,7 +13,7 @@
           <li>🔒 版权保护：解决侵权问题</li>
           <li>📈 内容出海：增加变现机会</li>
         </ul>
-        <img src="../assets/images/resource/service-2.png" alt="Illustration" class="illustration" />
+        <img src="../assets/images/resource/success-1.jpg" alt="Illustration" class="illustration" />
       </div>
 
       <!-- 右侧注册表单 -->
