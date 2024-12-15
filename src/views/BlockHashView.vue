@@ -3,12 +3,7 @@
     <Navbar />
     <!-- 搜索框和按钮 -->
     <div class="search-container">
-      <el-input
-        v-model="searchQuery"
-        placeholder="请输入区块编号或交易哈希进行溯源"
-        clearable
-        class="search-input"
-      />
+      <el-input v-model="searchQuery" placeholder="请输入区块编号或交易哈希进行溯源" clearable class="search-input" />
       <el-button type="primary" @click="traceSearch" class="search-button">
         立即溯源
       </el-button>
@@ -41,14 +36,8 @@
 
         <!-- 区块分页 -->
         <div class="pagination-container">
-          <el-pagination
-            @current-change="fetchBlocks"
-            :current-page="blockPagination.page + 1"
-            :page-size="blockPagination.size"
-            :total="blockPagination.total"
-            background
-            layout="prev, pager, next"
-          />
+          <el-pagination @current-change="fetchBlocks" :current-page="blockPagination.page + 1"
+            :page-size="blockPagination.size" :total="blockPagination.total" background layout="prev, pager, next" />
         </div>
       </div>
 
@@ -93,14 +82,9 @@
 
         <!-- 交易分页 -->
         <div class="pagination-container">
-          <el-pagination
-            @current-change="fetchTransactions"
-            :current-page="transactionPagination.page + 1"
-            :page-size="transactionPagination.size"
-            :total="transactionPagination.total"
-            background
-            layout="prev, pager, next"
-          />
+          <el-pagination @current-change="fetchTransactions" :current-page="transactionPagination.page + 1"
+            :page-size="transactionPagination.size" :total="transactionPagination.total" background
+            layout="prev, pager, next" />
         </div>
       </div>
     </div>
@@ -175,31 +159,31 @@ export default {
     };
 
     const traceSearch = () => {
-  const hashPattern = /^0x[a-fA-F0-9]{64}$/; // 正则表达式，用于匹配正确的哈希格式
+      const hashPattern = /^0x[a-fA-F0-9]{64}$/; // 正则表达式，用于匹配正确的哈希格式
 
-  if (!searchQuery.value) {
-    // 检查哈希是否为空
-    ElMessage({
-      message: "请输入交易哈希进行溯源！",
-      type: "warning",
-      duration: 3000, // 显示时间，单位为毫秒
-    });
-    return;
-  }
+      if (!searchQuery.value) {
+        // 检查哈希是否为空
+        ElMessage({
+          message: "请输入交易哈希进行溯源！",
+          type: "warning",
+          duration: 3000, // 显示时间，单位为毫秒
+        });
+        return;
+      }
 
-  if (!hashPattern.test(searchQuery.value)) {
-    // 检查哈希格式是否正确
-    ElMessage({
-      message: "请输入正确格式的交易哈希！",
-      type: "error",
-      duration: 3000,
-    });
-    return;
-  }
+      if (!hashPattern.test(searchQuery.value)) {
+        // 检查哈希格式是否正确
+        ElMessage({
+          message: "请输入正确格式的交易哈希！",
+          type: "error",
+          duration: 3000,
+        });
+        return;
+      }
 
-  // 哈希有效时，跳转到详情页面
-  goToTransactionDetail(searchQuery.value);
-};
+      // 哈希有效时，跳转到详情页面
+      goToTransactionDetail(searchQuery.value);
+    };
 
 
     onMounted(() => {
@@ -259,6 +243,7 @@ export default {
   justify-content: center;
   margin-top: 20px;
 }
+
 /* 搜索框样式 */
 .search-input {
   width: 600px;

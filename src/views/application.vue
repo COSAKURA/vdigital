@@ -81,8 +81,8 @@ import Navbar from "@/components/Navbar.vue";
 export default {
     name: "UploadSection",
     components: {
-    Navbar,
-  },
+        Navbar,
+    },
     data() {
         return {
             formData: {
@@ -346,7 +346,7 @@ export default {
 .header-section {
     background-color: #fce5d8;
     /* 顶部固定颜色 */
-    padding: 1550px 0 10px; 
+    padding: 1550px 0 10px;
     /* 增加顶部填充以适应固定的导航栏 */
     width: 100vw;
     /* 确保铺满整个页面宽度 */

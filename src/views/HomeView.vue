@@ -431,11 +431,16 @@ export default {
 }
 
 .action-button .el-button {
-  font-size: 1.5rem; /* 增大字体 */
-  padding: 10px 30px; /* 增加内边距 */
-  border-radius: 8px; /* 圆角 */
-  width: auto; /* 自动宽度 */
-  height: auto; /* 自动高度 */
+  font-size: 1.5rem;
+  /* 增大字体 */
+  padding: 10px 30px;
+  /* 增加内边距 */
+  border-radius: 8px;
+  /* 圆角 */
+  width: auto;
+  /* 自动宽度 */
+  height: auto;
+  /* 自动高度 */
 }
 
 /* 服务部分 */

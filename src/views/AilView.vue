@@ -7,11 +7,8 @@
       <Navbar />
       <div class="chat-messages" ref="chatMessages">
         <!-- 循环显示消息 -->
-        <div
-          v-for="(message, index) in messages"
-          :key="index"
-          :class="['chat-message-container', message.from === 'user' ? 'chat-right' : 'chat-left']"
-        >
+        <div v-for="(message, index) in messages" :key="index"
+          :class="['chat-message-container', message.from === 'user' ? 'chat-right' : 'chat-left']">
           <div class="chat-message-box">
             <span>{{ message.text }}</span>
           </div>
@@ -21,12 +18,7 @@
       <!-- 输入框和按钮 -->
       <div class="chat-input-container">
         <div class="chat-input-wrapper">
-          <el-input
-            v-model="newMessage"
-            placeholder="请输入消息..."
-            @keyup.enter="sendMessage"
-            class="chat-input"
-          />
+          <el-input v-model="newMessage" placeholder="请输入消息..." @keyup.enter="sendMessage" class="chat-input" />
           <el-button type="primary" @click="sendMessage" class="send-button">
             发送
           </el-button>
@@ -158,9 +150,12 @@ export default {
   color: #333;
   margin-bottom: 10px;
   padding: 10px;
-  background-color: #e6f7ff; /* 设置背景色 */
-  border-radius: 8px; /* 圆角样式 */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+  background-color: #e6f7ff;
+  /* 设置背景色 */
+  border-radius: 8px;
+  /* 圆角样式 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* 阴影效果 */
 }
 
 /* 聊天容器样式 */
@@ -186,11 +181,16 @@ export default {
 
 /* 消息内容样式 */
 .chat-message {
-  max-width: 100%; /* 消息宽度 */
-  margin: 10px 0; /* 消息间距 */
-  font-size: 16px; /* 字体大小 */
-  line-height: 1.5; /* 行高 */
-  word-wrap: break-word; /* 防止文字溢出 */
+  max-width: 100%;
+  /* 消息宽度 */
+  margin: 10px 0;
+  /* 消息间距 */
+  font-size: 16px;
+  /* 字体大小 */
+  line-height: 1.5;
+  /* 行高 */
+  word-wrap: break-word;
+  /* 防止文字溢出 */
 }
 
 /* 左侧消息样式 */
@@ -220,25 +220,33 @@ export default {
   width: 50%;
   border-radius: 25px;
   overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 增加阴影 */
-  border: 1px solid #dcdcdc; /* 添加边框 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  /* 增加阴影 */
+  border: 1px solid #dcdcdc;
+  /* 添加边框 */
 }
 
 /* 输入框样式 */
 .chat-input {
   flex: 1;
-  height: 50px; /* 调整高度 */
-  font-size: 16px; /* 字体大小 */
-  border: none; /* 隐藏边框 */
-  box-shadow: none; /* 移除阴影 */
-  background-color: transparent; /* 设置背景透明，与容器一致 */
+  height: 50px;
+  /* 调整高度 */
+  font-size: 16px;
+  /* 字体大小 */
+  border: none;
+  /* 隐藏边框 */
+  box-shadow: none;
+  /* 移除阴影 */
+  background-color: transparent;
+  /* 设置背景透明，与容器一致 */
 }
 
 /* 按钮样式 */
 .send-button {
   height: 50px;
   font-size: 16px;
-  border-radius: 0; /* 让按钮与输入框融为一体 */
+  border-radius: 0;
+  /* 让按钮与输入框融为一体 */
 }
 
 /* 消息容器样式 */
@@ -262,19 +270,24 @@ export default {
   max-width: 70%;
   padding: 10px 15px;
   border-radius: 8px;
-  background-color: #e6f7ff; /* 默认背景色 */
+  background-color: #e6f7ff;
+  /* 默认背景色 */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   word-wrap: break-word;
 }
 
 .chat-left .chat-message-box {
-  background-color: #f5f5f5; /* AI 消息背景色 */
-  color: #333; /* 字体颜色 */
+  background-color: #f5f5f5;
+  /* AI 消息背景色 */
+  color: #333;
+  /* 字体颜色 */
 }
 
 .chat-right .chat-message-box {
-  background-color: #409eff; /* 用户消息背景色 */
-  color: #fff; /* 字体颜色 */
+  background-color: #409eff;
+  /* 用户消息背景色 */
+  color: #fff;
+  /* 字体颜色 */
 }
 
 /* 消息区域滚动条样式 */
@@ -284,5 +297,4 @@ export default {
   padding: 10px;
   margin-bottom: 10px;
 }
-
 </style>

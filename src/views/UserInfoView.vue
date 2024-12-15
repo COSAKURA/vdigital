@@ -24,12 +24,7 @@
           <p><strong>创建时间：</strong> {{ user.createdAt }}</p>
         </div>
         <el-divider />
-        <el-button 
-          class="button" 
-          type="success" 
-          @click="showDialog" 
-          :disabled="!!user.blockchainAddress"
-        >
+        <el-button class="button" type="success" @click="showDialog" :disabled="!!user.blockchainAddress">
           注册区块链
         </el-button>
         <p v-if="user.blockchainAddress" class="info-text">
@@ -47,12 +42,7 @@
     </div>
     <el-form label-width="120px">
       <el-form-item label="加密私钥密码">
-        <el-input
-          v-model="registerForm.privateKeyPassword"
-          type="password"
-          placeholder="请输入加密私钥密码"
-          show-password
-        />
+        <el-input v-model="registerForm.privateKeyPassword" type="password" placeholder="请输入加密私钥密码" show-password />
       </el-form-item>
     </el-form>
     <template #footer>

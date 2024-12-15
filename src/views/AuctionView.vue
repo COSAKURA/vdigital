@@ -14,7 +14,7 @@
           <p class="work-description">{{ work.description }}</p> <!-- 作品描述 -->
           <p class="work-id" :class="{ breakable: showFullHash }" @mouseover="showFullHash = true"
             @mouseleave="showFullHash = false">
-            区块哈希: {{ work.blockHash }} 
+            区块哈希: {{ work.blockHash }}
           </p>
 
         </div>
@@ -227,10 +227,12 @@ export default {
 .logo-image {
   width: 80%;
 }
+
 .grid-item {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* 保证顶部内容正常排列 */
+  justify-content: flex-start;
+  /* 保证顶部内容正常排列 */
   align-items: center;
   background: #fff;
   border: 1px solid #ddd;
@@ -246,13 +248,14 @@ export default {
   max-width: 100%;
   height: auto;
   border-radius: 10px;
-  margin-bottom: auto; /* 推动文本部分到卡片底部 */
+  margin-bottom: auto;
+  /* 推动文本部分到卡片底部 */
 }
 
 .grid-item h3,
 .work-description,
 .work-id {
-  margin-top: auto; /* 保证这些元素固定在卡片底部 */
+  margin-top: auto;
+  /* 保证这些元素固定在卡片底部 */
 }
-
 </style>

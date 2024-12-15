@@ -34,12 +34,11 @@
           <!-- 动作按钮 -->
           <div class="action-buttons">
 
-            <el-button type="primary" 
-            :disabled="!selectedWork.hasDigitalCopyright || selectedWork.isOnAuction"
+            <el-button type="primary" :disabled="!selectedWork.hasDigitalCopyright || selectedWork.isOnAuction"
               @click="onAddListing">
               {{ selectedWork.isOnAuction ? '拍卖中' : '上架拍品' }}
             </el-button>
-            
+
             <el-button type="success" :disabled="!selectedWork.digitalCopyrightId" @click="downloadCertificate">
               下载证书
             </el-button>
@@ -250,6 +249,7 @@ export default {
         this.uploadDialogVisible = false;
       }
     },
+
     // 重置上传表单
     resetUploadForm() {
       this.uploadForm.uploadDate = "";
@@ -395,8 +395,10 @@ export default {
 .hero {
   margin-left: auto;
   margin-right: auto;
-  width: 60%; /* 缩小宽度 */
-  height: 30%; /* 缩小高度 */
+  width: 60%;
+  /* 缩小宽度 */
+  height: 30%;
+  /* 缩小高度 */
   background-size: cover;
   position: relative;
   margin-top: 50px;
@@ -407,8 +409,10 @@ export default {
   flex-direction: column;
   align-items: center;
   margin-top: 10px;
-  width: 100%; /* 调整盒子的宽度，缩小到 80% */
-  font-size: 0.9rem; /* 可选：缩小字体大小 */
+  width: 100%;
+  /* 调整盒子的宽度，缩小到 80% */
+  font-size: 0.9rem;
+  /* 可选：缩小字体大小 */
 }
 
 

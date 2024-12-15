@@ -24,18 +24,18 @@
           <el-row :gutter="20" class="overview">
             <!-- 左侧信息 -->
             <el-col :span="12">
-              <p><strong>交易结果：</strong> 
+              <p><strong>交易结果：</strong>
                 <el-tag v-if="transactionData.Message === 'Transaction succeeded'" type="success">成功</el-tag>
                 <el-tag v-else type="danger">失败</el-tag>
               </p>
               <p><strong>交易区块：</strong> {{ transactionData.blockNumber || "-" }}</p>
               <p><strong>交易时间：</strong> {{ transactionData.timestamp || "-" }}</p>
-              <p><strong>发送方：</strong> 
+              <p><strong>发送方：</strong>
                 <el-tooltip effect="dark" :content="transactionData.from" placement="top">
                   <el-link type="primary">{{ truncateText(transactionData.from, 20) }}</el-link>
                 </el-tooltip>
               </p>
-              <p><strong>接收方：</strong> 
+              <p><strong>接收方：</strong>
                 <el-tooltip effect="dark" :content="transactionData.to" placement="top">
                   <el-link type="primary">{{ truncateText(transactionData.to, 20) }}</el-link>
                 </el-tooltip>
@@ -44,17 +44,17 @@
 
             <!-- 右侧信息 -->
             <el-col :span="12">
-              <p><strong>交易序号：</strong> 
+              <p><strong>交易序号：</strong>
                 <el-tooltip effect="dark" :content="transactionData.nonce" placement="top">
                   {{ truncateText(transactionData.nonce, 20) }}
                 </el-tooltip>
               </p>
-              <p><strong>区块哈希：</strong> 
+              <p><strong>区块哈希：</strong>
                 <el-tooltip effect="dark" :content="transactionData.blockHash" placement="top">
                   {{ truncateText(transactionData.blockHash, 20) }}
                 </el-tooltip>
               </p>
-              <p><strong>合约地址：</strong> 
+              <p><strong>合约地址：</strong>
                 <el-tooltip effect="dark" :content="transactionData.contractAddress" placement="top">
                   {{ truncateText(transactionData.contractAddress, 20) }}
                 </el-tooltip>
@@ -127,9 +127,9 @@ export default {
 
 <style scoped>
 .transaction-details {
-    margin-top: 150px;
-    height: 100%;
-    width: 100%;
+  margin-top: 150px;
+  height: 100%;
+  width: 100%;
   padding: 20px;
 
   background: #fff;
@@ -145,7 +145,8 @@ export default {
 .overview {
   font-size: 18px;
   line-height: 1.6;
-  line-height: 4; /* 行间距 */
+  line-height: 4;
+  /* 行间距 */
 }
 
 
@@ -153,5 +154,4 @@ export default {
 .el-tabs {
   margin-top: 20px;
 }
-
 </style>

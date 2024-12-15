@@ -37,14 +37,6 @@
           <p>{{ valueDescription }}</p>
         </el-col>
       </el-row>
-
-      <!-- 下方：描述信息 -->
-      <el-row class="auction-item-info">
-        <el-col :span="24">
-          <h3>用户作品描述：</h3>
-          <p><strong></strong><span v-html="auctions.description"></span></p>
-        </el-col>
-      </el-row>
     </div>
   </div>
 </template>
