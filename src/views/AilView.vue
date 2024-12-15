@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import Navbar from "@/components/Navbar.vue";
 
 export default {
