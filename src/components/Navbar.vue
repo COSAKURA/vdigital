@@ -2,7 +2,7 @@
     <el-header class="main-header">
         <!-- 图片放置在导航栏左侧 -->
         <div class="logo-container">
-            <img src="@/assets/images/lll.png" alt="Logo" class="logo-image" />
+            <!-- <img src="@/assets/images/lll.png" alt="Logo" class="logo-image" /> -->
         </div>
         <el-menu mode="horizontal" class="el-menu-demo">
             <el-menu-item index="home" class="nav-item">
@@ -47,7 +47,7 @@ export default {
     name: "Navbar",
     setup() {
     const state = reactive({
-      circleUrl: 'src/assets/images/resource/service-2.png',
+      circleUrl: 'src/assets/images/resource/image.png',
       userName: localStorage.getItem('email') || '未知用户',
       userStatus: '正常',
       activeStep: 4,
