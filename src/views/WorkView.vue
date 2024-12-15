@@ -392,24 +392,25 @@ export default {
   color: #ff6347;
 }
 
-/* hero 背景图片区域 */
 .hero {
-  margin-left: 200px;
-  width: 70%;
-  height: 100vh;
+  margin-left: auto;
+  margin-right: auto;
+  width: 60%; /* 缩小宽度 */
+  height: 30%; /* 缩小高度 */
   background-size: cover;
   position: relative;
+  margin-top: 50px;
 }
 
 .hero-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+  width: 100%; /* 调整盒子的宽度，缩小到 80% */
+  font-size: 0.9rem; /* 可选：缩小字体大小 */
 }
+
 
 
 .section-title {
@@ -417,7 +418,6 @@ export default {
   font-size: 35px;
   font-weight: bold;
   margin-bottom: 20px;
-  color: black;
 }
 
 /* 网格布局 */
@@ -426,7 +426,7 @@ export default {
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
   max-width: 1200px;
-  margin: 20px auto;
+  margin: 40px auto;
   padding: 20px;
 }
 
@@ -565,7 +565,7 @@ p {
 }
 
 .main-content {
-  margin-top: 50px;
+  margin-top: -20px;
 }
 
 

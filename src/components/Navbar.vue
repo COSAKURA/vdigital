@@ -2,7 +2,7 @@
     <el-header class="main-header">
         <!-- 图片放置在导航栏左侧 -->
         <div class="logo-container">
-            <!-- <img src="@/assets/images/lll.png" alt="Logo" class="logo-image" /> -->
+            <img src="@/assets/images/logo.png" alt="Logo" class="logo-image" />
         </div>
         <el-menu mode="horizontal" class="el-menu-demo">
             <el-menu-item index="home" class="nav-item">
@@ -115,6 +115,7 @@ export default {
 }
 
 .nav-item {
+    font-size: 17px;
     transition: transform 0.3s ease-in-out;
 }
 
@@ -130,7 +131,10 @@ export default {
 }
 
 .logo-image {
-    width: 80%;
+    width: 250%;
+    position: relative;
+    left: -100%;
+    top: 30px;
 }
 
 /* 信息框样式 */

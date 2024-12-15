@@ -396,7 +396,7 @@ export default {
 .process-flow {
   height: 20%;
   text-align: center;
-  padding: 80px;
+  padding: 50px;
 }
 
 .process-title {
@@ -426,7 +426,16 @@ export default {
 }
 
 .action-button {
-  margin-top: 30px;
+  margin-top: 100px;
+  text-align: center;
+}
+
+.action-button .el-button {
+  font-size: 1.5rem; /* 增大字体 */
+  padding: 10px 30px; /* 增加内边距 */
+  border-radius: 8px; /* 圆角 */
+  width: auto; /* 自动宽度 */
+  height: auto; /* 自动高度 */
 }
 
 /* 服务部分 */

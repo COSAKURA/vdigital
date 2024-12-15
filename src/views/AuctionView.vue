@@ -122,7 +122,7 @@ export default {
 }
 
 .section-title {
-  margin-top: 200px;
+  margin-top: 10px;
   font-size: 35px;
   font-weight: bold;
   margin-bottom: 20px;

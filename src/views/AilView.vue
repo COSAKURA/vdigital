@@ -167,7 +167,7 @@ export default {
 /* 聊天容器样式 */
 .chat-container {
   position: relative;
-  margin-top: -px;
+
   display: flex;
   flex-direction: column;
   height: 100%;
