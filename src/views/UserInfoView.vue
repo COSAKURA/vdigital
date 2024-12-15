@@ -68,7 +68,7 @@ export default {
   },
   setup() {
     const user = reactive({
-      avatar: "src/assets/images/resource/service-2.png",
+      avatar: "src/assets/images/resource/tx.jpg",
       username: "",
       email: "",
       blockchainAddress: "",
