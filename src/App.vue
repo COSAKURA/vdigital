@@ -1,13 +1,6 @@
 <template>
   <div id="app">
-
-    <!-- 导航 -->
-    <!-- <MainHeader /> -->
-    <!-- 渲染路由对应的组件 -->
     <router-view />
-
-     <!-- 页脚 -->
-     <!-- <MainFooter /> -->
   </div>
 </template>
 
@@ -18,7 +11,9 @@ export default {
 </script>
 
 <style>
-html, body, #app {
+html,
+body,
+#app {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -26,6 +21,7 @@ html, body, #app {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f5faff; /* 浅蓝背景 */
+  background-color: #f5faff;
+  /* 浅蓝背景 */
 }
 </style>
