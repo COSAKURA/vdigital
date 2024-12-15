@@ -47,7 +47,7 @@ export default {
     name: "Navbar",
     setup() {
     const state = reactive({
-      circleUrl: 'src/assets/images/resource/image.png',
+      circleUrl: 'src/assets/images/resource/tx.jpg',
       userName: localStorage.getItem('email') || '未知用户',
       userStatus: '正常',
       activeStep: 4,
