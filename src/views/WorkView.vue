@@ -3,11 +3,9 @@
     <Navbar />
     <!-- 内容区域 -->
     <main class="main-content">
-      <!-- 背景图片区域 -->
       <div class="hero">
         <div class="hero-content">
-          <h1>作品中心</h1>
-          <p>Portfolio 3 Column Masonry</p>
+          <h2 class="section-title">作品中心</h2>
         </div>
       </div>
 
@@ -399,7 +397,6 @@ export default {
   margin-left: 200px;
   width: 70%;
   height: 100vh;
-  background: url("../assets/images/resource/service-4.png") no-repeat center center;
   background-size: cover;
   position: relative;
 }
@@ -412,6 +409,15 @@ export default {
   text-align: center;
   color: white;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+
+.section-title {
+  margin-top: 200px;
+  font-size: 35px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: black;
 }
 
 /* 网格布局 */
