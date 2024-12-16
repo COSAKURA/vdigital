@@ -75,12 +75,12 @@
     <div v-for="block in blockData" :key="block.id" class="block-item">
       <div class="circle">Bk</div>
       <div class="block-content">
-        <p class="block-title">{{ block.blockNumber }}</p>
+        <span class="sender"><p class="block-title">{{ block.blockNumber }}</p></span>
         <p class="block-time">{{ block.timestamp }}</p>
-        <p class="block-info">
+       <p class="block-info">
           哈希 
           <el-tooltip class="item" effect="dark" :content="block.blockHash" placement="top">
-          <span>{{ block.blockHash.slice(0, 16) }}...{{ block.blockHash.slice(-4) }}</span>
+          <span class="sender">{{ block.blockHash.slice(0, 16) }}...{{ block.blockHash.slice(-4) }}</span>
         </el-tooltip>
         </p>
       </div>
@@ -118,12 +118,12 @@
       <div class="tx-content">
         <el-tooltip class="item" effect="dark" :content="tx.transactionHash" placement="top">
           <el-link type="primary" @click="goToTransactionDetail(tx.transactionHash)">
-                  {{ tx.transactionHash.slice(0, 9) }}... {{ tx.transactionHash.slice( -9) }}
+            <span class="sender"> {{ tx.transactionHash.slice(0, 9) }}... {{ tx.transactionHash.slice( -9) }}</span>
                 </el-link>
         </el-tooltip>
         <p class="tx-info">
-          发送方 {{ tx.from.slice(0, 20) }}...{{ tx.from.slice( -10) }} <br />
-          接收方 {{ tx.to.slice(0, 20) }}...{{ tx.to.slice(-10) }}
+          发送方 <span class="sender">{{ tx.from.slice(0, 20) }}...{{ tx.from.slice( -10) }} </span> <br />
+          接收方 <span class="sender">{{ tx.to.slice(0, 20) }}...{{ tx.to.slice(-10) }} </span>
         </p>
       </div>
       <div class="tx-time">{{ tx.timestamp }}</div>
@@ -304,7 +304,7 @@ onMounted(() => {
 
 <style scoped>
 .main-content {
-  margin-top: 600px;
+  margin-top: 680px;
   /* 避免被导航栏遮挡 */
 }
 
@@ -385,5 +385,9 @@ onMounted(() => {
   margin: 0 10px;
   font-size: 16px;
   color: #333;
+}
+
+.sender{
+  color: rgb(71, 30, 255)
 }
 </style>
