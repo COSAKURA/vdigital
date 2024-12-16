@@ -1,283 +1,152 @@
 <template>
-  <div>
+  <el-container>
     <Navbar />
-    <!-- 搜索框和按钮 -->
-    <div class="search-container">
-      <el-input v-model="searchQuery" placeholder="请输入区块编号或交易哈希进行溯源" clearable class="search-input" />
-      <el-button type="primary" @click="traceSearch" class="search-button">
-        立即溯源
-      </el-button>
-    </div>
+    <el-main>
+     
+      <!-- 卡片和折线图并排 -->
+      <el-row :gutter="20" class="content-wrapper">
+        <!-- 左侧卡片区域 -->
+        <el-col :span="6">
+          <div class="card-section">
+            <el-card class="card" shadow="hover">
+              <div class="card-content">
+                <h2>4</h2>
+                <p>Nodes</p>
+              </div>
+            </el-card>
+            <el-card class="card" shadow="hover" style="margin-top: 10px;">
+              <div class="card-content">
+                <h2>4</h2>
+                <p>Deployed Contracts</p>
+              </div>
+            </el-card>
+            <el-card class="card orange" shadow="hover" style="margin-top: 10px;">
+              <div class="card-content">
+                <h2>99</h2>
+                <p>Blocks</p>
+              </div>
+            </el-card>
+            <el-card class="card purple" shadow="hover" style="margin-top: 10px;">
+              <div class="card-content">
+                <h2>99</h2>
+                <p>Transactions</p>
+              </div>
+            </el-card>
+          </div>
+        </el-col>
 
-    <!-- 模块部分 -->
-    <div class="dashboard">
-      <!-- 区块部分 -->
-      <div class="section">
-        <h2 class="section-title">区块</h2>
-        <el-table :data="blocks" border class="custom-table">
-          <el-table-column label="块高" prop="blockNumber" width="100" align="center">
-            <template #default="{ row }">
-              <el-link type="primary">{{ row.blockNumber }}</el-link>
-            </template>
-          </el-table-column>
-          <el-table-column label="区块哈希" prop="blockHash" width="250" align="center">
-            <template #default="{ row }">
-              <el-tooltip class="item" effect="dark" :content="row.blockHash" placement="top">
-                <span>{{ row.blockHash.slice(0, 10) }}...{{ row.blockHash.slice(-10) }}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="时间" prop="timestamp" width="180" align="center">
-            <template #default="{ row }">
-              <span>{{ row.timestamp }}</span>
+        <!-- 右侧交易折线图 -->
+        <el-col :span="18">
+          <el-card shadow="always">
+            <h3>最近七天内的交易</h3>
+            <div ref="chartRef" style="width: 110%; height: 403px;"></div>
+          </el-card>
+        </el-col>
+      </el-row>
+
+      <!-- 节点表格 -->
+      <el-card style="margin-top: 20px;" shadow="always">
+        <h3>Node Information</h3>
+        <el-table :data="filteredData" stripe style="width: 100%">
+          <el-table-column prop="id" label="Node ID" />
+          <el-table-column prop="height" label="Block Height" />
+          <el-table-column prop="view" label="PbftView" />
+          <el-table-column prop="status" label="Status">
+            <template #default="scope">
+              <el-tag type="success" v-if="scope.row.status === 'Running'">
+                ● Running
+              </el-tag>
             </template>
           </el-table-column>
         </el-table>
-
-        <!-- 区块分页 -->
-        <div class="pagination-container">
-          <el-pagination @current-change="fetchBlocks" :current-page="blockPagination.page + 1"
-            :page-size="blockPagination.size" :total="blockPagination.total" background layout="prev, pager, next" />
-        </div>
-      </div>
-
-      <!-- 交易部分 -->
-      <div class="section">
-        <h2 class="section-title">交易</h2>
-        <el-table :data="transactions" border class="custom-table">
-          <el-table-column label="块高" prop="blockNumber" width="100" align="center">
-            <template #default="{ row }">
-              <span>{{ row.blockNumber }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="交易哈希" prop="transactionHash" width="250" align="center">
-            <template #default="{ row }">
-              <el-tooltip class="item" effect="dark" :content="row.transactionHash" placement="top">
-                <el-link type="primary" @click="goToTransactionDetail(row.transactionHash)">
-                  {{ row.transactionHash.slice(0, 10) }}...{{ row.transactionHash.slice(-10) }}
-                </el-link>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="发送方" prop="from" width="250" align="center">
-            <template #default="{ row }">
-              <el-tooltip class="item" effect="dark" :content="row.from" placement="top">
-                <span>{{ row.from.slice(0, 10) }}...{{ row.from.slice(-10) }}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="接收方" prop="to" width="250" align="center">
-            <template #default="{ row }">
-              <el-tooltip class="item" effect="dark" :content="row.to" placement="top">
-                <span>{{ row.to.slice(0, 10) }}...{{ row.to.slice(-10) }}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="时间" prop="timestamp" width="180" align="center">
-            <template #default="{ row }">
-              <span>{{ row.timestamp }}</span>
-            </template>
-          </el-table-column>
-        </el-table>
-
-        <!-- 交易分页 -->
-        <div class="pagination-container">
-          <el-pagination @current-change="fetchTransactions" :current-page="transactionPagination.page + 1"
-            :page-size="transactionPagination.size" :total="transactionPagination.total" background
-            layout="prev, pager, next" />
-        </div>
-      </div>
-    </div>
-  </div>
+      </el-card>
+    </el-main>
+  </el-container>
 </template>
 
-<script>
-import { ref, onMounted } from "vue";
+<script setup>
+import { ref, onMounted, computed } from "vue";
+import { Search } from "@element-plus/icons-vue";
+import * as echarts from "echarts";
 import Navbar from "@/components/Navbar.vue";
-import request from "@/utils/reques";
-import router from "../router";
-import { ElMessage } from "element-plus";
 
-export default {
-  name: "Dashboard",
-  components: {
-    Navbar,
-  },
-  setup() {
-    const blocks = ref([]);
-    const transactions = ref([]);
-    const blockPagination = ref({ page: 0, size: 8, total: 0 });
-    const transactionPagination = ref({ page: 0, size: 8, total: 0 });
-    const searchQuery = ref("");
+// 表格数据
+const tableData = ref([
+  { id: "000d25498b...", height: 99, view: 2197, status: "Running" },
+  { id: "32515d8859...", height: 99, view: 2198, status: "Running" },
+  { id: "486b946b44...", height: 99, view: 2200, status: "Running" },
+  { id: "c39adb750e...", height: 99, view: 2196, status: "Running" },
+]);
 
-    // 获取区块数据
-    const fetchBlocks = async (currentPage = 1) => {
-      try {
-        const page = currentPage - 1; // 后端分页从 0 开始
-        const size = blockPagination.value.size;
-        const response = await request.get("/blockchain/allBlockDetails", {
-          params: { page, size },
-        });
+const searchQuery = ref(""); // 搜索框的输入内容
 
-        blocks.value = response.data.data;
-        blockPagination.value = {
-          page: response.data.page,
-          size: response.data.size,
-          total: response.data.total,
-        };
-      } catch (error) {
-        console.error("加载区块数据失败：", error);
-      }
-    };
+// 过滤后的数据
+const filteredData = computed(() => {
+  if (!searchQuery.value) return tableData.value;
+  return tableData.value.filter((item) =>
+    item.id.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
 
-    // 获取交易数据
-    const fetchTransactions = async (currentPage = 1) => {
-      try {
-        const page = currentPage - 1; // 后端分页从 0 开始
-        const size = transactionPagination.value.size;
-        const response = await request.get("/blockchain/allTransactionHashes", {
-          params: { page, size },
-        });
-
-        transactions.value = response.data.data;
-        transactionPagination.value = {
-          page: response.data.page,
-          size: response.data.size,
-          total: response.data.total,
-        };
-      } catch (error) {
-        console.error("加载交易数据失败：", error);
-      }
-    };
-
-    const goToTransactionDetail = (transactionHash) => {
-      router.push({
-        path: "/TransactionInfoView",
-        query: { tx: transactionHash },
-      })
-
-    };
-
-    const traceSearch = () => {
-      const hashPattern = /^0x[a-fA-F0-9]{64}$/; // 正则表达式，用于匹配正确的哈希格式
-
-      if (!searchQuery.value) {
-        // 检查哈希是否为空
-        ElMessage({
-          message: "请输入交易哈希进行溯源！",
-          type: "warning",
-          duration: 3000, // 显示时间，单位为毫秒
-        });
-        return;
-      }
-
-      if (!hashPattern.test(searchQuery.value)) {
-        // 检查哈希格式是否正确
-        ElMessage({
-          message: "请输入正确格式的交易哈希！",
-          type: "error",
-          duration: 3000,
-        });
-        return;
-      }
-
-      // 哈希有效时，跳转到详情页面
-      goToTransactionDetail(searchQuery.value);
-    };
-
-
-    onMounted(() => {
-      fetchBlocks();
-      fetchTransactions();
-    });
-
-    return {
-      blocks,
-      transactions,
-      blockPagination,
-      transactionPagination,
-      fetchBlocks,
-      fetchTransactions,
-      goToTransactionDetail,
-      traceSearch,
-      searchQuery,
-    };
-  },
+// 搜索事件
+const handleSearch = () => {
+  console.log("Searching for:", searchQuery.value);
 };
+
+// ECharts 折线图
+const chartRef = ref(null);
+
+onMounted(() => {
+  const chart = echarts.init(chartRef.value);
+  const option = {
+    title: { text: "" },
+    tooltip: {},
+    xAxis: { type: "category", data: ["2024-12-10", "2024-12-12", "2024-12-14", "2024-12-16"] },
+    yAxis: { type: "value" },
+    series: [
+      {
+        data: [6, 7, 2, 5, 1, 4],
+        type: "line",
+        areaStyle: { opacity: 0.3 },
+      },
+    ],
+  };
+  chart.setOption(option);
+});
 </script>
 
 <style scoped>
-/* 整体布局 */
-.dashboard {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-}
-
-/* 搜索框容器 */
-.search-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
+/* 搜索栏样式 */
+.search-bar {
   margin-bottom: 20px;
 }
 
-
-/* 模块标题文字居中 */
-.section-title {
-  font-weight: bold;
-  margin-bottom: 10px;
+/* 卡片样式 */
+.card-section .card {
   text-align: center;
+  border-radius: 8px;
+  background-color: #f4faff;
+  color: #4b6584;
+}
+.card-section .card.orange {
+  background-color: #fef1e6;
+  color: #e17055;
+}
+.card-section .card.purple {
+  background-color: #eaf2ff;
+  color: #6c5ce7;
+}
+.card-content h2 {
+  font-size: 28px;
+  margin: 0;
+}
+.card-content p {
+  margin: 0;
+  color: #7f8c8d;
 }
 
-/* 表格样式 */
-.custom-table {
-  margin-bottom: 20px;
-}
-
-/* 居中分页样式 */
-.pagination-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-/* 搜索框样式 */
-.search-input {
-  width: 600px;
-  height: 50px;
-  font-size: 16px;
-}
-
-.search-button {
-  height: 48px;
-  font-size: 16px;
-}
-
-/* 模块样式 */
-.section {
-  flex: 1;
-  background: #fff;
-  border: 1px solid #ebebeb;
-  border-radius: 15px;
-  padding: 20px;
-}
-
-.section-title {
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.custom-table {
-  margin-bottom: 20px;
-}
-
-/* 居中分页样式 */
-.pagination-container {
-  display: flex;
-  justify-content: center;
+/* 主体布局 */
+.content-wrapper {
   margin-top: 20px;
 }
 </style>
