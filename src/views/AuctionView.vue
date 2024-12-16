@@ -16,7 +16,6 @@
             @mouseleave="showFullHash = false">
             区块哈希: {{ work.blockHash }}
           </p>
-
         </div>
       </div>
     </section>
@@ -73,42 +72,6 @@ export default {
   display: flex;
   flex-direction: column;
   padding-top: 80px;
-  /* 需要确保内容不会被导航栏遮挡 */
-}
-
-/* 透明主导航栏 */
-.main-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 50px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  background-color: rgba(255, 255, 255, 0.9);
-  z-index: 1000;
-  transition: background-color 0.3s ease-in-out;
-}
-
-.el-menu-demo {
-  background-color: rgba(255, 255, 255, 0.1);
-  flex-grow: 1;
-  margin-left: 50px;
-}
-
-.nav-item {
-  transition: transform 0.3s ease-in-out;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.language-switch {
-  font-weight: bold;
 }
 
 /* 拍品推荐部分 */
@@ -118,11 +81,9 @@ export default {
   align-items: center;
   padding: 20px;
   margin-top: 120px;
-  /* 确保拍品推荐部分不会被导航栏遮挡 */
 }
 
 .section-title {
-  margin-top: 10px;
   font-size: 35px;
   font-weight: bold;
   margin-bottom: 20px;
@@ -131,108 +92,17 @@ export default {
 /* 网格布局 */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-  max-width: 1200px;
-  width: 100%;
-  justify-content: center;
-}
-
-.grid-item {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+  max-width: 1000px;
+  margin: 15px auto;
   padding: 15px;
-  text-align: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
-  cursor: pointer;
-}
-
-.grid-item:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.grid-image {
-  max-width: 100%;
-  height: auto;
-  border-radius: 10px;
-  margin-bottom: 10px;
-}
-
-/* 新增样式 */
-.work-description {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 10px;
-}
-
-.work-id {
-  font-size: 12px;
-  color: #888;
-}
-
-/* 作品标题和描述溢出优化 */
-.grid-item h3,
-.work-description {
-  font-size: 14px;
-  color: #333;
-  margin-bottom: 10px;
-  text-overflow: ellipsis;
-  /* 文本溢出时显示省略号 */
-  overflow: hidden;
-  white-space: nowrap;
-  /* 禁止换行 */
-}
-
-/* 区块哈希溢出优化 */
-.work-id {
-  font-size: 12px;
-  color: #888;
-  margin-bottom: 10px;
-  text-overflow: ellipsis;
-  /* 超出宽度时显示省略号 */
-  overflow: hidden;
-  white-space: nowrap;
-  width: 100%;
-  /* 限制宽度为父容器宽度 */
-}
-
-/* 如果需要换行显示的情况下 */
-.work-id.breakable {
-  white-space: normal;
-  /* 允许换行 */
-  word-wrap: break-word;
-  /* 自动换行 */
-  word-break: break-all;
-  /* 长单词强制断行 */
-  overflow-wrap: break-word;
-  /* 支持非英文单词换行 */
-}
-
-/* 网格项溢出保护 */
-.grid-item {
-  max-width: 100%;
-  /* 限制卡片宽度 */
-  box-sizing: border-box;
-}
-
-
-.logo-container {
-  margin-right: -80px;
-  width: 10%;
-}
-
-.logo-image {
-  width: 80%;
 }
 
 .grid-item {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  /* 保证顶部内容正常排列 */
   align-items: center;
   background: #fff;
   border: 1px solid #ddd;
@@ -244,18 +114,49 @@ export default {
   cursor: pointer;
 }
 
+/* 图片样式 */
 .grid-image {
   max-width: 100%;
   height: auto;
   border-radius: 10px;
   margin-bottom: auto;
-  /* 推动文本部分到卡片底部 */
 }
 
+/* 文本溢出处理 */
 .grid-item h3,
 .work-description,
 .work-id {
-  margin-top: auto;
-  /* 保证这些元素固定在卡片底部 */
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 10px;
+  text-overflow: ellipsis; /* 超出部分显示省略号 */
+  overflow: hidden; /* 隐藏溢出内容 */
+  white-space: nowrap; /* 禁止换行 */
+  width: 100%; /* 限制宽度 */
+  box-sizing: border-box;
+}
+
+/* 区块哈希悬停显示完整 */
+.work-id {
+  font-size: 12px;
+  color: #888;
+}
+
+.work-id.breakable {
+  white-space: normal; /* 恢复换行 */
+  word-wrap: break-word;
+  word-break: break-all;
+  overflow-wrap: break-word;
+}
+
+.grid-item h3:hover,
+.work-description:hover,
+.work-id:hover {
+  white-space: normal; /* 悬停显示完整内容 */
+  word-wrap: break-word;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  z-index: 10;
+  background: #f9f9f9;
 }
 </style>
