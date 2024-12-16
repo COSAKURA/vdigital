@@ -504,8 +504,9 @@ export default {
 }
 
 .pain-point-card {
+  
   width: 100%;
-  margin-left: 150px;
+  margin-left: 350px;
   text-align: center;
   border-radius: 8px;
   transition: all 0.3s ease;
