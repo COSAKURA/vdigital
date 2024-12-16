@@ -1,9 +1,8 @@
 <template>
   <el-container>
-    
+
     <!-- 导航栏 -->
     <Search />
-
     <!-- 主内容 -->
     <el-main class="main-content">
       <!-- 卡片和折线图并排 -->
@@ -13,26 +12,26 @@
           <div class="card-section">
             <el-card class="card" shadow="hover">
               <div class="card-content">
-                <h2>4</h2>
-                <p>节点数量</p>
+                <h2> {{ blockCountData.nodeList.length }} </h2>
+                <p> 节点 </p>
               </div>
             </el-card>
             <el-card class="card" shadow="hover" style="margin-top: 10px;">
               <div class="card-content">
-                <h2>4</h2>
-                <p>失败交易数量</p>
+                <h2> {{ blockCountData.failedTxSum }} </h2>
+                <p> 交易失败数量 </p>
               </div>
             </el-card>
             <el-card class="card orange" shadow="hover" style="margin-top: 10px;">
               <div class="card-content">
-                <h2>99</h2>
-                <p>区块数量</p>
+                <h2> {{ blockCountData.blockCount }} </h2>
+                <p> 区块数量</p>
               </div>
             </el-card>
             <el-card class="card purple" shadow="hover" style="margin-top: 10px;">
               <div class="card-content">
-                <h2>99</h2>
-                <p>交易数量</p>
+                <h2> {{ blockCountData.txSum }}</h2>
+                <p> 交易数量 </p>
               </div>
             </el-card>
           </div>
@@ -49,14 +48,19 @@
 
       <!-- 节点表格 -->
       <el-card style="margin-top: 20px;" shadow="always">
-        <h3>节点监控指标</h3>
+        <h3>Node Information</h3>
         <el-table :data="tableData" stripe style="width: 100%">
-          <el-table-column prop="id" label="节点ID" />
+          <el-table-column label="节点 ID">
+  <template #default="scope">
+    {{ scope.row.id.slice(0, 16) }}...
+  </template>
+</el-table-column>
+
           <el-table-column prop="height" label="块高" />
           <el-table-column prop="view" label="PbftView" />
           <el-table-column prop="status" label="状态">
             <template #default="scope">
-              <el-tag type="success" v-if="scope.row.status === 'Running'"> ● Running </el-tag>
+              <el-tag type="success" v-if="scope.row.status === '运行'"> ● 运行 </el-tag>
             </template>
           </el-table-column>
         </el-table>
@@ -66,88 +70,86 @@
       <el-row :gutter="20" class="block-transaction">
         <!-- 区块部分 -->
         <el-col :span="12">
-          <el-card shadow="hover" class="equal-card">
-            <h3>区块</h3>
-            <div v-for="block in blockData" :key="block.id" class="block-item">
-              <div class="circle">Bk</div>
-              <div class="block-content">
-                <p class="miner">{{ block.number }}</p>
-                <p class="block-time">{{ block.time }}</p>
-                <p class="block-info">
-                  出块者 <span class="miner">{{ block.miner }}</span>
-                </p>
-              </div>
-              <div class="block-transaction">{{ block.transaction }} </div>
-            </div>
-                <!-- 添加带左右按钮的分页样式 -->
-            <div class="pagination-container">
-              <!-- 左翻页按钮 -->
-              <button 
-                class="pagination-button" 
-                @click="prevPage" 
-                :disabled="currentPage <= 1"
-              >
-                &lt;
-              </button>
-              
-              <!-- 页码信息 -->
-              <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
-              
-              <!-- 右翻页按钮 -->
-              <button 
-                class="pagination-button" 
-                @click="nextPage" 
-                :disabled="currentPage >= totalPages"
-              >
-                &gt;
-              </button>
-            </div>
-          </el-card>
-        </el-col>
+  <el-card shadow="hover" class="equal-card">
+    <h3>区块</h3>
+    <div v-for="block in blockData" :key="block.id" class="block-item">
+      <div class="circle">Bk</div>
+      <div class="block-content">
+        <p class="block-title">{{ block.blockNumber }}</p>
+        <p class="block-time">{{ block.timestamp }}</p>
+        <p class="block-info">
+          哈希 
+          <el-tooltip class="item" effect="dark" :content="block.blockHash" placement="top">
+          <span>{{ block.blockHash.slice(0, 16) }}...{{ block.blockHash.slice(-4) }}</span>
+        </el-tooltip>
+        </p>
+      </div>
+      <div class="block-transaction">{{ 1 }}</div>
+    </div>
+
+    <!-- 区块分页 -->
+    <div class="pagination-container">
+      <button
+        class="pagination-button"
+        @click="prevBlockPage"
+        :disabled="currentBlockPage <= 1"
+      >
+        &lt;
+      </button>
+      <span class="page-info">{{ currentBlockPage }} / {{ blockTotalPages }}</span>
+      <button
+        class="pagination-button"
+        @click="nextBlockPage"
+        :disabled="currentBlockPage >= blockTotalPages"
+      >
+        &gt;
+      </button>
+    </div>
+  </el-card>
+</el-col>
+
 
         <!-- 大额交易部分 -->
         <el-col :span="12">
-          <el-card shadow="hover" class="equal-card">
-             
-               <!-- 搜索框 -->
-    
-    <h3>大额交易 </h3>
-            <div v-for="tx in transactionData" :key="tx.hash" class="tx-item">
-              <div class="circle">Tx</div>
-              <div class="tx-content">
-                <p class="miner">{{ tx.hash }}</p>
-                <p class="tx-info">
-                  发送方 <span class="sender">{{ tx.sender  }}</span> <br />
-                  接收方 <span class="sender">{{ tx.receiver }}</span>
-                </p>
-              </div>
-              <div class="tx-time">{{ tx.time }}</div>
-            </div>
-            <!-- 添加带左右按钮的分页样式 -->
-            <div class="pagination-container">
-              <!-- 左翻页按钮 -->
-              <button 
-                class="pagination-button" 
-                @click="prevPage2" 
-                :disabled="currentPage2 <= 1"
-              >
-                &lt;
-              </button>
-              
-              <!-- 页码信息 -->
-              <span class="page-info">{{ currentPage2 }} / {{ totalPages2 }}</span>
-              
-              <!-- 右翻页按钮 -->
-              <button 
-                class="pagination-button" 
-                @click="nextPage2" 
-                :disabled="currentPage2 >= totalPages2"
-              >
-                &gt;
-              </button>
-            </div>
-          </el-card>
-        </el-col>
+  <el-card shadow="hover" class="equal-card">
+    <h3>大额交易</h3>
+    <div v-for="tx in transactionData" :key="tx.hash" class="tx-item">
+      <div class="circle">Tx</div>
+      <div class="tx-content">
+        <el-tooltip class="item" effect="dark" :content="tx.transactionHash" placement="top">
+          <el-link type="primary" @click="goToTransactionDetail(tx.transactionHash)">
+                  {{ tx.transactionHash.slice(0, 9) }}... {{ tx.transactionHash.slice( -9) }}
+                </el-link>
+        </el-tooltip>
+        <p class="tx-info">
+          发送方 {{ tx.from.slice(0, 20) }}...{{ tx.from.slice( -10) }} <br />
+          接收方 {{ tx.to.slice(0, 20) }}...{{ tx.to.slice(-10) }}
+        </p>
+      </div>
+      <div class="tx-time">{{ tx.timestamp }}</div>
+    </div>
+
+    <!-- 交易分页 -->
+    <div class="pagination-container">
+      <button
+        class="pagination-button"
+        @click="prevTransactionPage"
+        :disabled="currentTransactionPage <= 1"
+      >
+        &lt;
+      </button>
+      <span class="page-info">{{ currentTransactionPage }} / {{ transactionTotalPages }}</span>
+      <button
+        class="pagination-button"
+        @click="nextTransactionPage"
+        :disabled="currentTransactionPage >= transactionTotalPages"
+      >
+        &gt;
+      </button>
+    </div>
+  </el-card>
+</el-col>
+
       </el-row>
     </el-main>
   </el-container>
@@ -157,62 +159,135 @@
 import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
 import Search from "@/components/Search.vue";
-import { color } from "echarts";
+import request from "../utils/reques";
+import router from "../router";
 
+// 区块统计信息
+const blockCountData = ref({
+  blockCount: 0, // 默认值
+  nodeList: [],
+  txSum: 0,
+  failedTxSum: 0,
+}); 
+
+
+// 区块数据分页状态
+const blockData = ref([]);
+const blockTotalPages = ref(1);
+const currentBlockPage = ref(1);
+const blockPageSize = ref(5);
+
+// 交易数据分页状态
+const transactionData = ref([]);
+const transactionTotalPages = ref(1);
+const currentTransactionPage = ref(1);
+const transactionPageSize = ref(5);
+
+
+// 获取区块数据
+const fetchBlockData = async () => {
+  try {
+    const response = await request.get(`/blockchain/allBlockDetails`, {
+      params: {
+        page: currentBlockPage.value - 1,
+        size: blockPageSize.value,
+      },
+    });
+
+    blockData.value = response.data.data; // 区块数据
+    blockTotalPages.value = Math.ceil(response.data.total / blockPageSize.value);
+    blockCountData.value = response.data.count; // 提取统计信息
+
+    // 动态更新表格数据
+    tableData.value = blockCountData.value.nodeList.map((node, index) => ({
+      id: node.slice(0, 16), // 节点 ID 前16位
+      height: blockCountData.value.blockCount, // 设置为 blockCount
+      view: 23175 + index, // 示例数据，或从后端动态获取
+      status: "运行", // 状态，示例值
+    }));
+
+  } catch (error) {
+    console.error("Failed to fetch block data:", error);
+  }
+};
+
+
+// 获取交易数据
+const fetchTransactionData = async () => {
+  try {
+    const response = await request.get(`/blockchain/allTransactionHashes`, {
+      params: {
+        page: currentTransactionPage.value - 1,
+        size: transactionPageSize.value,
+      },
+    });
+
+    transactionData.value = response.data.data; // 交易数据
+    transactionTotalPages.value = Math.ceil(response.data.total / transactionPageSize.value);
+
+  } catch (error) {
+    console.error("Failed to fetch transaction data:", error);
+  }
+};
+
+
+const goToTransactionDetail = (transactionHash) => {
+      router.push({
+        path: "/TransactionInfoView",
+        query: { tx: transactionHash },
+      })
+
+    };
+
+
+// 初始化页面时获取数据
+onMounted(() => {
+  fetchBlockData();
+  fetchTransactionData();
+});
+
+
+// 区块分页
+const prevBlockPage = () => {
+  if (currentBlockPage.value > 1) {
+    currentBlockPage.value--;
+    fetchBlockData();
+  }
+};
+
+
+const nextBlockPage = () => {
+  if (currentBlockPage.value < blockTotalPages.value) {
+    currentBlockPage.value++;
+    fetchBlockData();
+  }
+};
+
+
+// 交易分页
+const prevTransactionPage = () => {
+  if (currentTransactionPage.value > 1) {
+    currentTransactionPage.value--;
+    fetchTransactionData();
+  }
+};
+
+
+const nextTransactionPage = () => {
+  if (currentTransactionPage.value < transactionTotalPages.value) {
+    currentTransactionPage.value++;
+    fetchTransactionData();
+  }
+};
 
 
 // 表格数据
 const tableData = ref([
-  { id: "000d25498b...", height: 99, view: 2197, status: "Running" },
-  { id: "32515d8859...", height: 99, view: 2198, status: "Running" },
-  { id: "32515d8859...", height: 99, view: 2198, status: "Running" },
-  { id: "32515d8859...", height: 99, view: 2198, status: "Running" },
+  { id: "0X0000",
+    height: "",
+    view: 23175,
+    status: "运行" },
 ]);
-
-// 区块数据
-const blockData = ref([
-  { id: 1, number: "21412156", time: "45 秒前", miner: "0x4838000d25498b...5f97", txCount: 235, reward: "0.0413", transaction: 14.1 },
-  { id: 1, number: "21412156", time: "45 秒前", miner: "0x4838000d25498b...5f97", txCount: 235, reward: "0.0413", transaction: 14.1 },
-  { id: 1, number: "21412156", time: "45 秒前", miner: "0x4838000d25498b...5f97", txCount: 235, reward: "0.0413", transaction: 14.1 },
-  { id: 1, number: "21412156", time: "45 秒前", miner: "0x4838000d25498b...5f97", txCount: 235, reward: "0.0413", transaction: 14.1 },
-]);
-
-
-
-// 分页状态
-const currentPage = ref(1);
-const totalPages = ref(500);
-
-const prevPage = () => {
-  if (currentPage.value > 1) currentPage.value--;
-};
-
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) currentPage.value++;
-};
-
-// 大额交易数据
-const transactionData = ref([
-  { hash: "0xc5c2d1e...", time: "11 小时前", sender: "Binance.Deposit", receiver: "Binance.Withdraw_17", amount: "16,915" },
-  { hash: "0xc5c2d1e...", time: "11 小时前", sender: "Binance.Deposit", receiver: "Binance.Withdraw_17", amount: "16,915" },
-  { hash: "0xc5c2d1e...", time: "11 小时前", sender: "Binance.Deposit", receiver: "Binance.Withdraw_17", amount: "16,915" },
-  { hash: "0xc5c2d1e...", time: "11 小时前", sender: "Binance.Deposit", receiver: "Binance.Withdraw_17", amount: "16,915" },
-  
-  
-]);
-
-
-// 分页状态
-const currentPage2 = ref(1);
-const totalPages2 = ref(500);
-
-const prevPage2 = () => {
-  if (currentPag2.value > 1) currentPage2.value--;
-};
-
-const nextPage2= () => {
-  if (currentPage2.value < totalPages2.value) currentPage2.value++;
-};
 
 
 // ECharts
@@ -229,7 +304,8 @@ onMounted(() => {
 
 <style scoped>
 .main-content {
-  margin-top: 600px; /* 避免被导航栏遮挡 */
+  margin-top: 600px;
+  /* 避免被导航栏遮挡 */
 }
 
 .card-section .card {
@@ -275,7 +351,8 @@ onMounted(() => {
 .search-bar {
   margin-left: 280px;
   margin-bottom: 20px;
-  width: 300px; /* 将搜索框宽度调整为 300px */
+  width: 300px;
+  /* 将搜索框宽度调整为 300px */
 }
 
 .pagination-container {
@@ -309,13 +386,4 @@ onMounted(() => {
   font-size: 16px;
   color: #333;
 }
-
-.sender {
-  color: #460199; /* 设置紫色字体 */
-
-}
-
-.miner {
-  color: #460199; /* 设置紫色字体 */
-}
- </style>
+</style>
