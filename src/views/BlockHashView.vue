@@ -80,7 +80,7 @@
        <p class="block-info">
           哈希 
           <el-tooltip class="item" effect="dark" :content="block.blockHash" placement="top">
-          <span class="sender">{{ block.blockHash.slice(0, 16) }}...{{ block.blockHash.slice(-4) }}</span>
+          <span class="sender">{{ block.blockHash.slice(0, 20) }}...{{ block.blockHash.slice(-20) }}</span>
         </el-tooltip>
         </p>
       </div>
