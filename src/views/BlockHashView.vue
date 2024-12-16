@@ -1,7 +1,8 @@
 <template>
   <el-container>
+    
     <!-- 导航栏 -->
-    <Navbar />
+    <Search />
 
     <!-- 主内容 -->
     <el-main class="main-content">
@@ -85,7 +86,10 @@
         <!-- 大额交易部分 -->
         <el-col :span="12">
           <el-card shadow="hover" class="equal-card">
-            <h3>大额交易</h3>
+           
+               <!-- 搜索框 -->
+    
+    <h3>大额交易 </h3>
             <div v-for="tx in transactionData" :key="tx.hash" class="tx-item">
               <div class="circle">Tx</div>
               <div class="tx-content">
@@ -108,7 +112,9 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
-import Navbar from "@/components/Navbar.vue";
+import Search from "@/components/Search.vue";
+
+
 
 // 表格数据
 const tableData = ref([
@@ -150,7 +156,7 @@ onMounted(() => {
 
 <style scoped>
 .main-content {
-  margin-top: 380px; /* 避免被导航栏遮挡 */
+  margin-top: 600px; /* 避免被导航栏遮挡 */
 }
 
 .card-section .card {
@@ -191,5 +197,11 @@ onMounted(() => {
 
 .footer-button {
   width: 100%;
+}
+
+.search-bar {
+  margin-left: 280px;
+  margin-bottom: 20px;
+  width: 300px; /* 将搜索框宽度调整为 300px */
 }
 </style>
