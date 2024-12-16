@@ -79,7 +79,29 @@
               </div>
               <div class="block-transaction">{{ block.transaction }} </div>
             </div>
-            <el-button type="primary" plain class="footer-button">查看全部区块</el-button>
+                <!-- 添加带左右按钮的分页样式 -->
+            <div class="pagination-container">
+              <!-- 左翻页按钮 -->
+              <button 
+                class="pagination-button" 
+                @click="prevPage" 
+                :disabled="currentPage <= 1"
+              >
+                &lt;
+              </button>
+              
+              <!-- 页码信息 -->
+              <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
+              
+              <!-- 右翻页按钮 -->
+              <button 
+                class="pagination-button" 
+                @click="nextPage" 
+                :disabled="currentPage >= totalPages"
+              >
+                &gt;
+              </button>
+            </div>
           </el-card>
         </el-col>
 
@@ -101,7 +123,29 @@
               </div>
               <div class="tx-time">{{ tx.time }}</div>
             </div>
-            <el-button type="primary" plain class="footer-button">查看全部大额交易</el-button>
+            <!-- 添加带左右按钮的分页样式 -->
+            <div class="pagination-container">
+              <!-- 左翻页按钮 -->
+              <button 
+                class="pagination-button" 
+                @click="prevPage2" 
+                :disabled="currentPage2 <= 1"
+              >
+                &lt;
+              </button>
+              
+              <!-- 页码信息 -->
+              <span class="page-info">{{ currentPage2 }} / {{ totalPages2 }}</span>
+              
+              <!-- 右翻页按钮 -->
+              <button 
+                class="pagination-button" 
+                @click="nextPage2" 
+                :disabled="currentPage2 >= totalPages2"
+              >
+                &gt;
+              </button>
+            </div>
           </el-card>
         </el-col>
       </el-row>
@@ -132,6 +176,20 @@ const blockData = ref([
   { id: 1, number: "21412156", time: "45 秒前", miner: "0x4838000d25498b...5f97", txCount: 235, reward: "0.0413", transaction: 14.1 },
 ]);
 
+
+
+// 分页状态
+const currentPage = ref(1);
+const totalPages = ref(500);
+
+const prevPage = () => {
+  if (currentPage.value > 1) currentPage.value--;
+};
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) currentPage.value++;
+};
+
 // 大额交易数据
 const transactionData = ref([
   { hash: "0xc5c2d1e...", time: "11 小时前", sender: "Binance.Deposit", receiver: "Binance.Withdraw_17", amount: "16,915" },
@@ -141,6 +199,20 @@ const transactionData = ref([
   
   
 ]);
+
+
+// 分页状态
+const currentPage2 = ref(1);
+const totalPages2 = ref(500);
+
+const prevPage2 = () => {
+  if (currentPag2.value > 1) currentPage2.value--;
+};
+
+const nextPage2= () => {
+  if (currentPage2.value < totalPages2.value) currentPage2.value++;
+};
+
 
 // ECharts
 const chartRef = ref(null);
@@ -203,5 +275,37 @@ onMounted(() => {
   margin-left: 280px;
   margin-bottom: 20px;
   width: 300px; /* 将搜索框宽度调整为 300px */
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.pagination-button {
+  background-color: transparent;
+  border: none;
+  font-size: 15px;
+  color: #333;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  padding: 5px 10px;
+}
+
+.pagination-button:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination-button:hover {
+  transform: scale(1.2);
+}
+
+.page-info {
+  margin: 0 10px;
+  font-size: 16px;
+  color: #333;
 }
 </style>
