@@ -14,25 +14,25 @@
             <el-card class="card" shadow="hover">
               <div class="card-content">
                 <h2>4</h2>
-                <p>Nodes</p>
+                <p>节点数量</p>
               </div>
             </el-card>
             <el-card class="card" shadow="hover" style="margin-top: 10px;">
               <div class="card-content">
                 <h2>4</h2>
-                <p>Deployed Contracts</p>
+                <p>失败交易数量</p>
               </div>
             </el-card>
             <el-card class="card orange" shadow="hover" style="margin-top: 10px;">
               <div class="card-content">
                 <h2>99</h2>
-                <p>Blocks</p>
+                <p>区块数量</p>
               </div>
             </el-card>
             <el-card class="card purple" shadow="hover" style="margin-top: 10px;">
               <div class="card-content">
                 <h2>99</h2>
-                <p>Transactions</p>
+                <p>交易数量</p>
               </div>
             </el-card>
           </div>
@@ -49,12 +49,12 @@
 
       <!-- 节点表格 -->
       <el-card style="margin-top: 20px;" shadow="always">
-        <h3>Node Information</h3>
+        <h3>节点监控指标</h3>
         <el-table :data="tableData" stripe style="width: 100%">
-          <el-table-column prop="id" label="Node ID" />
-          <el-table-column prop="height" label="Block Height" />
+          <el-table-column prop="id" label="节点ID" />
+          <el-table-column prop="height" label="块高" />
           <el-table-column prop="view" label="PbftView" />
-          <el-table-column prop="status" label="Status">
+          <el-table-column prop="status" label="状态">
             <template #default="scope">
               <el-tag type="success" v-if="scope.row.status === 'Running'"> ● Running </el-tag>
             </template>
@@ -71,7 +71,7 @@
             <div v-for="block in blockData" :key="block.id" class="block-item">
               <div class="circle">Bk</div>
               <div class="block-content">
-                <p class="block-title">{{ block.number }}</p>
+                <p class="miner">{{ block.number }}</p>
                 <p class="block-time">{{ block.time }}</p>
                 <p class="block-info">
                   出块者 <span class="miner">{{ block.miner }}</span>
@@ -108,17 +108,17 @@
         <!-- 大额交易部分 -->
         <el-col :span="12">
           <el-card shadow="hover" class="equal-card">
-           
+             
                <!-- 搜索框 -->
     
     <h3>大额交易 </h3>
             <div v-for="tx in transactionData" :key="tx.hash" class="tx-item">
               <div class="circle">Tx</div>
               <div class="tx-content">
-                <p class="tx-hash">{{ tx.hash }}</p>
+                <p class="miner">{{ tx.hash }}</p>
                 <p class="tx-info">
-                  发送方 {{ tx.sender }} <br />
-                  接收方 {{ tx.receiver }}
+                  发送方 <span class="sender">{{ tx.sender  }}</span> <br />
+                  接收方 <span class="sender">{{ tx.receiver }}</span>
                 </p>
               </div>
               <div class="tx-time">{{ tx.time }}</div>
@@ -157,6 +157,7 @@
 import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
 import Search from "@/components/Search.vue";
+import { color } from "echarts";
 
 
 
@@ -308,4 +309,13 @@ onMounted(() => {
   font-size: 16px;
   color: #333;
 }
-</style>
+
+.sender {
+  color: #460199; /* 设置紫色字体 */
+
+}
+
+.miner {
+  color: #460199; /* 设置紫色字体 */
+}
+ </style>
