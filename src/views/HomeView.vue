@@ -7,9 +7,10 @@
       <el-row class="header-content" type="flex" align="middle">
         <el-col :span="12">
           <div class="header-text" id="header-text">
-            <h1 id="header-title">我们为您的原创内容提供全方位的版权保护。</h1>
-            <p id="header-subtitle">艺溯之链平台</p>
-          </div>
+    <h1 id="header-title">{{ headerTitle }}</h1>
+    <p id="header-subtitle">{{ headerSubtitle }}</p>
+  </div>
+
         </el-col>
         <el-col :span="12">
           <div class="header-image" id="image-container">
@@ -118,6 +119,8 @@ export default {
   },
   data() {
     return {
+      headerTitle: "我们为您的原创内容提供全方位的版权保护。",
+      headerSubtitle: "艺溯之链平台",
       isPrivateKeyDialogVisible: false, // 控制弹框显示
       privateKeyForm: {
         privateKeyFile: null, // 私钥文件
@@ -200,6 +203,11 @@ export default {
   },
 
   mounted() {
+    
+     // 在页面挂载后，设置定时器，每5秒调用一次 refreshHeaderContent
+     this.timer = setInterval(this.refreshHeaderContent, 3000);
+
+    
     // 检查本地存储中是否存在 privateKey
     const privateKey = localStorage.getItem("privateKey");
     if (!privateKey) {
@@ -280,11 +288,39 @@ function handleScroll() {
 
 window.addEventListener("scroll", handleScroll);
 handleScroll(); // 初始加载检查
+
+
 },
+beforeUnmount() {
+    // 组件销毁前清除定时器，避免内存泄漏
+    clearInterval(this.timer);
+  },
   
 
 
   methods: {
+
+      // 定义每隔5秒重新调用的函数
+   refreshHeaderContent() {
+    const titles = [
+      "我们为您的原创内容提供全方位的版权保护。",
+      "保护原创，赋能创作者，安全又高效。",
+      "艺溯之链，让版权保护更加智能。",
+    ];
+
+    const subtitles = [
+      "艺溯之链平台",
+      "创新版权保护解决方案",
+      "您的原创内容，我们来守护",
+    ];
+
+    // 随机选择标题和副标题
+    this.headerTitle = titles[Math.floor(Math.random() * titles.length)];
+    this.headerSubtitle = subtitles[Math.floor(Math.random() * subtitles.length)];
+
+    console.log("Header 内容重新调用一次"); // 确认方法执行
+    },
+
     // 处理文件选择
     handleFileChange(file) {
       this.privateKeyForm.privateKeyFile = file.raw; // 获取原始文件数据
@@ -331,6 +367,7 @@ handleScroll(); // 初始加载检查
       // 立即申请按钮的点击处理
       this.$router.push("/application"); // 假设 '/apply' 是申请页面的路径
     },
+    
   },
 };
 </script>
@@ -460,7 +497,7 @@ handleScroll(); // 初始加载检查
   white-space: nowrap; /* 防止换行 */
   overflow: hidden; /* 隐藏溢出的文字 */
   border-right: 0.1em solid transparent; /* 可选：用于打字光标效果 */
-  font-size: 1.5rem;
+  font-size: 1.9rem;
   margin-bottom: 20px;
 }
 
@@ -594,7 +631,7 @@ handleScroll(); // 初始加载检查
 .pain-point-card {
   
   width: 100%;
-  margin-left: 350px;
+  margin-left: 250px;
   text-align: center;
   border-radius: 8px;
   transition: all 0.3s ease;
