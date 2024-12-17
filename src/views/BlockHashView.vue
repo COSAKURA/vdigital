@@ -40,7 +40,7 @@
         <!-- 右侧交易折线图 -->
         <el-col :span="18">
           <el-card shadow="always" class="chart-card">
-            <h3>最近七天内的交易</h3>
+            <h3>关键监控指标</h3>
             <div ref="chartRef" style="width: 100%; height: 370px;"></div>
           </el-card>
         </el-col>
@@ -48,7 +48,7 @@
 
       <!-- 节点表格 -->
       <el-card style="margin-top: 20px;" shadow="always">
-        <h3>Node Information</h3>
+        <h3>节点信息</h3>
         <el-table :data="tableData" stripe style="width: 100%">
           <el-table-column label="节点 ID">
   <template #default="scope">
@@ -310,6 +310,15 @@ onMounted(() => {
 
 .card-section .card {
   text-align: center;
+}
+
+.card.green {
+  background-color: #aaecb8;
+}
+
+
+.card.red {
+  background-color: #f1ac9f;
 }
 
 .card.orange {
