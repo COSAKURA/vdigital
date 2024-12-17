@@ -10,13 +10,13 @@
         <!-- 左侧卡片区域 -->
         <el-col :span="6">
           <div class="card-section">
-            <el-card class="card" shadow="hover">
+            <el-card class="card green" shadow="hover">
               <div class="card-content">
                 <h2> {{ blockCountData.nodeList.length }} </h2>
                 <p> 节点 </p>
               </div>
             </el-card>
-            <el-card class="card" shadow="hover" style="margin-top: 10px;">
+            <el-card class="card red" shadow="hover" style="margin-top: 10px;">
               <div class="card-content">
                 <h2> {{ blockCountData.failedTxSum }} </h2>
                 <p> 交易失败数量 </p>
@@ -314,6 +314,15 @@ onMounted(() => {
 
 .card.orange {
   background-color: #fef1e6;
+}
+
+.card.green {
+  background-color: #aaecb8;
+}
+
+
+.card.red {
+  background-color: #f1ac9f;
 }
 
 .card.purple {
