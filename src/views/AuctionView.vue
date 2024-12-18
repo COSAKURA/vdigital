@@ -32,24 +32,6 @@
               </el-button>
             </div>
           </transition>
-
-          <!-- 主题分类筛选 -->
-          <div class="section-header" @click="toggleThemeType">
-            <h4>主题分类</h4>
-            <span class="arrow">{{ isThemeTypeVisible ? "▲" : "▼" }}</span>
-          </div>
-          <transition name="slide">
-            <div v-show="isThemeTypeVisible" class="two-columns">
-              <el-button
-                v-for="theme in themeTypes"
-                :key="theme.value"
-                :type="selectedTheme === theme.value ? 'primary' : ''"
-                @click="filterByTheme(theme.value)"
-              >
-                {{ theme.label }}
-              </el-button>
-            </div>
-          </transition>
         </el-card>
       </aside>
 
@@ -72,7 +54,8 @@
               class="grid-image"
             />
             <h3>{{ work.title }}</h3>
-            <p class="work-description">{{ work.description }}</p>
+            <p class="work-description">作者: {{ work.username }}</p>
+            <p class="work-description">¥ {{ work.startingPrice }} 起</p>
           </div>
         </div>
       </section>
@@ -103,17 +86,11 @@ export default {
       
         // 市场类型选项
         marketTypes: [
-        { label: "数字藏品", value: "digital" },
-        { label: "数字版权", value: "copyright" },
-        { label: "数字身份", value: "identity" },
-        { label: "实业赋能", value: "rwa" },
-      ],
-
-      // 主题分类选项
-      themeTypes: [
-        { label: "天龙区", value: "tianlong" },
-        { label: "活跃区", value: "active" },
-        { label: "观察区", value: "observe" },
+        { label: "艺术类", value: "arts" },
+        { label: "风景类", value: "landscape" },
+        { label: "虚拟场景类", value: "Virtual" },
+        { label: "游戏类", value: "game" },
+        { label: "其他类", value: " categories" }
       ],
     };
   },
@@ -271,7 +248,7 @@ export default {
   margin-bottom: auto;
 }
 
-/* 文本溢出处理 */
+文本溢出处理
 .grid-item h3,
 .work-description,
 .work-id {
