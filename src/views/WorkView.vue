@@ -21,6 +21,7 @@
       <!-- 作品详情弹框 -->
       <el-dialog v-model="dialogVisible" title="作品详情" width="50%" @close="resetSelectedWork">
         <div>
+          
           <p><strong>作品序号：</strong>{{ selectedWork.workId }}</p>
           <p><strong>作品名字：</strong>{{ selectedWork.title }}</p>
           <p><strong>作品描述：</strong>{{ selectedWork.description }}</p>
@@ -30,7 +31,8 @@
           <p><strong>交易哈希值：</strong>{{ selectedWork.transactionHash }}</p>
           <p><strong>创建时间：</strong>{{ selectedWork.createdAt }}</p>
           <p><strong>是否拍卖：</strong>{{ selectedWork.isOnAuction }}</p>
-
+    
+      
           <!-- 动作按钮 -->
           <div class="action-buttons">
 
@@ -581,4 +583,6 @@ p {
 .logo-image {
   width: 80%;
 }
+
+
 </style>

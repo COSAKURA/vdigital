@@ -2,7 +2,7 @@
   <el-header class="main-header">
     <!-- 图片放置在导航栏左侧 -->
     <div class="logo-container">
-      <img src="@/assets/images/logo.png" alt="Logo" class="logo-image" />
+      <img src="@/assets/images/logo.jpg" alt="Logo" class="logo-image" />
     </div>
 
     <!-- 导航菜单 -->
@@ -154,10 +154,10 @@ const goToTransactionDetail = (transactionHash) => {
 }
 
 .logo-image {
-  width: 250%;
+  width: 65%;
   position: relative;
-  left: -100%;
-  top: 30px;
+  left: -5px;
+  top: 5px;
 }
 
 .user-info {

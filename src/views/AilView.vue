@@ -51,11 +51,11 @@ export default {
       this.messages.push({ from: "user", text: this.newMessage });
 
       try {
-        const response = await fetch("http://172.46.225.96:11434/api/chat", {
+        const response = await fetch("http://172.46.225.90:11434/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            model: "minicpm-v:latest", // 模型名称
+            model: "glm4:9b", // 模型名称
             keep_alive: "5m", // 连接保持时间
             messages: [
               {
