@@ -11,27 +11,49 @@
 
       <!-- 网格布局 -->
       <div class="grid">
-        <div v-for="(item, index) in works" :key="index" class="grid-item" @click="openDialog(item)">
-          <img :src="`http://172.46.225.96:8888/uploads/${encodeURIComponent(item.imagePath)}`" :alt="item.title"
-            class="grid-image" />
-          <p>{{ item.title }}</p>
-        </div>
+        <div
+  v-for="(item, index) in works"
+  :key="index"
+  class="grid-item"
+  @click="openDialog(item)"
+>
+  <!-- 图片部分 -->
+  <div class="image-container">
+    <img
+      :src="`http://172.46.225.96:8888/uploads/${encodeURIComponent(item.imagePath)}`"
+      :alt="item.title"
+      class="grid-image"
+    />
+    <div class="image-overlay">
+      <span class="icon-heart ">❤️ {{ item.likes || 0 }} {{ item.title }}</span>
+    </div>
+  </div>
+  
+  <!-- 作品标题 -->
+
+</div>
       </div>
 
       <!-- 作品详情弹框 -->
-      <el-dialog v-model="dialogVisible" title="作品详情" width="50%" @close="resetSelectedWork">
-        <div>
-          
-          <p><strong>作品序号：</strong>{{ selectedWork.workId }}</p>
-          <p><strong>作品名字：</strong>{{ selectedWork.title }}</p>
-          <p><strong>作品描述：</strong>{{ selectedWork.description }}</p>
-          <p><strong>作品哈希值：</strong>{{ selectedWork.workHash }}</p>
-          <p><strong>版权编号：</strong>{{ selectedWork.digitalCopyrightId }}</p>
-          <p><strong>区块哈希值：</strong>{{ selectedWork.blockchainHash }}</p>
-          <p><strong>交易哈希值：</strong>{{ selectedWork.transactionHash }}</p>
-          <p><strong>创建时间：</strong>{{ selectedWork.createdAt }}</p>
-          <p><strong>是否拍卖：</strong>{{ selectedWork.isOnAuction }}</p>
+      <el-dialog v-model="dialogVisible" title="作品详情" width="60%" @close="resetSelectedWork">
+        <div class="details-container">
+           <!-- 左列 -->
+    <div class="details-column">
+      <p><strong>作品序号：</strong>{{ selectedWork.workId }}</p>
+      <p><strong>作品名字：</strong>{{ selectedWork.title }}</p>
+      <p><strong>作品描述：</strong><span class="text-ellipsis" :title="selectedWork.description">{{ selectedWork.description.slice(0, 5) }}...{{ selectedWork.description.slice(-20) }}</span></p>
+      <p><strong>作品哈希值：</strong><span class="text-ellipsis" :title="selectedWork.workHash">{{ selectedWork.workHash.slice(0, 25) }}...{{ selectedWork.workHash.slice(-20) }}</span>
+</p>
+    </div>
     
+     <!-- 右列 -->
+     <div class="details-column">
+      <p><strong>版权编号：</strong>{{ selectedWork.digitalCopyrightId }}</p>
+      <p><strong>区块哈希值：</strong> <span class="text-ellipsis" :title="selectedWork.blockchainHash">{{ selectedWork.blockchainHash.slice(0, 25) }}...{{ selectedWork.blockchainHash.slice(-20) }}</span></p>
+      <p><strong>交易哈希值：</strong> <span class="text-ellipsis" :title="selectedWork.transactionHash">{{ selectedWork.transactionHash.slice(0, 20) }}...{{ selectedWork.transactionHash.slice(-20) }}</span></p>
+      <p><strong>创建时间：</strong>{{ selectedWork.createdAt }}</p>
+      <p><strong>是否拍卖：</strong>{{ selectedWork.isOnAuction }}</p>
+    </div>
       
           <!-- 动作按钮 -->
           <div class="action-buttons">
@@ -439,11 +461,10 @@ export default {
 .grid-item {
   background: #fff;
   border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
 }
 
@@ -455,11 +476,8 @@ export default {
 /* 优化图片样式，防止溢出 */
 .grid-image {
   width: 100%;
-  max-height: 200px;
-  object-fit: contain;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 200px;
+  object-fit: cover;
   transition: transform 0.3s ease;
 }
 
@@ -584,5 +602,46 @@ p {
   width: 80%;
 }
 
+.icon-heart{
+margin-left: 80px;
+}
+
+/* 详情容器 */
+.details-container {
+  margin-top: 25px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 两列等宽 */
+  gap: 20px; /* 列间距 */
+  padding: 10px;
+}
+
+/* 每一列 */
+.details-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* 每个条目之间的间距 */
+}
+
+/* 详情文本样式 */
+.details-column p {
+  margin: 0; /* 清除默认 margin */
+  font-size: 17px;
+  color: #333;
+}
+
+.details-column strong {
+  color: #000;
+  font-weight: bold;
+}
+
+.text-ellipsis {
+  display: inline-block;
+  max-width: 100%; /* 防止溢出 */
+  white-space: nowrap; /* 不换行 */
+  overflow: hidden; /* 隐藏超出部分 */
+  text-overflow: ellipsis; /* 显示省略号 */
+  color: #333;
+  cursor: pointer; /* 鼠标指针变成手型 */
+}
 
 </style>

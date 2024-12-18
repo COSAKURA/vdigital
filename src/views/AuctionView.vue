@@ -40,7 +40,6 @@
         class="auction-recommendation"
         :class="{ 'content-expanded': isSidebarHidden }"
       >
-        <h2 class="section-title">拍品推荐</h2>
         <div class="grid">
           <div
             class="grid-item"
@@ -48,15 +47,25 @@
             :key="index"
             @click="goToAuctionsView(work)"
           >
+            <!-- 图片部分 -->
+          <div class="image-container">
             <img
-              :src="'http://172.46.225.96:8888/uploads/' + encodeURIComponent(work.imagePath)"
+              :src="`http://172.46.225.96:8888/uploads/${encodeURIComponent(work.imagePath)}`"
               :alt="work.title"
               class="grid-image"
             />
-            <h3>{{ work.title }}</h3>
-            <p class="work-description">作者: {{ work.username }}</p>
-            <p class="work-description">¥ {{ work.startingPrice }} 起</p>
+            <div class="image-overlay">
+              <span class="icon-heart">❤️ {{ work.likes || 0 }}</span>
+            </div>
           </div>
+
+          <!-- 作品内容部分 -->
+          <div>
+            <h3>{{ work.title }}</h3>
+            <p class="work-author"> <img src="../assets/images/resource/tx.jpg" alt="icon" class="author-icon" />{{ work.username }}</p>
+            <p class="work-price">¥ {{ work.startingPrice }}起</p>
+          </div>
+        </div>
         </div>
       </section>
     </div>
@@ -188,12 +197,9 @@ export default {
 
 /* 拍品推荐部分 */
 .auction-recommendation {
-  margin-left: 200px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  margin-top: 80px;
+  max-width: 1200px;
+  margin: 40px auto;
+  text-align: center;
 }
 
 /* 调整分类标题之间的间距 */
@@ -217,49 +223,57 @@ export default {
 
 /* 网格布局 */
 .grid {
+  width: 1200px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 15px;
-  max-width: 1000px;
-  margin: 15px auto;
-  padding: 15px;
+  grid-template-columns: repeat(4, 1fr); /* 每行显示6个作品 */
+  gap: 20px; /* 子元素间距 */
+  padding: 20px;
+  margin: 0 auto; /* 居中展示 */
+
 }
 
+/* 单个拍品卡片 */
 .grid-item {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
   background: #fff;
   border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 15px;
-  text-align: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
 }
 
-/* 图片样式 */
-.grid-image {
-  max-width: 100%;
-  height: auto;
-  border-radius: 10px;
-  margin-bottom: auto;
+.grid-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
-文本溢出处理
-.grid-item h3,
-.work-description,
-.work-id {
-  font-size: 14px;
-  color: #333;
-  margin-bottom: 10px;
-  text-overflow: ellipsis; /* 超出部分显示省略号 */
-  overflow: hidden; /* 隐藏溢出内容 */
-  white-space: nowrap; /* 禁止换行 */
-  width: 100%; /* 限制宽度 */
-  box-sizing: border-box;
+/* 图片部分 */
+.image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.grid-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.grid-item:hover .grid-image {
+  transform: scale(1.05);
+}
+
+.image-overlay {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 12px;
 }
 
 /* 区块哈希悬停显示完整 */
@@ -289,7 +303,7 @@ export default {
 /* 容器样式 */
 .container {
   margin-right: 250px;
-  max-width: 1600px;
+  max-width: 1500px;
   display: flex;
   flex-direction: row;
 }
@@ -449,7 +463,7 @@ export default {
 /* 调整按钮组与标题之间的间距 */
 .two-columns {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 每行两列 */
+
   gap: 15px; /* 按钮之间的间距 */
   margin-bottom: 20px; /* 按钮组底部间距，拉开和下方标题的距离 */
 }
@@ -463,4 +477,25 @@ export default {
   margin: 0; /* 去掉按钮默认外边距 */
   box-sizing: border-box;
 }
+
+.work-price{
+  margin-right: 180px;
+  color: #d4af37; /* 金黄色 */
+  font-weight: bold; /* 字体加粗 */
+  font-size: 17px; /* 可选：调整字体大小 */
+}
+
+.work-author{
+  margin-right: 180px;
+  font-size: 16px; /* 可选：调整字体大小 */
+}
+
+.author-icon {
+  width: 16px; /* 小图片宽度 */
+  height: 16px; /* 小图片高度 */
+  margin-right: 5px; /* 图片和文字之间的间距 */
+  vertical-align: middle; /* 垂直居中对齐 */
+  border-radius: 50%; /* 可选：将图片变为圆形 */
+}
+
 </style>

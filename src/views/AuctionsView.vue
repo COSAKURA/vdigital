@@ -7,10 +7,15 @@
     <div class="auction-item-container">
       <el-row :gutter="20">
         <!-- 左侧：图片 -->
-        <el-col :span="6" class="auction-item-left">
-          <el-image :src="`http://172.46.225.96:8888/uploads/${encodeURIComponent(auctions.imgUrl)}`" alt="拍品图片"
-            fit="contain" class="item-image" />
-        </el-col>
+        <div class="auction-item-left">
+    <!-- 图片反转进入 -->
+    <el-image
+      :src="`http://172.46.225.96:8888/uploads/${encodeURIComponent(auctions.imgUrl)}`"
+      alt="拍品图片"
+      fit="contain"
+      class="item-image flip-in"
+    />
+  </div>
         <!-- 右侧：拍品信息 -->
         <el-col :span="18" class="auction-item-right">
           <h2 class="item-title">{{ auctions.title }}</h2>
@@ -208,8 +213,12 @@ body {
   padding: 0;
 }
 
-.main-header,
+.main-header{
+
+}
+
 .auction-item-container {
+  margin-top: 100px;
   max-width: 100%;
   /* 确保内容不会超出屏幕 */
   overflow-x: hidden;
@@ -217,10 +226,18 @@ body {
 }
 
 .item-image {
-  left: 50%;
-  /* 居中图片 */
-  transform: translateX(-50%);
-  /* 防止图片超出页面边界 */
+  width: 100%;
+  max-height: 500px; /* 控制图片的最大高度 */
+  border-radius: 8px; /* 圆角边框 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* 添加平滑过渡效果 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 默认的阴影效果 */
+  position: relative;
+}
+
+.item-image:hover {
+  transform: scale(1.1); /* 鼠标移上去时放大图片 */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* 悬浮时增加阴影 */
+  cursor: pointer; /* 鼠标指针变为手型 */
 }
 
 /* 整体布局样式 */
@@ -281,13 +298,19 @@ body {
 
 /* 拍品信息区域 */
 .auction-item-container {
-  position: sticky;
-  margin-top: 300px;
-  /* 保证内容不会被固定的导航栏遮挡 */
+  margin-top: 30px; /* 将原来的 300px 调小，比如 20px */
+  padding: 20px;
+  background-color: #ffffff; /* 白色背景，更美观 */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+  position: relative; /* 保持相对定位 */
+  z-index: 10; /* 保证在灰色背景之上 */
 }
 
 .auction-item-left {
-  margin-top: 70px;
+  
+  width: 23%;
+  margin-top: 50px;
   position: sticky;
   padding: 20px;
 }
@@ -399,4 +422,26 @@ body {
 .logo-image {
   width: 80%;
 }
+
+.item-image {
+  width: 100%;
+  height: auto;
+  transition: transform 0.8s ease-out;
+}
+
+.flip-in {
+  animation: flipIn 1s ease-in-out;
+}
+
+@keyframes flipIn {
+  0% {
+    transform: rotateY(90deg); /* 初始翻转90度 */
+    opacity: 0; /* 初始透明 */
+  }
+  100% {
+    transform: rotateY(0deg); /* 还原到正常状态 */
+    opacity: 1; /* 完全显示 */
+  }
+}
+
 </style>
