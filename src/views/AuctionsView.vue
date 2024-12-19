@@ -209,8 +209,6 @@ body {
   padding: 0;
 }
 
-.main-header {}
-
 .auction-item-container {
   margin-top: 100px;
   max-width: 100%;
