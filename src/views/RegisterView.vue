@@ -32,8 +32,8 @@
             <!-- 验证码 -->
             <el-form-item label="验证码" prop="code">
               <div class="code-input-wrapper">
-                <el-input v-model="registerForm.code" placeholder="请输入验证码" />
-                <el-button class="send-code-btn" :disabled="!isFormValid || isSending" @click="sendCode">
+                <el-input v-model="registerForm.emailCode" placeholder="请输入验证码" />
+                <el-button class="send-code-btn" :disabled="isSending" @click="sendCode">
                   {{ isSending ? `${countdown}s 后重试` : "获取验证码" }}
                 </el-button>
               </div>
@@ -53,8 +53,7 @@
             </el-form-item>
             <!-- 注册按钮 -->
             <el-form-item>
-              <el-button type="primary" class="register-button" @click="handleRegister"
-                :disabled="!registerForm.agreement">
+              <el-button type="primary" class="register-button" @click="handleRegister" :disabled="!registerForm.agreement">
                 注 册
               </el-button>
             </el-form-item>
@@ -69,8 +68,9 @@
   </div>
 </template>
 
+
 <script setup>
-import { reactive, ref, computed } from "vue";
+import { reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
 import request from "../utils/reques";
 
@@ -80,9 +80,10 @@ const registerForm = reactive({
   email: "",
   emailCode: "",
   password: "",
-  type: "0"
+  type: "0",
 });
 
+// 表单规则
 const rules = {
   username: [
     { required: true, message: "请输入用户名", trigger: "blur" },
@@ -96,33 +97,26 @@ const rules = {
   password: [{ required: true, message: "请输入密码", trigger: "blur" }],
 };
 
+// 表单实例
+const registerFormRef = ref(null);
+
 // 验证码相关状态
 const isSending = ref(false);
 const countdown = ref(60);
 
-// 检查表单是否有效
-const isFormValid = computed(() => {
-  return (
-    registerForm.username &&
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(registerForm.email) &&
-    registerForm.password &&
-    registerForm.agreement
-  );
-});
-
 // 发送验证码逻辑
 const sendCode = async () => {
-  if (!isFormValid.value) {
-    ElMessage.error("请先填写完整的用户名、邮箱和密码，并同意协议！");
+  if (!registerForm.email) {
+    ElMessage.error("请先填写邮箱！");
     return;
   }
+
   isSending.value = true;
   countdown.value = 60;
 
   try {
     const response = await request.post("/user/emailCode", { email: registerForm.email });
 
-    // 判断响应码是否为 0
     if (response.data.code === 0) {
       ElMessage.success("验证码已发送！");
       const timer = setInterval(() => {
@@ -134,7 +128,6 @@ const sendCode = async () => {
         }
       }, 1000);
     } else {
-      // 如果响应码不是 0，则提示失败信息
       ElMessage.error(response.data.msg || "发送验证码失败，请稍后重试！");
       isSending.value = false;
     }
@@ -145,29 +138,27 @@ const sendCode = async () => {
   }
 };
 
-
-// 注册处理
+// 注册处理逻辑
 const handleRegister = async () => {
-  // 验证表单数据
-  await registerFormRef.value.validate(async (valid) => {
+  if (!registerFormRef.value) {
+    return;
+  }
+
+  // 调用表单实例的 validate 方法验证表单
+  registerFormRef.value.validate(async (valid) => {
     if (valid) {
       try {
-        // 发送注册请求
-        const response = await request.post("/api/register", registerForm);
+        const response = await request.post("/user/register", registerForm);
 
-        // 检查响应状态码
         if (response.data.code === 0) {
           ElMessage.success("注册成功！");
           setTimeout(() => {
-            // 跳转到登录页面
             window.location.href = "/login";
           }, 1500);
         } else {
-          // 提示后端返回的错误信息
           ElMessage.error(response.data.msg || "注册失败，请稍后重试！");
         }
       } catch (error) {
-        // 捕获请求错误
         ElMessage.error("注册失败，请检查信息！");
         console.error("注册错误：", error);
       }
