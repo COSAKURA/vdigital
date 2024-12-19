@@ -5,7 +5,7 @@
     <main class="main-content">
       <div class="hero">
         <div class="hero-content">
-          <h2 class="section-title">作品中心</h2>
+          <h2 class="section-title" id="animated-text">作品中心</h2>
         </div>
       </div>
 
@@ -25,10 +25,11 @@
       class="grid-image"
     />
     <div class="image-overlay">
-      <span class="icon-heart ">❤️ {{ item.likes || 0 }} {{ item.title }}</span>
+      <span class="icon-heart ">{{ item.title }}</span>
+      <span class="icon-heart2 "> ❤️ {{ item.likes || 0 }} </span>
     </div>
   </div>
-  
+                                                                  
   <!-- 作品标题 -->
 
 </div>
@@ -101,6 +102,8 @@
   </div>
 </template>
 <script>
+
+
 import request from "../utils/reques";
 import Navbar from "@/components/Navbar.vue";
 
@@ -131,6 +134,8 @@ export default {
     };
   },
   methods: {
+
+  
 
     // 打开作品详情弹框
     openDialog(item) {
@@ -361,7 +366,30 @@ export default {
       console.error("调用 getUserWorks 时出错:", error);
     }
   },
-};
+
+
+mounted() {
+    // 动画逻辑：让文字逐个出现
+    const textElement = document.getElementById("animated-text");
+    const text = textElement.textContent;
+    textElement.textContent = ""; // 清空原有文本
+
+    // 将文字逐个分解为 span 包裹
+    text.split("").forEach((char) => {
+      const span = document.createElement("span");
+      span.textContent = char;
+      span.classList.add("letter");
+      textElement.appendChild(span);
+    });
+
+    // 文字逐个显示的效果
+    const letters = textElement.querySelectorAll(".letter");
+    letters.forEach((letter, index) => {
+      setTimeout(() => {
+        letter.classList.add("visible");
+      }, index * 100); // 每个字母间隔 100ms
+    });
+  }};
 </script>
 
 <style scoped>
@@ -606,6 +634,11 @@ p {
 margin-left: 80px;
 }
 
+.icon-heart2{
+  margin-left: 90px;
+}
+
+
 /* 详情容器 */
 .details-container {
   margin-top: 25px;
@@ -642,6 +675,19 @@ margin-left: 80px;
   text-overflow: ellipsis; /* 显示省略号 */
   color: #333;
   cursor: pointer; /* 鼠标指针变成手型 */
+}
+
+/* 动画效果 */
+.letter {
+  opacity: 0;
+  display: inline-block;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.letter.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 </style>
