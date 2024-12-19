@@ -30,7 +30,7 @@
               <el-input v-model="registerForm.email" placeholder="请输入邮箱" />
             </el-form-item>
             <!-- 验证码 -->
-            <el-form-item label="验证码" prop="code">
+            <el-form-item label="验证码" prop="emailCode">
               <div class="code-input-wrapper">
                 <el-input v-model="registerForm.emailCode" placeholder="请输入验证码" />
                 <el-button class="send-code-btn" :disabled="isSending" @click="sendCode">
@@ -93,7 +93,7 @@ const rules = {
     { required: true, message: "请输入邮箱", trigger: "blur" },
     { pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "邮箱格式不正确", trigger: "blur" },
   ],
-  code: [{ required: true, message: "请输入验证码", trigger: "blur" }],
+  emailCode: [{ required: true, message: "请输入验证码", trigger: "blur" }],
   password: [{ required: true, message: "请输入密码", trigger: "blur" }],
 };
 
