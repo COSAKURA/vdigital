@@ -25,12 +25,7 @@
     </el-menu>
 
     <!-- 搜索框 -->
-    <el-input
-      v-model="searchQuery"
-      placeholder="请输入区块哈希/交易哈希进行溯源"
-      class="search-bar"
-      clearable
-    ></el-input>
+    <el-input v-model="searchQuery" placeholder="请输入区块哈希/交易哈希进行溯源" class="search-bar" clearable></el-input>
 
     <!-- 立即溯源按钮 -->
     <el-button type="primary" class="trace-button" @click="traceSearch">

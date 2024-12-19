@@ -22,12 +22,8 @@
           </div>
           <transition name="slide">
             <div v-show="isMarketTypeVisible" class="two-columns">
-              <el-button
-                v-for="type in marketTypes"
-                :key="type.value"
-                :type="selectedMarketType === type.value ? 'primary' : ''"
-                @click="filterByMarketType(type.value)"
-              >
+              <el-button v-for="type in marketTypes" :key="type.value"
+                :type="selectedMarketType === type.value ? 'primary' : ''" @click="filterByMarketType(type.value)">
                 {{ type.label }}
               </el-button>
             </div>
@@ -36,36 +32,26 @@
       </aside>
 
       <!-- 拍品推荐部分 -->
-      <section
-        class="auction-recommendation"
-        :class="{ 'content-expanded': isSidebarHidden }"
-      >
+      <section class="auction-recommendation" :class="{ 'content-expanded': isSidebarHidden }">
         <div class="grid">
-          <div
-            class="grid-item"
-            v-for="(work, index) in works"
-            :key="index"
-            @click="goToAuctionsView(work)"
-          >
+          <div class="grid-item" v-for="(work, index) in works" :key="index" @click="goToAuctionsView(work)">
             <!-- 图片部分 -->
-          <div class="image-container">
-            <img
-              :src="`http://172.46.225.96:8888/uploads/${encodeURIComponent(work.imagePath)}`"
-              :alt="work.title"
-              class="grid-image"
-            />
-            <div class="image-overlay">
-              <span class="icon-heart">❤️ {{ work.likes || 0 }}</span>
+            <div class="image-container">
+              <img :src="`http://172.46.225.96:8888/uploads/${encodeURIComponent(work.imagePath)}`" :alt="work.title"
+                class="grid-image" />
+              <div class="image-overlay">
+                <span class="icon-heart">❤️ {{ work.likes || 0 }}</span>
+              </div>
+            </div>
+
+            <!-- 作品内容部分 -->
+            <div>
+              <h3>{{ work.title }}</h3>
+              <p class="work-author"> <img src="../assets/images/resource/tx.jpg" alt="icon" class="author-icon" />{{
+                work.username }}</p>
+              <p class="work-price">¥ {{ work.startingPrice }}起</p>
             </div>
           </div>
-
-          <!-- 作品内容部分 -->
-          <div>
-            <h3>{{ work.title }}</h3>
-            <p class="work-author"> <img src="../assets/images/resource/tx.jpg" alt="icon" class="author-icon" />{{ work.username }}</p>
-            <p class="work-price">¥ {{ work.startingPrice }}起</p>
-          </div>
-        </div>
         </div>
       </section>
     </div>
@@ -92,9 +78,9 @@ export default {
       isSidebarHidden: false, // 侧边栏显示/隐藏状态
       selectedMarketType: "",
       selectedTheme: "",
-      
-        // 市场类型选项
-        marketTypes: [
+
+      // 市场类型选项
+      marketTypes: [
         { label: "艺术类", value: "arts" },
         { label: "风景类", value: "landscape" },
         { label: "虚拟场景类", value: "Virtual" },
@@ -106,7 +92,7 @@ export default {
   methods: {
 
 
-     toggleMarketType() {
+    toggleMarketType() {
       this.isMarketTypeVisible = !this.isMarketTypeVisible; // 切换市场类型显示/隐藏
     },
     toggleThemeType() {
@@ -155,8 +141,8 @@ export default {
         console.error("获取拍卖数据时发生错误:", error);
       }
     },
-     // 根据市场类型筛选
-     filterByMarketType(type) {
+    // 根据市场类型筛选
+    filterByMarketType(type) {
       this.selectedMarketType = type;
       this.applyFilters();
     },
@@ -204,12 +190,15 @@ export default {
 
 /* 调整分类标题之间的间距 */
 .section-header {
-  margin-bottom: 10px; /* 标题与下方内容的间距 */
+  margin-bottom: 10px;
+  /* 标题与下方内容的间距 */
 }
 
 .section-header h4 {
-  margin: 0; /* 去掉默认 h4 margin，统一控制 */
-  font-size: 16px; /* 可以增加字体大小 */
+  margin: 0;
+  /* 去掉默认 h4 margin，统一控制 */
+  font-size: 16px;
+  /* 可以增加字体大小 */
   color: #333;
   font-weight: bold;
 }
@@ -225,10 +214,13 @@ export default {
 .grid {
   width: 1200px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 每行显示6个作品 */
-  gap: 20px; /* 子元素间距 */
+  grid-template-columns: repeat(4, 1fr);
+  /* 每行显示6个作品 */
+  gap: 20px;
+  /* 子元素间距 */
   padding: 20px;
-  margin: 0 auto; /* 居中展示 */
+  margin: 0 auto;
+  /* 居中展示 */
 
 }
 
@@ -283,7 +275,8 @@ export default {
 }
 
 .work-id.breakable {
-  white-space: normal; /* 恢复换行 */
+  white-space: normal;
+  /* 恢复换行 */
   word-wrap: break-word;
   word-break: break-all;
   overflow-wrap: break-word;
@@ -292,7 +285,8 @@ export default {
 .grid-item h3:hover,
 .work-description:hover,
 .work-id:hover {
-  white-space: normal; /* 悬停显示完整内容 */
+  white-space: normal;
+  /* 悬停显示完整内容 */
   word-wrap: break-word;
   word-break: break-all;
   overflow-wrap: break-word;
@@ -310,7 +304,7 @@ export default {
 
 /* 左侧侧边栏 */
 .sidebar {
-  margin-top:-21px;
+  margin-top: -21px;
   position: fixed;
   top: 80px;
   left: 0;
@@ -323,7 +317,8 @@ export default {
 }
 
 .sidebar-hidden {
-  transform: translateX(-100%); /* 将侧边栏隐藏到左侧 */
+  transform: translateX(-100%);
+  /* 将侧边栏隐藏到左侧 */
 }
 
 .filter-card {
@@ -355,7 +350,7 @@ export default {
 
 .toggle-button:hover {
   background-color: #5daf2b;
-  
+
 }
 
 
@@ -365,8 +360,9 @@ export default {
   transition: margin-left 0.3s ease-in-out;
 }
 
-.content-expanded { 
-  margin-left: 20px; /* 左侧侧边栏收起时，主内容区域左移 */
+.content-expanded {
+  margin-left: 20px;
+  /* 左侧侧边栏收起时，主内容区域左移 */
 }
 
 /* 按钮样式 */
@@ -379,8 +375,10 @@ export default {
 }
 
 .el-button:hover {
-  background-color: #f0f9eb; /* 按钮悬停背景色 */
-  color: #67c23a; /* 悬停字体颜色 */
+  background-color: #f0f9eb;
+  /* 按钮悬停背景色 */
+  color: #67c23a;
+  /* 悬停字体颜色 */
 }
 
 /* 按钮分组优化 */
@@ -454,7 +452,8 @@ export default {
 
 .slide-enter-to,
 .slide-leave-from {
-  max-height: 200px; /* 根据内容调整 */
+  max-height: 200px;
+  /* 根据内容调整 */
   overflow: hidden;
 }
 
@@ -464,38 +463,51 @@ export default {
 .two-columns {
   display: grid;
 
-  gap: 15px; /* 按钮之间的间距 */
-  margin-bottom: 20px; /* 按钮组底部间距，拉开和下方标题的距离 */
+  gap: 15px;
+  /* 按钮之间的间距 */
+  margin-bottom: 20px;
+  /* 按钮组底部间距，拉开和下方标题的距离 */
 }
 
 /* 单个按钮样式 */
 .two-columns .el-button {
   width: 100%;
   text-align: center;
-  padding: 12px 0; /* 增加按钮的高度 */
-  font-size: 14px; /* 增大按钮字体大小 */
-  margin: 0; /* 去掉按钮默认外边距 */
+  padding: 12px 0;
+  /* 增加按钮的高度 */
+  font-size: 14px;
+  /* 增大按钮字体大小 */
+  margin: 0;
+  /* 去掉按钮默认外边距 */
   box-sizing: border-box;
 }
 
-.work-price{
+.work-price {
   margin-right: 180px;
-  color: #d4af37; /* 金黄色 */
-  font-weight: bold; /* 字体加粗 */
-  font-size: 17px; /* 可选：调整字体大小 */
+  color: #d4af37;
+  /* 金黄色 */
+  font-weight: bold;
+  /* 字体加粗 */
+  font-size: 17px;
+  /* 可选：调整字体大小 */
 }
 
-.work-author{
+.work-author {
   margin-right: 180px;
-  font-size: 16px; /* 可选：调整字体大小 */
+  font-size: 16px;
+  /* 可选：调整字体大小 */
 }
 
 .author-icon {
-  width: 16px; /* 小图片宽度 */
-  height: 16px; /* 小图片高度 */
-  margin-right: 5px; /* 图片和文字之间的间距 */
-  vertical-align: middle; /* 垂直居中对齐 */
-  border-radius: 50%; /* 可选：将图片变为圆形 */
+  width: 16px;
+  /* 小图片宽度 */
+  height: 16px;
+  /* 小图片高度 */
+  margin-right: 5px;
+  /* 图片和文字之间的间距 */
+  vertical-align: middle;
+  /* 垂直居中对齐 */
+  border-radius: 50%;
+  /* 可选：将图片变为圆形 */
 }
-
 </style>
