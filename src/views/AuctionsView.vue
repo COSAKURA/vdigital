@@ -18,39 +18,67 @@
         </div>
         <!-- 右侧：拍品信息 -->
         <el-col :span="18" class="auction-item-right">
-          <h2 class="item-title">{{ auctions.title }}</h2>
-          
-          <p><strong>起拍价：</strong> <span class="price">{{ auctions.startPrice }}</span></p>
-          <p><strong>当前竞拍最高价：</strong> <span class="price">{{ auctions.currentPrice || '暂无竞拍' }}</span></p>
+  <h2 class="item-title">{{ auctions.title }}  <span class="icon-heart">❤️ {{ auctions.likes || 0 }}</span></h2>
+  
+  <p class="author">
+    <strong>作者：</strong>
+    <img src="../assets/images/resource/tx.jpg" alt="icon" class="author-icon" />
+    {{ auctions.author || '李某某' }}
+  </p>
+  <p>
+    <strong class="price-label">￥起：</strong>
+    <span class="price">{{ auctions.startPrice }} </span>
 
-          <div class="buttons">
-            <el-input 
-              v-model="bidAmount" 
-              placeholder="输入竞拍金额" 
-              style="width: 150px; margin-right: 10px;" 
-              :disabled="isAuctionEnded" 
-            />
-            <el-button type="primary" @click="openBidDialog" :disabled="isAuctionEnded">
-              参与竞拍
-            </el-button>
-          </div>
-          <p v-if="isAuctionEnded" class="error-message">拍卖已结束，无法竞拍。</p>
-          <p v-if="bidError" class="error-message">{{ bidError }}</p>
+    <span class="spacing"></span> <!-- 用于增加间隔 -->
+
+    <strong class="price-label">当前最高￥：</strong>
+    <span class="price">{{ auctions.currentPrice || '暂无竞拍' }}</span>
+  </p>
+  <div class="buttons">
+    <el-input 
+      v-model="bidAmount" 
+      placeholder="输入竞拍金额" 
+      style="width: 150px; margin-right: 10px;" 
+      :disabled="isAuctionEnded" 
+    />
+    <el-button type="primary" @click="openBidDialog" :disabled="isAuctionEnded">
+      参与竞拍
+    </el-button>
+  </div>
+  <p v-if="isAuctionEnded" class="error-message">拍卖已结束，无法竞拍。</p>
+  <p v-if="bidError" class="error-message">{{ bidError }}</p>
           
           <!-- 商品信息框 -->
           <div class="product-info-box">
             <h3>商品信息</h3>
-            <div class="info-item" v-for="(value, label) in productInfo" :key="label">
-              <span class="info-label">{{ label }}：</span>
-              <span 
-                v-if="label === '认证标识' || label === '合约地址'" 
-                class="info-value copyable" 
-                @click="copyToClipboard(value)">
-                {{ value }}
-              </span>
-              
-              <span v-else>{{ value }}</span>
-            </div>
+            <div class="info-item">
+  <span class="info-label">合约地址：</span>
+  <span 
+    class="info-value copyable" 
+    @click="copyToClipboard(productInfo['合约地址'])">
+    {{ productInfo['合约地址'] }}
+  </span>
+</div>
+<div class="info-item">
+  <span class="info-label">认证标识：</span>
+  <span 
+    class="info-value copyable" 
+    @click="copyToClipboard(productInfo['认证标识'])">
+    {{ productInfo['认证标识'] }}
+  </span>
+</div>
+<div class="info-item">
+  <span class="info-label">认证标准：</span>
+  <span class="info-value">{{ productInfo['认证标准'] }}</span>
+</div>
+<div class="info-item">
+  <span class="info-label">认证网络：</span>
+  <span class="info-value">{{ productInfo['认证网络'] }}</span>
+</div>
+<div class="info-item">
+  <span class="info-label">到期时间：</span>
+  <span class="info-value1">{{ remainingTime }}</span>
+</div>
           </div>
         </el-col>
       </el-row>
@@ -90,7 +118,7 @@ export default {
         认证标识: "112947...095258",
         认证标准: "ERC-721",
         认证网络: "唯艺链",
-        到期时间: "2024-12-20 14:34:40",
+        到期时间: "",
       },
       auctions: {}, // 拍卖相关信息
       valueDescription: "此艺术品由著名艺术家创作，具有极高的历史文化价值。",
@@ -253,29 +281,20 @@ body {
   /* 禁止容器水平滚动 */
 }
 
-.item-image {
-  margin-left: -30px;
-  margin-top: 70px;
-  width: 100%;
-  max-height: 500px;
-  /* 控制图片的最大高度 */
-  border-radius: 8px;
-  /* 圆角边框 */
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  /* 添加平滑过渡效果 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  /* 默认的阴影效果 */
-  position: relative;
+.auction-item-left {
+  width: auto; /* 自动调整宽度 */
+  height: auto; /* 自动调整高度 */
+  overflow: visible; /* 确保不隐藏内容 */
 }
 
+
+
 .item-image:hover {
-  transform: scale(1.1);
-  /* 鼠标移上去时放大图片 */
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-  /* 悬浮时增加阴影 */
-  cursor: pointer;
-  /* 鼠标指针变为手型 */
+  transform: scale(1.5); /* 鼠标悬停时放大1.5倍 */
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3); /* 放大时增强阴影效果 */
+  cursor: pointer; /* 鼠标变为手型 */
 }
+
 
 /* 整体布局样式 */
 .home-view {
@@ -308,7 +327,7 @@ body {
 }
 
 .nav-item:hover {
-  transform: scale(1.1);
+  transform: scale(1.2);
   /* 鼠标悬停时放大 */
 }
 
@@ -367,18 +386,19 @@ body {
 }
 
 .item-title {
-  font-size: 25px;
-  font-weight: bold;
-  margin-bottom: 50px;
+  font-size: 35px; /* 调整标题文字大小 */
+  font-weight: bold; /* 加粗标题文字 */
+  color: #333; /* 设置标题文字颜色 */
+  margin-bottom: 20px; /* 添加标题与后面内容的间距 */
 }
 
 .price {
+  font-size: 23px;
   color: red;
   font-weight: bold;
 }
 
 .buttons {
-
   margin-top: 20px;
 }
 
@@ -388,13 +408,17 @@ body {
 
 .item-image {
   position: absolute;
-  top: -20px; /* 将图片往上移动 */
-  left: 300px;
-  width: 90%;
+  top: 200px; /* 将图片往上移动 */
+  left: 200px;
+  width: 200px;
   max-height: 500px;
   border-radius: 8px;
-  transform: scale(1.2);
+  transform: scale(1.4);
   z-index: 1;
+  width: 100%;
+  height: auto;
+  transition: transform 0.8s ease-out;
+
 }
 
 .auction-item-info {
@@ -457,11 +481,7 @@ body {
   width: 80%;
 }
 
-.item-image {
-  width: 100%;
-  height: auto;
-  transition: transform 0.8s ease-out;
-}
+
 
 .flip-in {
   animation: flipIn 1s ease-in-out;
@@ -515,6 +535,10 @@ body {
   cursor: pointer;
 }
 
+.info-value1{
+  color: red;
+}
+
 .info-value:hover {
   text-decoration: underline;
 }
@@ -529,12 +553,6 @@ body {
   margin-bottom: 20px;
 }
 
-.item-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 15px;
-}
-
 .price {
   color: red;
   font-weight: bold;
@@ -547,5 +565,58 @@ body {
 .error-message {
   color: red;
   margin-top: 10px;
+}
+
+.price-label {
+  font-size: 20px; /* 增大字体 */
+  color: #333; /* 设置颜色 */
+  font-weight: bold; /* 加粗文字 */
+  margin-right: 5px; /* 与后面的文字保持间距 */
+}
+
+
+.author{
+  font-size: 17px;
+  color: #333;
+  font-weight: bold;
+  margin-right: 5px;
+  margin-left: 5px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.author-icon {
+  width: 20px;
+  /* 小图片宽度 */
+  height: 20px;
+  /* 小图片高度 */
+  margin-right: 5px;
+  /* 图片和文字之间的间距 */
+  vertical-align: middle;
+  /* 垂直居中对齐 */
+  border-radius: 50%;
+  /* 可选：将图片变为圆形 */
+}
+
+.icon-heart {
+  margin-left: 10px; /* 图标与标题文字的间距 */
+  font-size: 18px; /* 图标和数字的大小 */
+  color: #ff4d4f; /* 设置红色的爱心图标 */
+  vertical-align: middle; /* 垂直居中对齐 */
+  cursor: pointer; /* 鼠标移到图标上时变为手型 */
+}
+
+.icon-heart:hover {
+  transform: scale(1.2); /* 悬停时放大效果 */
+  transition: transform 0.2s ease-in-out; /* 动画效果 */
+}
+
+.spacing {
+  display: inline-block; /* 确保占据空间 */
+  width: 95px; /* 设置左右间隔的大小，可以根据需要调整 */
 }
 </style>

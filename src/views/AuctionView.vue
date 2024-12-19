@@ -40,7 +40,7 @@
               <img :src="`http://172.46.225.3:8888/uploads/${encodeURIComponent(work.imagePath)}`" :alt="work.title"
                 class="grid-image" />
               <div class="image-overlay">
-                <span class="icon-heart">❤️ {{ work.likes || 0 }}</span>
+                <span >❤️ {{ work.likes || 0 }}</span>
               </div>
             </div>
 
