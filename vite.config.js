@@ -14,7 +14,7 @@ export default defineConfig({
 
   server:{
     host: '0.0.0.0',
-    port: 8089, // 例如修改为 8089
+    port: 8089, // 例如修改为 8089    
   },
 
   resolve: {

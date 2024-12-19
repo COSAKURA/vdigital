@@ -50,12 +50,8 @@ export default {
       // 添加用户消息
       this.messages.push({ from: "user", text: this.newMessage });
 
-
-      // 清空输入框
-      this.newMessage = "";
-
       try {
-        const response = await fetch("http://172.46.225.90:11434/api/chat", {
+        const response = await fetch("http://172.46.225.0:11434/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
