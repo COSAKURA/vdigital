@@ -9,26 +9,49 @@
         <!-- 左侧：图片 -->
         <div class="auction-item-left">
           <!-- 图片反转进入 -->
-          <el-image :src="`http://172.46.225.3:8888/uploads/${encodeURIComponent(auctions.imgUrl)}`" alt="拍品图片"
-            fit="contain" class="item-image flip-in" />
+          <el-image 
+            :src="`http://172.46.225.3:8888/uploads/${encodeURIComponent(auctions.imgUrl)}`" 
+            alt="拍品图片"
+            fit="contain"
+            class="item-image flip-in" 
+          />
         </div>
         <!-- 右侧：拍品信息 -->
         <el-col :span="18" class="auction-item-right">
           <h2 class="item-title">{{ auctions.title }}</h2>
-          <p><strong>距结束：</strong><span class="countdown">{{ remainingTime }}</span></p>
+          
           <p><strong>起拍价：</strong> <span class="price">{{ auctions.startPrice }}</span></p>
           <p><strong>当前竞拍最高价：</strong> <span class="price">{{ auctions.currentPrice || '暂无竞拍' }}</span></p>
 
           <div class="buttons">
-            <el-input v-model="bidAmount" placeholder="输入竞拍金额" style="width: 150px; margin-right: 10px;"
-              :disabled="isAuctionEnded" />
+            <el-input 
+              v-model="bidAmount" 
+              placeholder="输入竞拍金额" 
+              style="width: 150px; margin-right: 10px;" 
+              :disabled="isAuctionEnded" 
+            />
             <el-button type="primary" @click="openBidDialog" :disabled="isAuctionEnded">
               参与竞拍
             </el-button>
           </div>
           <p v-if="isAuctionEnded" class="error-message">拍卖已结束，无法竞拍。</p>
-
           <p v-if="bidError" class="error-message">{{ bidError }}</p>
+          
+          <!-- 商品信息框 -->
+          <div class="product-info-box">
+            <h3>商品信息</h3>
+            <div class="info-item" v-for="(value, label) in productInfo" :key="label">
+              <span class="info-label">{{ label }}：</span>
+              <span 
+                v-if="label === '认证标识' || label === '合约地址'" 
+                class="info-value copyable" 
+                @click="copyToClipboard(value)">
+                {{ value }}
+              </span>
+              
+              <span v-else>{{ value }}</span>
+            </div>
+          </div>
         </el-col>
       </el-row>
       <!-- 新增：拍品价值性描述 -->
@@ -62,6 +85,19 @@ export default {
   },
   data() {
     return {
+      productInfo: {
+        合约地址: "0x4064...8329",
+        认证标识: "112947...095258",
+        认证标准: "ERC-721",
+        认证网络: "唯艺链",
+        到期时间: "2024-12-20 14:34:40",
+      },
+      auctions: {}, // 拍卖相关信息
+      valueDescription: "此艺术品由著名艺术家创作，具有极高的历史文化价值。",
+      bidAmount: "",
+      isAuctionEnded: false,
+      remainingTime: "",
+      bidError: "",
       workId: "", // 用于存储接收到的作品 ID
       auctions: [], // 用于存储拍卖数据
 
@@ -218,6 +254,8 @@ body {
 }
 
 .item-image {
+  margin-left: -30px;
+  margin-top: 70px;
   width: 100%;
   max-height: 500px;
   /* 控制图片的最大高度 */
@@ -322,16 +360,16 @@ body {
 .auction-item-right {
   margin-bottom: 100px;
   margin-top: 10px;
-  margin-left: 650px;
+  margin-left: 640px;
   width: 50%;
   /* 右侧占50%的宽度 */
   padding: 20px;
 }
 
 .item-title {
-  font-size: 24px;
+  font-size: 25px;
   font-weight: bold;
-  margin-bottom: 15px;
+  margin-bottom: 50px;
 }
 
 .price {
@@ -350,21 +388,13 @@ body {
 
 .item-image {
   position: absolute;
-  /* 使用绝对定位 */
-  top: 10px;
-  /* 向下偏移 */
+  top: -20px; /* 将图片往上移动 */
   left: 300px;
-  /* 向左偏移 */
   width: 90%;
-  /* 放大图片宽度 */
   max-height: 500px;
-  /* 控制图片的最大高度 */
   border-radius: 8px;
-  /* 圆角边框 */
   transform: scale(1.2);
-  /* 放大图片 */
   z-index: 1;
-  /* 确保图片在最上层 */
 }
 
 .auction-item-info {
@@ -451,5 +481,71 @@ body {
     opacity: 1;
     /* 完全显示 */
   }
+}
+
+/* 商品信息框样式 */
+.product-info-box {
+  width: 400px;
+  padding: 20px;
+  border: 1px solid #e0e0e0; /* 边框颜色 */
+  border-radius: 8px; /* 圆角 */
+  background-color: #f9f9f9; /* 背景颜色 */
+  margin-top: 20px; /* 上方间距 */
+}
+
+.product-info-box h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+}
+
+.info-label {
+  font-weight: bold;
+  color: #666;
+}
+
+.info-value {
+  color: #409eff;
+  cursor: pointer;
+}
+
+.info-value:hover {
+  text-decoration: underline;
+}
+
+/* 竞拍信息框 */
+.auction-info-box {
+  padding: 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.item-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.price {
+  color: red;
+  font-weight: bold;
+}
+
+.buttons {
+  margin-top: 20px;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
 }
 </style>
