@@ -206,7 +206,7 @@ export default {
           null, // POST 请求体为空时可以传递 null
           {
             params: {
-              actionId: this.auctions.actionId,
+              auctionId: this.auctions.auctionId,
               bidAmount: this.bidAmount,
               email: localStorage.getItem("email"),
               privateKey: localStorage.getItem("privateKey"),
