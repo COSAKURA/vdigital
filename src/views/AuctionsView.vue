@@ -8,14 +8,10 @@
       <el-row :gutter="20">
         <!-- 左侧：图片 -->
         <div class="auction-item-left">
-    <!-- 图片反转进入 -->
-    <el-image
-      :src="`http://172.46.225.96:8888/uploads/${encodeURIComponent(auctions.imgUrl)}`"
-      alt="拍品图片"
-      fit="contain"
-      class="item-image flip-in"
-    />
-  </div>
+          <!-- 图片反转进入 -->
+          <el-image :src="`http://172.46.225.3:8888/uploads/${encodeURIComponent(auctions.imgUrl)}`" alt="拍品图片"
+            fit="contain" class="item-image flip-in" />
+        </div>
         <!-- 右侧：拍品信息 -->
         <el-col :span="18" class="auction-item-right">
           <h2 class="item-title">{{ auctions.title }}</h2>
@@ -213,10 +209,6 @@ body {
   padding: 0;
 }
 
-.main-header{
-
-}
-
 .auction-item-container {
   margin-top: 100px;
   max-width: 100%;
@@ -227,17 +219,24 @@ body {
 
 .item-image {
   width: 100%;
-  max-height: 500px; /* 控制图片的最大高度 */
-  border-radius: 8px; /* 圆角边框 */
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* 添加平滑过渡效果 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 默认的阴影效果 */
+  max-height: 500px;
+  /* 控制图片的最大高度 */
+  border-radius: 8px;
+  /* 圆角边框 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  /* 添加平滑过渡效果 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /* 默认的阴影效果 */
   position: relative;
 }
 
 .item-image:hover {
-  transform: scale(1.1); /* 鼠标移上去时放大图片 */
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* 悬浮时增加阴影 */
-  cursor: pointer; /* 鼠标指针变为手型 */
+  transform: scale(1.1);
+  /* 鼠标移上去时放大图片 */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  /* 悬浮时增加阴影 */
+  cursor: pointer;
+  /* 鼠标指针变为手型 */
 }
 
 /* 整体布局样式 */
@@ -298,17 +297,22 @@ body {
 
 /* 拍品信息区域 */
 .auction-item-container {
-  margin-top: 30px; /* 将原来的 300px 调小，比如 20px */
+  margin-top: 30px;
+  /* 将原来的 300px 调小，比如 20px */
   padding: 20px;
-  background-color: #ffffff; /* 白色背景，更美观 */
+  background-color: #ffffff;
+  /* 白色背景，更美观 */
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 添加阴影 */
-  position: relative; /* 保持相对定位 */
-  z-index: 10; /* 保证在灰色背景之上 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* 添加阴影 */
+  position: relative;
+  /* 保持相对定位 */
+  z-index: 10;
+  /* 保证在灰色背景之上 */
 }
 
 .auction-item-left {
-  
+
   width: 23%;
   margin-top: 50px;
   position: sticky;
@@ -435,13 +439,17 @@ body {
 
 @keyframes flipIn {
   0% {
-    transform: rotateY(90deg); /* 初始翻转90度 */
-    opacity: 0; /* 初始透明 */
+    transform: rotateY(90deg);
+    /* 初始翻转90度 */
+    opacity: 0;
+    /* 初始透明 */
   }
+
   100% {
-    transform: rotateY(0deg); /* 还原到正常状态 */
-    opacity: 1; /* 完全显示 */
+    transform: rotateY(0deg);
+    /* 还原到正常状态 */
+    opacity: 1;
+    /* 完全显示 */
   }
 }
-
 </style>

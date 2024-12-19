@@ -51,10 +51,10 @@
         <h3>节点信息</h3>
         <el-table :data="tableData" stripe style="width: 100%">
           <el-table-column label="节点 ID">
-  <template #default="scope">
-    {{ scope.row.id.slice(0, 16) }}...
-  </template>
-</el-table-column>
+            <template #default="scope">
+              {{ scope.row.id.slice(0, 16) }}...
+            </template>
+          </el-table-column>
 
           <el-table-column prop="height" label="块高" />
           <el-table-column prop="view" label="PbftView" />
@@ -70,85 +70,73 @@
       <el-row :gutter="20" class="block-transaction">
         <!-- 区块部分 -->
         <el-col :span="12">
-  <el-card shadow="hover" class="equal-card">
-    <h3>区块</h3>
-    <div v-for="block in blockData" :key="block.id" class="block-item">
-      <div class="circle">Bk</div>
-      <div class="block-content">
-        <span class="sender"><p class="block-title">{{ block.blockNumber }}</p></span>
-        <p class="block-time">{{ block.timestamp }}</p>
-       <p class="block-info">
-          哈希 
-          <el-tooltip class="item" effect="dark" :content="block.blockHash" placement="top">
-          <span class="sender">{{ block.blockHash.slice(0, 20) }}...{{ block.blockHash.slice(-20) }}</span>
-        </el-tooltip>
-        </p>
-      </div>
-      <div class="block-transaction">{{ 1 }}</div>
-    </div>
+          <el-card shadow="hover" class="equal-card">
+            <h3>区块</h3>
+            <div v-for="block in blockData" :key="block.id" class="block-item">
+              <div class="circle">Bk</div>
+              <div class="block-content">
+                <span class="sender">
+                  <p class="block-title">{{ block.blockNumber }}</p>
+                </span>
+                <p class="block-time">{{ block.timestamp }}</p>
+                <p class="block-info">
+                  哈希
+                  <el-tooltip class="item" effect="dark" :content="block.blockHash" placement="top">
+                    <span class="sender">{{ block.blockHash.slice(0, 20) }}...{{ block.blockHash.slice(-20) }}</span>
+                  </el-tooltip>
+                </p>
+              </div>
+              <div class="block-transaction">{{ 1 }}</div>
+            </div>
 
-    <!-- 区块分页 -->
-    <div class="pagination-container">
-      <button
-        class="pagination-button"
-        @click="prevBlockPage"
-        :disabled="currentBlockPage <= 1"
-      >
-        &lt;
-      </button>
-      <span class="page-info">{{ currentBlockPage }} / {{ blockTotalPages }}</span>
-      <button
-        class="pagination-button"
-        @click="nextBlockPage"
-        :disabled="currentBlockPage >= blockTotalPages"
-      >
-        &gt;
-      </button>
-    </div>
-  </el-card>
-</el-col>
+            <!-- 区块分页 -->
+            <div class="pagination-container">
+              <button class="pagination-button" @click="prevBlockPage" :disabled="currentBlockPage <= 1">
+                &lt;
+              </button>
+              <span class="page-info">{{ currentBlockPage }} / {{ blockTotalPages }}</span>
+              <button class="pagination-button" @click="nextBlockPage" :disabled="currentBlockPage >= blockTotalPages">
+                &gt;
+              </button>
+            </div>
+          </el-card>
+        </el-col>
 
 
         <!-- 大额交易部分 -->
         <el-col :span="12">
-  <el-card shadow="hover" class="equal-card">
-    <h3>大额交易</h3>
-    <div v-for="tx in transactionData" :key="tx.hash" class="tx-item">
-      <div class="circle">Tx</div>
-      <div class="tx-content">
-        <el-tooltip class="item" effect="dark" :content="tx.transactionHash" placement="top">
-          <el-link type="primary" @click="goToTransactionDetail(tx.transactionHash)">
-            <span class="sender"> {{ tx.transactionHash.slice(0, 9) }}... {{ tx.transactionHash.slice( -9) }}</span>
-                </el-link>
-        </el-tooltip>
-        <p class="tx-info">
-          发送方 <span class="sender">{{ tx.from.slice(0, 20) }}...{{ tx.from.slice( -10) }} </span> <br />
-          接收方 <span class="sender">{{ tx.to.slice(0, 20) }}...{{ tx.to.slice(-10) }} </span>
-        </p>
-      </div>
-      <div class="tx-time">{{ tx.timestamp }}</div>
-    </div>
+          <el-card shadow="hover" class="equal-card">
+            <h3>大额交易</h3>
+            <div v-for="tx in transactionData" :key="tx.hash" class="tx-item">
+              <div class="circle">Tx</div>
+              <div class="tx-content">
+                <el-tooltip class="item" effect="dark" :content="tx.transactionHash" placement="top">
+                  <el-link type="primary" @click="goToTransactionDetail(tx.transactionHash)">
+                    <span class="sender"> {{ tx.transactionHash.slice(0, 9) }}... {{ tx.transactionHash.slice(-9)
+                      }}</span>
+                  </el-link>
+                </el-tooltip>
+                <p class="tx-info">
+                  发送方 <span class="sender">{{ tx.from.slice(0, 20) }}...{{ tx.from.slice(-10) }} </span> <br />
+                  接收方 <span class="sender">{{ tx.to.slice(0, 20) }}...{{ tx.to.slice(-10) }} </span>
+                </p>
+              </div>
+              <div class="tx-time">{{ tx.timestamp }}</div>
+            </div>
 
-    <!-- 交易分页 -->
-    <div class="pagination-container">
-      <button
-        class="pagination-button"
-        @click="prevTransactionPage"
-        :disabled="currentTransactionPage <= 1"
-      >
-        &lt;
-      </button>
-      <span class="page-info">{{ currentTransactionPage }} / {{ transactionTotalPages }}</span>
-      <button
-        class="pagination-button"
-        @click="nextTransactionPage"
-        :disabled="currentTransactionPage >= transactionTotalPages"
-      >
-        &gt;
-      </button>
-    </div>
-  </el-card>
-</el-col>
+            <!-- 交易分页 -->
+            <div class="pagination-container">
+              <button class="pagination-button" @click="prevTransactionPage" :disabled="currentTransactionPage <= 1">
+                &lt;
+              </button>
+              <span class="page-info">{{ currentTransactionPage }} / {{ transactionTotalPages }}</span>
+              <button class="pagination-button" @click="nextTransactionPage"
+                :disabled="currentTransactionPage >= transactionTotalPages">
+                &gt;
+              </button>
+            </div>
+          </el-card>
+        </el-col>
 
       </el-row>
     </el-main>
@@ -168,7 +156,7 @@ const blockCountData = ref({
   nodeList: [],
   txSum: 0,
   failedTxSum: 0,
-}); 
+});
 
 
 // 区块数据分页状态
@@ -232,12 +220,12 @@ const fetchTransactionData = async () => {
 
 
 const goToTransactionDetail = (transactionHash) => {
-      router.push({
-        path: "/TransactionInfoView",
-        query: { tx: transactionHash },
-      })
+  router.push({
+    path: "/TransactionInfoView",
+    query: { tx: transactionHash },
+  })
 
-    };
+};
 
 
 // 初始化页面时获取数据
@@ -283,10 +271,12 @@ const nextTransactionPage = () => {
 
 // 表格数据
 const tableData = ref([
-  { id: "0X0000",
+  {
+    id: "0X0000",
     height: "",
     view: 23175,
-    status: "运行" },
+    status: "运行"
+  },
 ]);
 
 
@@ -405,7 +395,7 @@ onMounted(() => {
   color: #333;
 }
 
-.sender{
+.sender {
   color: rgb(71, 30, 255)
 }
 </style>

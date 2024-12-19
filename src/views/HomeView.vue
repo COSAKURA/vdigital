@@ -7,14 +7,15 @@
       <el-row class="header-content" type="flex" align="middle">
         <el-col :span="12">
           <div class="header-text" id="header-text">
-    <h1 id="header-title">{{ headerTitle }}</h1>
-    <p id="header-subtitle">{{ headerSubtitle }}</p>
-  </div>
+            <h1 id="header-title">{{ headerTitle }}</h1>
+            <p id="header-subtitle">{{ headerSubtitle }}</p>
+          </div>
 
         </el-col>
         <el-col :span="12">
           <div class="header-image" id="image-container">
-            <img src="@/assets/images/main-slider/image-3.png" alt="Header Image"   id="tilt-image"  class="flip-in-image"/>
+            <img src="@/assets/images/main-slider/image-3.png" alt="Header Image" id="tilt-image"
+              class="flip-in-image" />
           </div>
         </el-col>
       </el-row>
@@ -203,51 +204,51 @@ export default {
   },
 
   mounted() {
-    
-     // 在页面挂载后，设置定时器，每5秒调用一次 refreshHeaderContent
-     this.timer = setInterval(this.refreshHeaderContent, 3000);
 
-    
+    // 在页面挂载后，设置定时器，每5秒调用一次 refreshHeaderContent
+    this.timer = setInterval(this.refreshHeaderContent, 3000);
+
+
     // 检查本地存储中是否存在 privateKey
     const privateKey = localStorage.getItem("privateKey");
     if (!privateKey) {
       this.isPrivateKeyDialogVisible = true; // 如果没有，显示弹框
     }
-    
+
     const image = document.getElementById("tilt-image");
 
-  // 1. 页面加载时动画效果
-  setTimeout(() => {
-    image.style.transition = "transform 1.2s ease-out, opacity 1.2s ease-out";
-    image.style.transform = "rotateY(0deg) scale(1)";
-    image.style.opacity = "1";
-  }, 100); // 加入延迟确保加载时执行
+    // 1. 页面加载时动画效果
+    setTimeout(() => {
+      image.style.transition = "transform 1.2s ease-out, opacity 1.2s ease-out";
+      image.style.transform = "rotateY(0deg) scale(1)";
+      image.style.opacity = "1";
+    }, 100); // 加入延迟确保加载时执行
 
-  // 2. 鼠标移动效果
-  const imageContainer = document.getElementById("image-container");
+    // 2. 鼠标移动效果
+    const imageContainer = document.getElementById("image-container");
 
-  imageContainer.addEventListener("mousemove", (event) => {
-    const { offsetWidth, offsetHeight } = imageContainer;
+    imageContainer.addEventListener("mousemove", (event) => {
+      const { offsetWidth, offsetHeight } = imageContainer;
 
-    // 计算鼠标位置
-    const x = (event.offsetX / offsetWidth - 0.5) * 2;
-    const y = (event.offsetY / offsetHeight - 0.5) * 2;
+      // 计算鼠标位置
+      const x = (event.offsetX / offsetWidth - 0.5) * 2;
+      const y = (event.offsetY / offsetHeight - 0.5) * 2;
 
-    const tiltAmount = 10; // 最大偏移角度
-    const rotateX = -y * tiltAmount;
-    const rotateY = x * tiltAmount;
+      const tiltAmount = 10; // 最大偏移角度
+      const rotateX = -y * tiltAmount;
+      const rotateY = x * tiltAmount;
 
-    // 应用鼠标偏移效果
-    image.style.transition = "transform 0.1s ease-out";
-    image.style.transform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
-  });
+      // 应用鼠标偏移效果
+      image.style.transition = "transform 0.1s ease-out";
+      image.style.transform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+    });
 
-  // 鼠标离开时复位
-  imageContainer.addEventListener("mouseleave", () => {
-    image.style.transform = "rotateY(0deg) rotateX(0deg)";
-  });
+    // 鼠标离开时复位
+    imageContainer.addEventListener("mouseleave", () => {
+      image.style.transform = "rotateY(0deg) rotateX(0deg)";
+    });
 
-  function typeText(element, text, speed, callback) {
+    function typeText(element, text, speed, callback) {
       let index = 0;
       const interval = setInterval(() => {
         element.textContent += text[index];
@@ -261,11 +262,11 @@ export default {
 
     const titleElement = document.getElementById("header-title");
     const subtitleElement = document.getElementById("header-subtitle");
-    
-     // 清空初始文本
+
+    // 清空初始文本
     titleElement.textContent = "";
     subtitleElement.textContent = "";
-    
+
     // 执行打字效果
     typeText(titleElement, "我们为您的原创内容提供全方位的版权保护。", 100, () => {
       typeText(subtitleElement, "艺溯之链平台", 100);
@@ -274,51 +275,51 @@ export default {
 
     const processFlow = document.getElementById("process-flow");
 
-function isInViewport(element) {
-  const rect = element.getBoundingClientRect();
-  return rect.top <= window.innerHeight && rect.bottom >= 0;
-}
+    function isInViewport(element) {
+      const rect = element.getBoundingClientRect();
+      return rect.top <= window.innerHeight && rect.bottom >= 0;
+    }
 
-function handleScroll() {
-  if (isInViewport(processFlow)) {
-    processFlow.classList.add("visible");
-    window.removeEventListener("scroll", handleScroll);
-  }
-}
+    function handleScroll() {
+      if (isInViewport(processFlow)) {
+        processFlow.classList.add("visible");
+        window.removeEventListener("scroll", handleScroll);
+      }
+    }
 
-window.addEventListener("scroll", handleScroll);
-handleScroll(); // 初始加载检查
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // 初始加载检查
 
 
-},
-beforeUnmount() {
+  },
+  beforeUnmount() {
     // 组件销毁前清除定时器，避免内存泄漏
     clearInterval(this.timer);
   },
-  
+
 
 
   methods: {
 
-      // 定义每隔5秒重新调用的函数
-   refreshHeaderContent() {
-    const titles = [
-      "我们为您的原创内容提供全方位的版权保护。",
-      "保护原创，赋能创作者，安全又高效。",
-      "艺溯之链，让版权保护更加智能。",
-    ];
+    // 定义每隔5秒重新调用的函数
+    refreshHeaderContent() {
+      const titles = [
+        "我们为您的原创内容提供全方位的版权保护。",
+        "保护原创，赋能创作者，安全又高效。",
+        "艺溯之链，让版权保护更加智能。",
+      ];
 
-    const subtitles = [
-      "艺溯之链平台",
-      "创新版权保护解决方案",
-      "您的原创内容，我们来守护",
-    ];
+      const subtitles = [
+        "艺溯之链平台",
+        "创新版权保护解决方案",
+        "您的原创内容，我们来守护",
+      ];
 
-    // 随机选择标题和副标题
-    this.headerTitle = titles[Math.floor(Math.random() * titles.length)];
-    this.headerSubtitle = subtitles[Math.floor(Math.random() * subtitles.length)];
+      // 随机选择标题和副标题
+      this.headerTitle = titles[Math.floor(Math.random() * titles.length)];
+      this.headerSubtitle = subtitles[Math.floor(Math.random() * subtitles.length)];
 
-    console.log("Header 内容重新调用一次"); // 确认方法执行
+      console.log("Header 内容重新调用一次"); // 确认方法执行
     },
 
     // 处理文件选择
@@ -367,7 +368,7 @@ beforeUnmount() {
       // 立即申请按钮的点击处理
       this.$router.push("/application"); // 假设 '/apply' 是申请页面的路径
     },
-    
+
   },
 };
 </script>
@@ -482,7 +483,8 @@ beforeUnmount() {
 }
 
 .header-text {
-  overflow: hidden; /* 避免文字溢出 */
+  overflow: hidden;
+  /* 避免文字溢出 */
   flex: 1;
 }
 
@@ -494,25 +496,32 @@ beforeUnmount() {
 
 .header-text p {
   display: inline-block;
-  white-space: nowrap; /* 防止换行 */
-  overflow: hidden; /* 隐藏溢出的文字 */
-  border-right: 0.1em solid transparent; /* 可选：用于打字光标效果 */
+  white-space: nowrap;
+  /* 防止换行 */
+  overflow: hidden;
+  /* 隐藏溢出的文字 */
+  border-right: 0.1em solid transparent;
+  /* 可选：用于打字光标效果 */
   font-size: 1.9rem;
   margin-bottom: 20px;
 }
 
 .header-image {
   margin-top: 100px;
-  overflow: hidden; /* 防止图片偏移溢出 */
-  perspective: 1000px; /* 添加3D透视效果 */
+  overflow: hidden;
+  /* 防止图片偏移溢出 */
+  perspective: 1000px;
+  /* 添加3D透视效果 */
   flex: 1;
   display: flex;
   justify-content: flex-end;
 }
 
 .header-image img {
-  transition: transform 0.1s ease-out; /* 添加平滑过渡效果 */
-  will-change: transform; /* 优化渲染性能 */
+  transition: transform 0.1s ease-out;
+  /* 添加平滑过渡效果 */
+  will-change: transform;
+  /* 优化渲染性能 */
   max-width: 90%;
   height: auto;
 }
@@ -629,7 +638,7 @@ beforeUnmount() {
 }
 
 .pain-point-card {
-  
+
   width: 100%;
   margin-left: 250px;
   text-align: center;
@@ -739,22 +748,28 @@ beforeUnmount() {
 
 /* 初始状态 */
 .slide-up {
-  opacity: 0; /* 初始透明 */
-  transform: translateY(50px); /* 向下偏移 */
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out; /* 平滑过渡 */
+  opacity: 0;
+  /* 初始透明 */
+  transform: translateY(50px);
+  /* 向下偏移 */
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  /* 平滑过渡 */
 }
 
 /* 滑动进入动画效果 */
 .slide-up.visible {
-  opacity: 1; /* 完全显示 */
-  transform: translateY(0); /* 回到原始位置 */
+  opacity: 1;
+  /* 完全显示 */
+  transform: translateY(0);
+  /* 回到原始位置 */
 }
 
 /* 图片初始状态 */
 .flip-in-image {
   transform: rotateY(180deg) scale(0.8);
   opacity: 0;
-  transition: transform 0.1s ease-out; /* 鼠标移动时的平滑过渡 */
+  transition: transform 0.1s ease-out;
+  /* 鼠标移动时的平滑过渡 */
   will-change: transform;
 }
 </style>
