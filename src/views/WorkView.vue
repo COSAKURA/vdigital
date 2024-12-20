@@ -174,7 +174,7 @@ export default {
       request.post('/work/applyCopyright', null, { params })  // 通过 `params` 发送查询参数
         .then(response => {
           // 如果请求成功
-          this.selectedWork.hasDigitalCopyright = true;  // 更新作品状态
+          this.selectedWork.hasDigitalCopyright = true; // 更新作品状态
           this.$message.success("版权申请成功，版权已自动上链！");
           this.getUserWorks();
         })
