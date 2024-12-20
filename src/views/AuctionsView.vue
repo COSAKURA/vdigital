@@ -23,7 +23,7 @@
   <p class="author">
     <strong>作者：</strong>
     <img src="../assets/images/resource/tx.jpg" alt="icon" class="author-icon" />
-    {{ auctions.author || '李某某' }}
+    {{ auctions.username }}
   </p>
   <p>
     <strong class="price-label">￥起：</strong>
@@ -35,16 +35,31 @@
     <span class="price">{{ auctions.currentPrice || '暂无竞拍' }}</span>
   </p>
   <div class="buttons">
-    <el-input 
-      v-model="bidAmount" 
-      placeholder="输入竞拍金额" 
-      style="width: 150px; margin-right: 10px;" 
-      :disabled="isAuctionEnded" 
-    />
-    <el-button type="primary" @click="openBidDialog" :disabled="isAuctionEnded">
-      参与竞拍
-    </el-button>
-  </div>
+  <!-- 输入框禁用状态 -->
+  <el-input 
+    v-model="bidAmount" 
+    placeholder="输入竞拍金额" 
+    style="width: 150px; margin-right: 10px;" 
+    :disabled="isAuctionEnded" 
+  />
+  
+  <!-- 根据拍卖状态动态切换按钮 -->
+  <el-button 
+    v-if="!isAuctionEnded" 
+    type="primary" 
+    @click="openBidDialog">
+    参与竞拍
+  </el-button>
+
+  <el-button 
+    v-else 
+    type="danger" 
+    disabled>
+    拍卖已结束
+  </el-button>
+</div>
+
+
   <p v-if="isAuctionEnded" class="error-message">拍卖已结束，无法竞拍。</p>
   <p v-if="bidError" class="error-message">{{ bidError }}</p>
           
@@ -76,7 +91,7 @@
   <span class="info-value">{{ productInfo['认证网络'] }}</span>
 </div>
 <div class="info-item">
-  <span class="info-label">到期时间：</span>
+  <span class="info-label">结束时间：</span>
   <span class="info-value1">{{ remainingTime }}</span>
 </div>
           </div>
@@ -113,6 +128,7 @@ export default {
   },
   data() {
     return {
+      isOwner: false, // 当前用户是否为发起人
       productInfo: {
         合约地址: "0x4064...8329",
         认证标识: "112947...095258",
@@ -149,34 +165,47 @@ export default {
   },
 
   methods: {
-    // 计算倒计时
-    calculateRemainingTime(endTime) {
-      const now = new Date();
-      const end = new Date(endTime);
-      const diff = end - now; // 计算时间差（毫秒）
+     // 计算倒计时
+  calculateRemainingTime(endTime) {
+    const now = new Date();
+    const end = new Date(endTime);
+    const diff = end - now; // 计算时间差（毫秒）
 
-      if (diff <= 0) {
-        this.remainingTime = "已结束";
-        this.isAuctionEnded = true; // 标记拍卖已结束
-        clearInterval(this.countdownInterval); // 倒计时结束，清除定时器
-        return;
-      }
+    if (diff <= 0) {
+      this.remainingTime = "已结束";
+      this.isAuctionEnded = true; // 标记拍卖已结束
+      clearInterval(this.countdownInterval); // 清除定时器
 
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      // 调用后端结束拍卖接口
+      this.endAuction();
 
-      this.remainingTime = `${hours}小时 ${minutes}分钟 ${seconds}秒`;
-      this.isAuctionEnded = false; // 拍卖进行中
-    },
+      return;
+    }
 
-    // 开始倒计时
-    startCountdown(endTime) {
-      this.calculateRemainingTime(endTime); // 初始化计算
-      this.countdownInterval = setInterval(() => {
-        this.calculateRemainingTime(endTime);
-      }, 1000); // 每秒更新一次
-    },
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24)); // 天数
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); // 小时
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)); // 分钟
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000); // 秒
+
+        // 格式化为两位数
+    const formattedDays = days.toString().padStart(2, '0');
+    const formattedHours = hours.toString().padStart(2, '0');
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+    const formattedSeconds = seconds.toString().padStart(2, '0');
+
+    this.remainingTime = `${formattedDays}天 ${formattedHours}小时 ${formattedMinutes}分钟 ${formattedSeconds}秒`;
+    this.isAuctionEnded = false; // 拍卖进行中
+  },
+
+  // 开始倒计时
+  startCountdown(endTime) {
+    this.calculateRemainingTime(endTime); // 初始化计算
+    this.countdownInterval = setInterval(() => {
+      this.calculateRemainingTime(endTime);
+    }, 1000); // 每秒更新一次
+  },
+
+
     // 点击“参与竞拍”按钮时打开弹框
     openBidDialog() {
       if (!this.auctions || !this.auctions.startPrice) {
@@ -239,7 +268,9 @@ export default {
     async fetchAuctionsByWorkId(workId) {
       try {
         const response = await request.get('/auctions/getAuctionById', {
-          params: { workId }, // 将作品 ID 传递到后端
+          params: { workId,
+            currentUserEmail: localStorage.getItem("email")
+           }, // 将作品 ID 传递到后端
         });
         if (response.data.code === 0) {
           this.auctions = response.data.auction; // 成功获取数据
@@ -252,6 +283,28 @@ export default {
         console.error('获取拍卖数据时发生错误:', error);
       }
     },
+
+      // 调用结束拍卖接口
+  async endAuction() {
+    try {
+      const response = await request.post('/auctions/endAuction', null, {
+        params: {
+          auctionId: this.auctions.auctionId, // 当前拍卖ID
+          privateKey: localStorage.getItem('privateKey'), // 用户私钥
+          email: localStorage.getItem('email'), // 用户邮箱
+        },
+      });
+
+      if (response.data.code === 0) {
+        this.$message.success("拍卖已成功结束");
+      } else {
+        this.$message.error(response.data.msg || "结束拍卖失败！");
+      }
+    } catch (error) {
+      console.error("结束拍卖时发生错误:", error);
+      this.$message.error("系统错误，请稍后再试！");
+    }
+  },
   },
   beforeDestroy() {
     if (this.countdownInterval) {
