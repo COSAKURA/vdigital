@@ -77,9 +77,15 @@
       <el-dialog v-model="uploadDialogVisible" title="上传拍品信息" width="50%" @close="resetUploadForm">
         <el-form :model="uploadForm" label-width="100px">
           <el-form-item label="竞拍时间">
-            <el-date-picker v-model="uploadForm.auctionDateRange" type="daterange" start-placeholder="开始日期"
-              end-placeholder="结束日期" />
-          </el-form-item>
+  <el-date-picker
+v-model="uploadForm.auctionDateRange"
+    type="datetimerange"
+    start-placeholder="开始日期"
+    end-placeholder="结束日期"
+    range-separator="至"
+    :shortcuts="shortcuts"
+  />
+</el-form-item>
           <el-form-item label="竞拍价格">
             <el-input v-model="uploadForm.auctionPrice" placeholder="请输入竞拍价格" :formatter="formatter" :parser="parser" />
           </el-form-item>
