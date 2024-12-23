@@ -10,14 +10,14 @@
 
        <!-- 分割线上方的标签导航 -->
        <div class="custom-tab-container">
-  <div
-    v-for="tab in tabs"
-    :key="tab.name"
-    :class="['custom-tab', { active: activeTab === tab.name }]"
-    @click="handleTabClick(tab)"
-  >
-    {{ tab.label }}
-  </div>
+        <div
+  v-for="tab in tabs"
+  :key="tab.name"
+  :class="['custom-tab', tab.name, { active: activeTab === tab.name }]"
+  @click="handleTabClick(tab)"
+>
+  {{ tab.label }}
+</div>
 </div>
 
       <!-- 网格布局 -->
@@ -727,16 +727,14 @@ p {
   border-radius: 15px;
   font-size: 12px;
 }
-
 .custom-tab-container {
-position: relative;
-margin-top: -100px;
+  position: relative;
+  margin-top: -100px;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 20px;
   padding: 10px 0;
-
   border-bottom: 2px solid #e0e0e0;
   margin-bottom: 20px;
 }
@@ -753,9 +751,24 @@ margin-top: -100px;
   transition: all 0.3s ease-in-out;
 }
 
-.custom-tab.active {
+/* 进行中（绿色） */
+.custom-tab.in-progress.active {
+  background: linear-gradient(to right, #4caf50, #66bb6a); /* 绿色渐变 */
   color: #fff;
-  background: linear-gradient(to right, #ff4d4f, #ff7875);
+  box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3); /* 绿色阴影 */
+}
+
+/* 待公布（黄色） */
+.custom-tab.upcoming.active {
+  background: linear-gradient(to right, #e7d104, #f5c432); /* 黄色渐变 */
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3); /* 黄色阴影 */
+}
+
+/* 已结束（默认红色） */
+.custom-tab.active:not(.in-progress):not(.upcoming) {
+  color: #fff;
+  background: linear-gradient(to right, #ff4d4f, #ff7875); /* 红色渐变 */
   box-shadow: 0 4px 10px rgba(255, 77, 79, 0.3);
 }
 
@@ -763,6 +776,5 @@ margin-top: -100px;
   transform: scale(1.05);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
 
 </style>
