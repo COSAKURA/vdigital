@@ -5,9 +5,20 @@
     <main class="main-content">
       <div class="hero">
         <div class="hero-content">
-          <h2 class="section-title" id="animated-text">作品中心</h2>
         </div>
       </div>
+
+       <!-- 分割线上方的标签导航 -->
+       <div class="custom-tab-container">
+  <div
+    v-for="tab in tabs"
+    :key="tab.name"
+    :class="['custom-tab', { active: activeTab === tab.name }]"
+    @click="handleTabClick(tab)"
+  >
+    {{ tab.label }}
+  </div>
+</div>
 
       <!-- 网格布局 -->
       <div class="grid">
@@ -21,9 +32,6 @@
               <span class="icon-heart1 ">❤️ {{ item.likes || 0 }} </span>
             </div>
           </div>
-
-          <!-- 作品标题 -->
-
         </div>
       </div>
 
@@ -39,7 +47,7 @@
             <p><strong>作品哈希值：</strong><span class="text-ellipsis" :title="selectedWork.workHash">{{
               selectedWork.workHash.slice(0, 25) }}...{{ selectedWork.workHash.slice(-20) }}</span>
             </p>
-          </div>
+          </div> 
 
           <!-- 右列 -->
           <div class="details-column">
@@ -116,6 +124,12 @@ export default {
   },
   data() {
     return {
+      activeTab: "in-progress", // 默认选中的标签
+      tabs: [
+        { label: "进行中", name: "in-progress" },
+        { label: "待公布", name: "upcoming" },
+        { label: "已结束", name: "finished" },
+      ],
       dialogVisible: false,
       uploadDialogVisible: false, // 控制上传弹框的显示
       selectedWork: {}, // 当前选中的作品
@@ -136,6 +150,17 @@ export default {
     };
   },
   methods: {
+      // 标签点击事件处理
+      handleTabClick(tab) {
+      this.activeTab = tab.name;
+
+    },
+
+      // 模拟动态数据加载
+      fetchWorks(tabName) {
+      // 假设通过 API 获取不同标签的数据
+      this.works = []; // 清空当前数据
+    },
     // 打开作品详情弹框
     openDialog(item) {
       this.selectedWork = { ...item };
@@ -366,6 +391,10 @@ export default {
     }
   },
   mounted() {
+
+     // 页面加载时加载默认标签的数据
+     this.fetchWorks(this.activeTab);
+
   this.$nextTick(() => {
     const textElement = document.getElementById("animated-text");
     if (!textElement) {
@@ -464,27 +493,6 @@ export default {
   margin-top: 50px;
 }
 
-.hero-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 10px;
-  width: 100%;
-  /* 调整盒子的宽度，缩小到 80% */
-  font-size: 0.9rem;
-  /* 可选：缩小字体大小 */
-}
-
-
-
-.section-title {
-  margin-top: 200px;
-  font-size: 35px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
 /* 动画效果 */
 .letter {
   opacity: 0;
@@ -507,15 +515,12 @@ export default {
   margin: 40px auto;
   padding: 20px;
 }
-
 .grid-item {
+  position: relative;
   background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
 }
 
 .grid-item:hover {
@@ -639,7 +644,7 @@ p {
 }
 
 .main-content {
-  margin-top: -20px;
+  margin-top: -20px;                                  
 }
 
 
@@ -721,6 +726,42 @@ p {
   padding: 5px 10px;
   border-radius: 15px;
   font-size: 12px;
+}
+
+.custom-tab-container {
+position: relative;
+margin-top: -100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 0;
+
+  border-bottom: 2px solid #e0e0e0;
+  margin-bottom: 20px;
+}
+
+.custom-tab {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #666;
+  background: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+}
+
+.custom-tab.active {
+  color: #fff;
+  background: linear-gradient(to right, #ff4d4f, #ff7875);
+  box-shadow: 0 4px 10px rgba(255, 77, 79, 0.3);
+}
+
+.custom-tab:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 
