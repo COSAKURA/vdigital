@@ -252,7 +252,7 @@ export default {
         }
       } catch (error) {
         console.error("提交竞拍时发生错误:", error);
-        this.$message.error("竞拍失败，请稍后再试！");
+        this.$message.error("竞拍失败，请输入正整数！");
       }
     },
 
