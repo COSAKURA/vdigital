@@ -227,9 +227,8 @@ export default {
     },
     // 解析竞拍价格
     parser(value) {
-      return value.replace(/\$\s?|(,*)/g, "");
-    },
-
+  return value.replace(/￥\s?|(,*)/g, "");
+},
     openDialog(item) {
       this.selectedWork = { ...item };
       this.dialogVisible = true;
