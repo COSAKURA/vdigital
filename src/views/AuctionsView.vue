@@ -162,6 +162,8 @@ export default {
     } else {
       console.error('未接收到作品 ID');
     }
+      // 初始化 WebSocket 连接
+      this.initWebSocket();
   },
 
   methods: {
