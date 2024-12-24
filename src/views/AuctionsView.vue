@@ -165,6 +165,44 @@ export default {
   },
 
   methods: {
+    // 初始化 WebSocket 连接
+    initWebSocket() {
+      const socket = new WebSocket("ws://172.46.225.3:8888/ws/auction");
+
+      // 保存 WebSocket 实例到 data
+      this.websocket = socket;
+
+      // 监听消息
+      socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+
+        // 检查消息是否为拍卖更新
+        const auctionId = data.auctionId;
+        const currentPrice = data.currentPrice;
+
+        // 更新页面中对应的拍卖数据
+        if (this.auctions.auctionId === auctionId) {
+          this.auctions.currentPrice = currentPrice;
+          this.$forceUpdate(); // 强制更新页面
+        }
+      };
+
+      // WebSocket 连接关闭时的处理
+      socket.onclose = () => {
+        console.log("WebSocket connection closed");
+      };
+
+      // WebSocket 连接出错时的处理
+      socket.onerror = (error) => {
+        console.error("WebSocket error:", error);
+      };
+
+      // WebSocket 连接成功时的处理
+      socket.onopen = () => {
+        console.log("WebSocket connection opened");
+      };
+    },
+
      // 计算倒计时
   calculateRemainingTime(endTime) {
     const now = new Date();
@@ -307,6 +345,10 @@ export default {
   },
   },
   beforeDestroy() {
+     // 组件销毁时关闭 WebSocket
+    if (this.websocket) {
+      this.websocket.close();
+    }
     if (this.countdownInterval) {
       clearInterval(this.countdownInterval);
     }
