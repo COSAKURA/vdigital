@@ -51,7 +51,7 @@ export default {
       this.messages.push({ from: "user", text: this.newMessage });
 
       try {
-        const response = await fetch("http://172.46.225.3:11434/api/chat", {
+        const response = await fetch("http://127.0.0.1:11434/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

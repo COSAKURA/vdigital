@@ -223,7 +223,7 @@ export default {
     // 格式化竞拍价格
     formatter(value) {
       if (!value) return "";
-      return `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     // 解析竞拍价格
     parser(value) {
@@ -729,7 +729,7 @@ p {
 }
 .custom-tab-container {
   position: relative;
-  margin-top: -100px;
+  margin-top: 10px;
   display: flex;
   justify-content: center;
   align-items: center;

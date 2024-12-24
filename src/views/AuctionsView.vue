@@ -232,7 +232,7 @@ export default {
       try {
         const response = await request.post(
           '/auctions/placeBid',
-          null, // POST 请求体为空时可以传递 null
+          null, // POST 请求体为空时可以传递 null               
           {
             params: {
               auctionId: this.auctions.auctionId,
@@ -252,7 +252,7 @@ export default {
         }
       } catch (error) {
         console.error("提交竞拍时发生错误:", error);
-        this.$message.error("竞拍失败，请稍后再试！");
+        this.$message.error("竞拍失败，请输入正整数！");
       }
     },
 
