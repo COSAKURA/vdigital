@@ -28,102 +28,94 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, nextTick } from "vue";
 import Navbar from "@/components/Navbar.vue";
 
-export default {
-  components: {
-    Navbar,
-  },
-  data() {
-    return {
-      newMessage: "",
-      messages: [
-        { from: "assistant", text: "你好！欢迎使用本地 AI 服务，有什么可以帮您的吗？ 😊" },
-      ],
-    };
-  },
-  methods: {
-    async sendMessage() {
-      if (this.newMessage.trim() === "") return;
+// 定义响应式数据
+const newMessage = ref("");
+const messages = reactive([
+  { from: "assistant", text: "你好！欢迎使用本地 AI 服务，有什么可以帮您的吗？ 😊" },
+]);
 
-      // 添加用户消息
-      this.messages.push({ from: "user", text: this.newMessage });
+// 发送消息方法
+async function sendMessage() {
+  if (newMessage.value.trim() === "") return;
 
+  // 添加用户消息
+  messages.push({ from: "user", text: newMessage.value });
+
+  try {
+    const response = await fetch("http://127.0.0.1:11434/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "glm4:9b", // 模型名称
+        keep_alive: "5m", // 连接保持时间
+        messages: [
+          {
+            role: "user",
+            content: newMessage.value,
+            images: [],
+          },
+        ],
+      }),
+    });
+
+    if (!response.body) {
+      throw new Error("Response body is null");
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+    let assistantMessage = "";
+    messages.push({ from: "assistant", text: "" });
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      // 解析流数据
+      const chunk = decoder.decode(value, { stream: true });
       try {
-        const response = await fetch("http://127.0.0.1:11434/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            model: "glm4:9b", // 模型名称
-            keep_alive: "5m", // 连接保持时间
-            messages: [
-              {
-                role: "user",
-                content: this.newMessage,
-                images: [],
-              },
-            ],
-          }),
-        });
+        const jsonChunks = chunk
+          .split("\n")
+          .filter((line) => line.trim() !== "") // 过滤空行
+          .map((line) => JSON.parse(line)); // 转换为 JSON
 
-        if (!response.body) {
-          throw new Error("Response body is null");
-        }
+        for (const json of jsonChunks) {
+          if (json.message && json.message.content) {
+            assistantMessage += json.message.content;
 
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder("utf-8");
-        let assistantMessage = "";
-        this.messages.push({ from: "assistant", text: "" });
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          // 解析流数据
-          const chunk = decoder.decode(value, { stream: true });
-          try {
-            const jsonChunks = chunk
-              .split("\n")
-              .filter((line) => line.trim() !== "") // 过滤空行
-              .map((line) => JSON.parse(line)); // 转换为 JSON
-
-            for (const json of jsonChunks) {
-              if (json.message && json.message.content) {
-                assistantMessage += json.message.content;
-
-                // 更新对话框中 AI 的回答
-                this.messages[this.messages.length - 1].text = assistantMessage;
-                this.scrollToBottom(); // 每次更新消息后滚动到底部
-              }
-            }
-          } catch (e) {
-            console.error("解析流数据失败：", e, chunk);
+            // 更新对话框中 AI 的回答
+            messages[messages.length - 1].text = assistantMessage;
+            scrollToBottom(); // 每次更新消息后滚动到底部
           }
         }
-      } catch (error) {
-        console.error("发送消息失败：", error);
-        this.messages.push({
-          from: "assistant",
-          text: "发送失败，请检查服务器状态或稍后再试。",
-        });
+      } catch (e) {
+        console.error("解析流数据失败：", e, chunk);
       }
-      this.scrollToBottom(); // 发送消息后滚动到底部
-    },
-    scrollToBottom() {
-      // 滚动到底部
-      this.$nextTick(() => {
-        const chatMessages = this.$refs.chatMessages;
-        if (chatMessages) {
-          chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-      });
-    },
-  },
-};
+    }
+  } catch (error) {
+    console.error("发送消息失败：", error);
+    messages.push({
+      from: "assistant",
+      text: "发送失败，请检查服务器状态或稍后再试。",
+    });
+  }
+  scrollToBottom(); // 发送消息后滚动到底部
+}
+
+// 滚动到底部方法
+function scrollToBottom() {
+  nextTick(() => {
+    const chatMessages = document.querySelector(".chat-messages");
+    if (chatMessages) {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  });
+}
 </script>
-
-
 
 <style scoped>
 /* 聊天页面的整体布局 */
