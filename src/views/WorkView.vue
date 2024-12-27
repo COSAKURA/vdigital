@@ -36,50 +36,40 @@
       </div>
 
       <!-- 作品详情弹框 -->
-      <el-dialog v-model="dialogVisible" title="作品详情" width="60%" @close="resetSelectedWork">
-        <div class="details-container">
-          <!-- 左列 -->
-          <div class="details-column">
-            <p><strong>作品序号：</strong>{{ selectedWork.workId }}</p>
-            <p><strong>作品名字：</strong>{{ selectedWork.title }}</p>
-            <p><strong>作品描述：</strong><span class="text-ellipsis" :title="selectedWork.description">{{
-              selectedWork.description.slice(0, 5) }}...{{ selectedWork.description.slice(-20) }}</span></p>
-            <p><strong>作品哈希值：</strong><span class="text-ellipsis" :title="selectedWork.workHash">{{
-              selectedWork.workHash.slice(0, 25) }}...{{ selectedWork.workHash.slice(-20) }}</span>
-            </p>
-          </div> 
+      <el-dialog v-model="dialogVisible" title="作品详情" width="40%" @close="resetSelectedWork">
+  <div class="details-container">
+    <!-- 左列 -->
+    <div class="details-column">
+      <p><strong>作品序号：</strong>{{ selectedWork.workId }}</p>
+      <p><strong>作品名字：</strong>{{ selectedWork.title }}</p>
+      <p><strong>作品描述：</strong><span class="text-ellipsis" :title="selectedWork.description">{{
+        selectedWork.description.slice(0, 5) }}...{{ selectedWork.description.slice(-20) }}</span></p>
+      <p><strong>版权编号：</strong>{{ selectedWork.digitalCopyrightId }}</p>
+      <p><strong>交易哈希值：</strong> <span class="text-ellipsis" :title="selectedWork.transactionHash">{{
+        selectedWork.transactionHash.slice(0, 20) }}...{{ selectedWork.transactionHash.slice(-20) }}</span></p>
+      <p><strong>创建时间：</strong>{{ selectedWork.createdAt }}</p>
+      <p><strong>是否拍卖：</strong>{{ selectedWork.isOnAuction }}</p>
+    </div>
+  </div>
+  <template #footer>
+    <div class="footer-actions">
+      <el-button type="primary" :disabled="!selectedWork.hasDigitalCopyright || selectedWork.isOnAuction"
+        @click="onAddListing">
+        {{ selectedWork.isOnAuction ? '拍卖中' : '上架拍品' }}
+      </el-button>
 
-          <!-- 右列 -->
-          <div class="details-column">
-            <p><strong>版权编号：</strong>{{ selectedWork.digitalCopyrightId }}</p>
-            <p><strong>区块哈希值：</strong> <span class="text-ellipsis" :title="selectedWork.blockchainHash">{{
-              selectedWork.blockchainHash.slice(0, 25) }}...{{ selectedWork.blockchainHash.slice(-20) }}</span></p>
-            <p><strong>交易哈希值：</strong> <span class="text-ellipsis" :title="selectedWork.transactionHash">{{
-              selectedWork.transactionHash.slice(0, 20) }}...{{ selectedWork.transactionHash.slice(-20) }}</span></p>
-            <p><strong>创建时间：</strong>{{ selectedWork.createdAt }}</p>
-            <p><strong>是否拍卖：</strong>{{ selectedWork.isOnAuction }}</p>
-          </div>
+      <el-button type="success" :disabled="!selectedWork.digitalCopyrightId" @click="downloadCertificate">
+        下载证书
+      </el-button>
 
-          <!-- 动作按钮 -->
-          <div class="action-buttons">
+      <el-button type="warning" :disabled="selectedWork.digitalCopyrightId" @click="applyForCopyright">
+        申请版权
+      </el-button>
 
-            <el-button type="primary" :disabled="!selectedWork.hasDigitalCopyright || selectedWork.isOnAuction"
-              @click="onAddListing">
-              {{ selectedWork.isOnAuction ? '拍卖中' : '上架拍品' }}
-            </el-button>
-
-            <el-button type="success" :disabled="!selectedWork.digitalCopyrightId" @click="downloadCertificate">
-              下载证书
-            </el-button>
-            <el-button type="warning" :disabled="selectedWork.digitalCopyrightId" @click="applyForCopyright">
-              申请版权
-            </el-button>
-          </div>
-        </div>
-        <template #footer>
-          <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
-        </template>
-      </el-dialog>
+      <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
+    </div>
+  </template>
+</el-dialog>
 
       <!-- 上传拍品信息弹框 -->
       <el-dialog v-model="uploadDialogVisible" title="上传拍品信息" width="50%" @close="resetUploadForm">
@@ -226,7 +216,7 @@ export default {
       return `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     // 解析竞拍价格
-    parser(value) {
+  parser(value) {
   return value.replace(/￥\s?|(,*)/g, "");
 },
     openDialog(item) {
@@ -728,7 +718,7 @@ p {
 }
 .custom-tab-container {
   position: relative;
-  margin-top: 10px;
+  margin-top: -30px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -776,4 +766,9 @@ p {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+.footer-actions {
+  display: flex;
+  justify-content: flex-end; /* 按钮右对齐 */
+  gap: 10px; /* 按钮之间的间距 */
+}
 </style>
