@@ -337,6 +337,8 @@ export default {
 
       if (response.data.code === 0) {
         this.$message.success("拍卖已成功结束");
+        window.location.reload(); // 刷新页面
+        
       } else {
         this.$message.error(response.data.msg || "结束拍卖失败！");
       }
