@@ -45,8 +45,10 @@ async function sendMessage() {
   // 添加用户消息
   messages.push({ from: "user", text: newMessage.value });
 
+ 
   try {
-    const response = await fetch("http://127.0.0.1:11434/api/chat", {
+    // 改了这个路径别动
+    const response = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -83,6 +85,11 @@ async function sendMessage() {
           .filter((line) => line.trim() !== "") // 过滤空行
           .map((line) => JSON.parse(line)); // 转换为 JSON
 
+
+            // 清空输入框
+ newMessage.value = ""; // 在这里清空输入框内容 
+
+
         for (const json of jsonChunks) {
           if (json.message && json.message.content) {
             assistantMessage += json.message.content;
@@ -104,6 +111,8 @@ async function sendMessage() {
     });
   }
   scrollToBottom(); // 发送消息后滚动到底部
+
+
 }
 
 // 滚动到底部方法
