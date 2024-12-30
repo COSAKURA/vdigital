@@ -718,7 +718,7 @@ p {
 }
 .custom-tab-container {
   position: relative;
-  margin-top: -30px;
+  top: 10px;
   display: flex;
   justify-content: center;
   align-items: center;

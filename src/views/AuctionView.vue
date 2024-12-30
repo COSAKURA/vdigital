@@ -182,8 +182,9 @@ export default {
 
 /* 拍品推荐部分 */
 .auction-recommendation {
+  position: relative;
+  top: 300px;
   max-width: 1200px;
-  margin: 40px auto;
   text-align: center;
 }
 
@@ -211,6 +212,8 @@ export default {
 
 /* 网格布局 */
 .grid {
+  position: relative;
+  top: 150px;
   width: 1200px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
