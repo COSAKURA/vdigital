@@ -26,8 +26,7 @@
                 :type="selectedMarketType === type.value ? 'primary' : ''" @click="filterByMarketType(type.value)">
                 {{ type.label }}
               </el-button>
-            </div>
-          </transition>
+            </div> 
         </el-card>
       </aside>
 
