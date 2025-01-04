@@ -8,17 +8,13 @@
         </div>
       </div>
 
-       <!-- 分割线上方的标签导航 -->
-       <div class="custom-tab-container">
-        <div
-  v-for="tab in tabs"
-  :key="tab.name"
-  :class="['custom-tab', tab.name, { active: activeTab === tab.name }]"
-  @click="handleTabClick(tab)"
->
-  {{ tab.label }}
-</div>
-</div>
+      <!-- 分割线上方的标签导航 -->
+      <div class="custom-tab-container">
+        <div v-for="tab in tabs" :key="tab.name" :class="['custom-tab', tab.name, { active: activeTab === tab.name }]"
+          @click="handleTabClick(tab)">
+          {{ tab.label }}
+        </div>
+      </div>
 
       <!-- 网格布局 -->
       <div class="grid">
@@ -37,53 +33,47 @@
 
       <!-- 作品详情弹框 -->
       <el-dialog v-model="dialogVisible" title="作品详情" width="40%" @close="resetSelectedWork">
-  <div class="details-container">
-    <!-- 左列 -->
-    <div class="details-column">
-      <p><strong>作品序号：</strong>{{ selectedWork.workId }}</p>
-      <p><strong>作品名字：</strong>{{ selectedWork.title }}</p>
-      <p><strong>作品描述：</strong><span class="text-ellipsis" :title="selectedWork.description">{{
-        selectedWork.description.slice(0, 5) }}...{{ selectedWork.description.slice(-20) }}</span></p>
-      <p><strong>版权编号：</strong>{{ selectedWork.digitalCopyrightId }}</p>
-      <p><strong>交易哈希值：</strong> <span class="text-ellipsis" :title="selectedWork.transactionHash">{{
-        selectedWork.transactionHash.slice(0, 20) }}...{{ selectedWork.transactionHash.slice(-20) }}</span></p>
-      <p><strong>创建时间：</strong>{{ selectedWork.createdAt }}</p>
-      <p><strong>是否拍卖：</strong>{{ selectedWork.isOnAuction }}</p>
-    </div>
-  </div>
-  <template #footer>
-    <div class="footer-actions">
-      <el-button type="primary" :disabled="!selectedWork.hasDigitalCopyright || selectedWork.isOnAuction"
-        @click="onAddListing">
-        {{ selectedWork.isOnAuction ? '拍卖中' : '上架拍品' }}
-      </el-button>
+        <div class="details-container">
+          <!-- 左列 -->
+          <div class="details-column">
+            <p><strong>作品序号：</strong>{{ selectedWork.workId }}</p>
+            <p><strong>作品名字：</strong>{{ selectedWork.title }}</p>
+            <p><strong>作品描述：</strong><span class="text-ellipsis" :title="selectedWork.description">{{
+              selectedWork.description.slice(0, 5) }}...{{ selectedWork.description.slice(-20) }}</span></p>
+            <p><strong>版权编号：</strong>{{ selectedWork.digitalCopyrightId }}</p>
+            <p><strong>交易哈希值：</strong> <span class="text-ellipsis" :title="selectedWork.transactionHash">{{
+              selectedWork.transactionHash.slice(0, 20) }}...{{ selectedWork.transactionHash.slice(-20) }}</span></p>
+            <p><strong>创建时间：</strong>{{ selectedWork.createdAt }}</p>
+            <p><strong>是否拍卖：</strong>{{ selectedWork.isOnAuction }}</p>
+          </div>
+        </div>
+        <template #footer>
+          <div class="footer-actions">
+            <el-button type="primary" :disabled="!selectedWork.hasDigitalCopyright || selectedWork.isOnAuction"
+              @click="onAddListing">
+              {{ selectedWork.isOnAuction ? '拍卖中' : '上架拍品' }}
+            </el-button>
 
-      <el-button type="success" :disabled="!selectedWork.digitalCopyrightId" @click="downloadCertificate">
-        下载证书
-      </el-button>
+            <el-button type="success" :disabled="!selectedWork.digitalCopyrightId" @click="downloadCertificate">
+              下载证书
+            </el-button>
 
-      <el-button type="warning" :disabled="selectedWork.digitalCopyrightId" @click="applyForCopyright">
-        申请版权
-      </el-button>
+            <el-button type="warning" :disabled="selectedWork.digitalCopyrightId" @click="applyForCopyright">
+              申请版权
+            </el-button>
 
-      <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
-    </div>
-  </template>
-</el-dialog>
+            <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
+          </div>
+        </template>
+      </el-dialog>
 
       <!-- 上传拍品信息弹框 -->
       <el-dialog v-model="uploadDialogVisible" title="上传拍品信息" width="50%" @close="resetUploadForm">
         <el-form :model="uploadForm" label-width="100px">
           <el-form-item label="竞拍时间">
-  <el-date-picker
-v-model="uploadForm.auctionDateRange"
-    type="datetimerange"
-    start-placeholder="开始日期"
-    end-placeholder="结束日期"
-    range-separator="至"
-    :shortcuts="shortcuts"
-  />
-</el-form-item>
+            <el-date-picker v-model="uploadForm.auctionDateRange" type="datetimerange" start-placeholder="开始日期"
+              end-placeholder="结束日期" range-separator="至" :shortcuts="shortcuts" />
+          </el-form-item>
           <el-form-item label="竞拍价格">
             <el-input v-model="uploadForm.auctionPrice" placeholder="请输入竞拍价格" :formatter="formatter" :parser="parser" />
           </el-form-item>
@@ -140,14 +130,14 @@ export default {
     };
   },
   methods: {
-      // 标签点击事件处理
-      handleTabClick(tab) {
+    // 标签点击事件处理
+    handleTabClick(tab) {
       this.activeTab = tab.name;
 
     },
 
-      // 模拟动态数据加载
-      fetchWorks(tabName) {
+    // 模拟动态数据加载
+    fetchWorks(tabName) {
       // 假设通过 API 获取不同标签的数据
       this.works = []; // 清空当前数据
     },
@@ -216,9 +206,9 @@ export default {
       return `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     // 解析竞拍价格
-  parser(value) {
-  return value.replace(/￥\s?|(,*)/g, "");
-},
+    parser(value) {
+      return value.replace(/￥\s?|(,*)/g, "");
+    },
     openDialog(item) {
       this.selectedWork = { ...item };
       this.dialogVisible = true;
@@ -381,41 +371,41 @@ export default {
   },
   mounted() {
 
-     // 页面加载时加载默认标签的数据
-     this.fetchWorks(this.activeTab);
+    // 页面加载时加载默认标签的数据
+    this.fetchWorks(this.activeTab);
 
-  this.$nextTick(() => {
-    const textElement = document.getElementById("animated-text");
-    if (!textElement) {
-      console.error("未找到 id 为 'animated-text' 的元素");
-      return;
-    }
+    this.$nextTick(() => {
+      const textElement = document.getElementById("animated-text");
+      if (!textElement) {
+        console.error("未找到 id 为 'animated-text' 的元素");
+        return;
+      }
 
-    const text = textElement.textContent;
-    textElement.textContent = ""; // 清空原有文本
+      const text = textElement.textContent;
+      textElement.textContent = ""; // 清空原有文本
 
-    // 将文字逐个分解为 span 包裹
-    text.split("").forEach((char) => {
-      const span = document.createElement("span");
-      span.textContent = char;
-      span.classList.add("letter");
-      textElement.appendChild(span);
+      // 将文字逐个分解为 span 包裹
+      text.split("").forEach((char) => {
+        const span = document.createElement("span");
+        span.textContent = char;
+        span.classList.add("letter");
+        textElement.appendChild(span);
+      });
+
+      // 文字逐个显示的效果
+      const letters = textElement.querySelectorAll(".letter");
+      letters.forEach((letter, index) => {
+        setTimeout(() => {
+          letter.classList.add("visible");
+        }, index * 100); // 每个字母间隔 100ms
+      });
     });
+  }
 
-    // 文字逐个显示的效果
-    const letters = textElement.querySelectorAll(".letter");
-    letters.forEach((letter, index) => {
-      setTimeout(() => {
-        letter.classList.add("visible");
-      }, index * 100); // 每个字母间隔 100ms
-    });
-  });
 }
 
-}
 
 
-  
 </script>
 
 <style scoped>
@@ -504,6 +494,7 @@ export default {
   margin: 40px auto;
   padding: 20px;
 }
+
 .grid-item {
   position: relative;
   background: #fff;
@@ -633,7 +624,7 @@ p {
 }
 
 .main-content {
-  margin-top: -20px;                                  
+  margin-top: -20px;
 }
 
 
@@ -650,7 +641,7 @@ p {
   margin-left: 110px;
 }
 
-.icon-heart2{
+.icon-heart2 {
   margin-left: 90px;
 }
 
@@ -703,7 +694,8 @@ p {
 }
 
 .image-overlay {
-  position: relative; /* 设置为相对定位，让内部元素可以绝对定位 */
+  position: relative;
+  /* 设置为相对定位，让内部元素可以绝对定位 */
 }
 
 .icon-heart1 {
@@ -716,6 +708,7 @@ p {
   border-radius: 15px;
   font-size: 12px;
 }
+
 .custom-tab-container {
   position: relative;
   top: 10px;
@@ -742,22 +735,27 @@ p {
 
 /* 进行中（绿色） */
 .custom-tab.in-progress.active {
-  background: linear-gradient(to right, #4caf50, #66bb6a); /* 绿色渐变 */
+  background: linear-gradient(to right, #4caf50, #66bb6a);
+  /* 绿色渐变 */
   color: #fff;
-  box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3); /* 绿色阴影 */
+  box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+  /* 绿色阴影 */
 }
 
 /* 待公布（黄色） */
 .custom-tab.upcoming.active {
-  background: linear-gradient(to right, #e7d104, #f5c432); /* 黄色渐变 */
+  background: linear-gradient(to right, #e7d104, #f5c432);
+  /* 黄色渐变 */
   color: #fff;
-  box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3); /* 黄色阴影 */
+  box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3);
+  /* 黄色阴影 */
 }
 
 /* 已结束（默认红色） */
 .custom-tab.active:not(.in-progress):not(.upcoming) {
   color: #fff;
-  background: linear-gradient(to right, #ff4d4f, #ff7875); /* 红色渐变 */
+  background: linear-gradient(to right, #ff4d4f, #ff7875);
+  /* 红色渐变 */
   box-shadow: 0 4px 10px rgba(255, 77, 79, 0.3);
 }
 
@@ -768,7 +766,9 @@ p {
 
 .footer-actions {
   display: flex;
-  justify-content: flex-end; /* 按钮右对齐 */
-  gap: 10px; /* 按钮之间的间距 */
+  justify-content: flex-end;
+  /* 按钮右对齐 */
+  gap: 10px;
+  /* 按钮之间的间距 */
 }
 </style>

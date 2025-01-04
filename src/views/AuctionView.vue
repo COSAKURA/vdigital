@@ -40,14 +40,15 @@
               <img :src="`http://172.46.225.3:8888/uploads/${encodeURIComponent(work.imagePath)}`" :alt="work.title"
                 class="grid-image" />
               <div class="image-overlay">
-                <span >❤️ {{ work.likes || 0 }}</span>
+                <span>❤️ {{ work.likes || 0 }}</span>
               </div>
             </div>
 
             <!-- 作品内容部分 -->
             <div>
               <h3>{{ work.title }}</h3>
-              <p class="work-author"> <img src="../assets/images/resource/tx.jpg" alt="icon" class="author-icon" /> <span class="author-name">{{ work.username }}</span></p>
+              <p class="work-author"> <img src="../assets/images/resource/tx.jpg" alt="icon" class="author-icon" />
+                <span class="author-name">{{ work.username }}</span></p>
               <p class="work-price">¥ {{ work.startingPrice }}起</p>
             </div>
           </div>
@@ -495,9 +496,12 @@ export default {
 }
 
 .work-author {
-  display: flex; /* 将内容水平排列 */
-  align-items: center; /* 垂直居中对齐 */
-  gap: 8px; /* 图片和用户名之间的间距 */
+  display: flex;
+  /* 将内容水平排列 */
+  align-items: center;
+  /* 垂直居中对齐 */
+  gap: 8px;
+  /* 图片和用户名之间的间距 */
   margin-right: 180px;
   font-size: 12px;
   /* 可选：调整字体大小 */
@@ -517,8 +521,11 @@ export default {
 }
 
 .author-name {
-  white-space: nowrap; /* 防止文字换行 */
-  font-size: 14px; /* 根据需求调整字体大小 */
-  color: #333; /* 设置文字颜色 */
+  white-space: nowrap;
+  /* 防止文字换行 */
+  font-size: 14px;
+  /* 根据需求调整字体大小 */
+  color: #333;
+  /* 设置文字颜色 */
 }
 </style>

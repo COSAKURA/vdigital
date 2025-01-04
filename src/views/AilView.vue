@@ -45,7 +45,7 @@ async function sendMessage() {
   // 添加用户消息
   messages.push({ from: "user", text: newMessage.value });
 
- 
+
   try {
     // 改了这个路径别动
     const response = await fetch("/api/chat", {
@@ -86,8 +86,8 @@ async function sendMessage() {
           .map((line) => JSON.parse(line)); // 转换为 JSON
 
 
-            // 清空输入框
- newMessage.value = ""; // 在这里清空输入框内容 
+        // 清空输入框
+        newMessage.value = ""; // 在这里清空输入框内容 
 
 
         for (const json of jsonChunks) {

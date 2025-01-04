@@ -53,7 +53,8 @@
             </el-form-item>
             <!-- 注册按钮 -->
             <el-form-item>
-              <el-button type="primary" class="register-button" @click="handleRegister" :disabled="!registerForm.agreement">
+              <el-button type="primary" class="register-button" @click="handleRegister"
+                :disabled="!registerForm.agreement">
                 注 册
               </el-button>
             </el-form-item>
