@@ -9,94 +9,108 @@
         <!-- 左侧：图片 -->
         <div class="auction-item-left">
           <!-- 图片反转进入 -->
-          <el-image 
-            :src="`http://172.46.225.3:8888/uploads/${encodeURIComponent(auctions.imgUrl)}`" 
-            alt="拍品图片"
-            fit="contain"
-            class="item-image flip-in" 
-          />
+          <el-image :src="`http://172.46.225.3:8888/uploads/${encodeURIComponent(auctions.imgUrl)}`" alt="拍品图片"
+            fit="contain" class="item-image flip-in" />
         </div>
         <!-- 右侧：拍品信息 -->
         <el-col :span="18" class="auction-item-right">
-  <h2 class="item-title">{{ auctions.title }}  <span class="icon-heart">❤️ {{ auctions.likes || 0 }}</span></h2>
-  
-  <p class="author">
-    <strong>作者：</strong>
-    <img src="../assets/images/resource/tx.jpg" alt="icon" class="author-icon" />
-    {{ auctions.username }}
-  </p>
-  <p>
-    <strong class="price-label">￥起：</strong>
-    <span class="price">{{ auctions.startPrice }} </span>
+          <h2 class="item-title">{{ auctions.title }} <span class="icon-heart">❤️ {{ auctions.likes || 0 }}</span></h2>
 
-    <span class="spacing"></span> <!-- 用于增加间隔 -->
+          <p class="author">
+            <strong>作者：</strong>
+            <img src="../assets/images/resource/tx.jpg" alt="icon" class="author-icon" />
+            {{ auctions.username }}
+          </p>
+          <p>
+            <strong class="price-label">￥起：</strong>
+            <span class="price">{{ auctions.startPrice }} </span>
 
-    <strong class="price-label">当前最高￥：</strong>
-    <span class="price">{{ auctions.currentPrice || '暂无竞拍' }}</span>
-  </p>
-  <div class="buttons">
-  <!-- 输入框禁用状态 -->
-  <el-input 
-    v-model="bidAmount" 
-    placeholder="输入竞拍金额" 
-    style="width: 150px; margin-right: 10px;" 
-    :disabled="isAuctionEnded" 
-  />
-  
-  <!-- 根据拍卖状态动态切换按钮 -->
-  <el-button 
-    v-if="!isAuctionEnded" 
-    type="primary" 
-    @click="openBidDialog">
-    参与竞拍
-  </el-button>
+            <span class="spacing"></span> <!-- 用于增加间隔 -->
 
-  <el-button 
-    v-else 
-    type="danger" 
-    disabled>
-    拍卖已结束
-  </el-button>
-</div>
+            <strong class="price-label">当前最高￥：</strong>
+            <span class="price">{{ auctions.currentPrice || '暂无竞拍' }}</span>
+          </p>
+          <div class="buttons">
+            <!-- 输入框禁用状态 -->
+            <el-input v-model="bidAmount" placeholder="输入竞拍金额" style="width: 150px; margin-right: 10px;"
+              :disabled="isAuctionEnded" />
+
+            <!-- 根据拍卖状态动态切换按钮 -->
+            <el-button v-if="!isAuctionEnded" type="primary" @click="openBidDialog">
+              参与竞拍
+            </el-button>
+
+            <el-button v-else type="danger" disabled>
+              拍卖已结束
+            </el-button>
+          </div>
 
 
-  <p v-if="isAuctionEnded" class="error-message">拍卖已结束，无法竞拍。</p>
-  <p v-if="bidError" class="error-message">{{ bidError }}</p>
-          
+          <p v-if="isAuctionEnded" class="error-message">拍卖已结束，无法竞拍。</p>
+          <p v-if="bidError" class="error-message">{{ bidError }}</p>
+
           <!-- 商品信息框 -->
           <div class="product-info-box">
             <h3>商品信息</h3>
             <div class="info-item">
-  <span class="info-label">合约地址：</span>
-  <span 
-    class="info-value copyable" 
-    @click="copyToClipboard(productInfo['合约地址'])">
-    {{ productInfo['合约地址'] }}
-  </span>
-</div>
-<div class="info-item">
-  <span class="info-label">认证标识：</span>
-  <span 
-    class="info-value copyable" 
-    @click="copyToClipboard(productInfo['认证标识'])">
-    {{ productInfo['认证标识'] }}
-  </span>
-</div>
-<div class="info-item">
-  <span class="info-label">认证标准：</span>
-  <span class="info-value">{{ productInfo['认证标准'] }}</span>
-</div>
-<div class="info-item">
-  <span class="info-label">认证网络：</span>
-  <span class="info-value">{{ productInfo['认证网络'] }}</span>
-</div>
-<div class="info-item">
-  <span class="info-label">结束时间：</span>
-  <span class="info-value1">{{ remainingTime }}</span>
-</div>
+              <span class="info-label">合约地址：</span>
+              <span class="info-value copyable" @click="copyToClipboard(productInfo['合约地址'])">
+                {{ productInfo['合约地址'] }}
+              </span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">认证标识：</span>
+              <span class="info-value copyable" @click="copyToClipboard(productInfo['认证标识'])">
+                {{ productInfo['认证标识'] }}
+              </span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">认证标准：</span>
+              <span class="info-value">{{ productInfo['认证标准'] }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">认证网络：</span>
+              <span class="info-value">{{ productInfo['认证网络'] }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">结束时间：</span>
+              <span class="info-value1">{{ remainingTime }}</span>
+            </div>
           </div>
         </el-col>
       </el-row>
+      <el-row class="bidding-records">
+  <el-col :span="24">
+    <h3 class="section-title">竞买记录</h3>
+    <el-table
+      :data="bids"
+      style="width: 100%; margin-top: 10px;"
+      border
+    >
+      <el-table-column prop="username" label="用户名称" align="center" width="250">
+        <template #default="scope">
+          {{ scope.row.username }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="price" label="价格" align="center" width="150">
+        <template #default="scope">
+          ￥{{ scope.row.price }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="createdAt" label="时间" align="center" width="240">
+        <template #default="scope">
+          {{ scope.row.createdAt }}
+        </template>
+      </el-table-column>
+      <el-table-column label="交易哈希" align="center" width="600">
+        <template #default="scope">
+          {{ scope.row.transactionHash }}
+        </template>
+      </el-table-column>
+    </el-table>
+  </el-col>
+</el-row>
+
       <!-- 新增：拍品价值性描述 -->
       <el-row class="value-description">
         <el-col :span="24">
@@ -106,6 +120,7 @@
       </el-row>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -128,6 +143,7 @@ export default {
   },
   data() {
     return {
+      bids: [], // 存储出价历史记录
       isOwner: false, // 当前用户是否为发起人
       productInfo: {
         合约地址: "0x4064...8329",
@@ -162,8 +178,8 @@ export default {
     } else {
       console.error('未接收到作品 ID');
     }
-      // 初始化 WebSocket 连接
-      this.initWebSocket();
+    // 初始化 WebSocket 连接
+    this.initWebSocket();
   },
 
   methods: {
@@ -205,45 +221,45 @@ export default {
       };
     },
 
-     // 计算倒计时
-  calculateRemainingTime(endTime) {
-    const now = new Date();
-    const end = new Date(endTime);
-    const diff = end - now; // 计算时间差（毫秒）
+    // 计算倒计时
+    calculateRemainingTime(endTime) {
+      const now = new Date();
+      const end = new Date(endTime);
+      const diff = end - now; // 计算时间差（毫秒）
 
-    if (diff <= 0) {
-      this.remainingTime = "已结束";
-      this.isAuctionEnded = true; // 标记拍卖已结束
-      clearInterval(this.countdownInterval); // 清除定时器
+      if (diff <= 0) {
+        this.remainingTime = "已结束";
+        this.isAuctionEnded = true; // 标记拍卖已结束
+        clearInterval(this.countdownInterval); // 清除定时器
 
-      // 调用后端结束拍卖接口
-      this.endAuction();
+        // 调用后端结束拍卖接口
+        this.endAuction();
 
-      return;
-    }
+        return;
+      }
 
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24)); // 天数
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); // 小时
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)); // 分钟
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000); // 秒
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24)); // 天数
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); // 小时
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)); // 分钟
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000); // 秒
 
-        // 格式化为两位数
-    const formattedDays = days.toString().padStart(2, '0');
-    const formattedHours = hours.toString().padStart(2, '0');
-    const formattedMinutes = minutes.toString().padStart(2, '0');
-    const formattedSeconds = seconds.toString().padStart(2, '0');
+      // 格式化为两位数
+      const formattedDays = days.toString().padStart(2, '0');
+      const formattedHours = hours.toString().padStart(2, '0');
+      const formattedMinutes = minutes.toString().padStart(2, '0');
+      const formattedSeconds = seconds.toString().padStart(2, '0');
 
-    this.remainingTime = `${formattedDays}天 ${formattedHours}小时 ${formattedMinutes}分钟 ${formattedSeconds}秒`;
-    this.isAuctionEnded = false; // 拍卖进行中
-  },
+      this.remainingTime = `${formattedDays}天 ${formattedHours}小时 ${formattedMinutes}分钟 ${formattedSeconds}秒`;
+      this.isAuctionEnded = false; // 拍卖进行中
+    },
 
-  // 开始倒计时
-  startCountdown(endTime) {
-    this.calculateRemainingTime(endTime); // 初始化计算
-    this.countdownInterval = setInterval(() => {
-      this.calculateRemainingTime(endTime);
-    }, 1000); // 每秒更新一次
-  },
+    // 开始倒计时
+    startCountdown(endTime) {
+      this.calculateRemainingTime(endTime); // 初始化计算
+      this.countdownInterval = setInterval(() => {
+        this.calculateRemainingTime(endTime);
+      }, 1000); // 每秒更新一次
+    },
 
 
     // 点击“参与竞拍”按钮时打开弹框
@@ -308,12 +324,14 @@ export default {
     async fetchAuctionsByWorkId(workId) {
       try {
         const response = await request.get('/auctions/getAuctionById', {
-          params: { workId,
+          params: {
+            workId,
             currentUserEmail: localStorage.getItem("email")
-           }, // 将作品 ID 传递到后端
+          }, // 将作品 ID 传递到后端
         });
         if (response.data.code === 0) {
           this.auctions = response.data.auction; // 成功获取数据
+          this.bids = response.data.auction.bids;
           // 开始倒计时
           this.startCountdown(this.auctions.endTime);
         } else {
@@ -324,32 +342,32 @@ export default {
       }
     },
 
-      // 调用结束拍卖接口
-  async endAuction() {
-    try {
-      const response = await request.post('/auctions/endAuction', null, {
-        params: {
-          auctionId: this.auctions.auctionId, // 当前拍卖ID
-          privateKey: localStorage.getItem('privateKey'), // 用户私钥
-          email: localStorage.getItem('email'), // 用户邮箱
-        },
-      });
+    // 调用结束拍卖接口
+    async endAuction() {
+      try {
+        const response = await request.post('/auctions/endAuction', null, {
+          params: {
+            auctionId: this.auctions.auctionId, // 当前拍卖ID
+            privateKey: localStorage.getItem('privateKey'), // 用户私钥
+            email: localStorage.getItem('email'), // 用户邮箱
+          },
+        });
 
-      if (response.data.code === 0) {
-        this.$message.success("拍卖已成功结束");
-        window.location.reload(); // 刷新页面
-        
-      } else {
-        this.$message.error(response.data.msg || "结束拍卖失败！");
+        if (response.data.code === 0) {
+          this.$message.success("拍卖已成功结束");
+          window.location.reload(); // 刷新页面
+
+        } else {
+          this.$message.error(response.data.msg || "结束拍卖失败！");
+        }
+      } catch (error) {
+        console.error("结束拍卖时发生错误:", error);
+        this.$message.error("系统错误，请稍后再试！");
       }
-    } catch (error) {
-      console.error("结束拍卖时发生错误:", error);
-      this.$message.error("系统错误，请稍后再试！");
-    }
-  },
+    },
   },
   beforeDestroy() {
-     // 组件销毁时关闭 WebSocket
+    // 组件销毁时关闭 WebSocket
     if (this.websocket) {
       this.websocket.close();
     }
@@ -373,7 +391,9 @@ body {
 }
 
 .auction-item-container {
-  margin-top: 100px;
+  /* margin-top: 100px; */
+  position: relative;
+  top: 55px;
   max-width: 100%;
   /* 确保内容不会超出屏幕 */
   overflow-x: hidden;
@@ -381,17 +401,23 @@ body {
 }
 
 .auction-item-left {
-  width: auto; /* 自动调整宽度 */
-  height: auto; /* 自动调整高度 */
-  overflow: visible; /* 确保不隐藏内容 */
+  width: auto;
+  /* 自动调整宽度 */
+  height: auto;
+  /* 自动调整高度 */
+  overflow: visible;
+  /* 确保不隐藏内容 */
 }
 
 
 
 .item-image:hover {
-  transform: scale(1.5); /* 鼠标悬停时放大1.5倍 */
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3); /* 放大时增强阴影效果 */
-  cursor: pointer; /* 鼠标变为手型 */
+  transform: scale(1.5);
+  /* 鼠标悬停时放大1.5倍 */
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3);
+  /* 放大时增强阴影效果 */
+  cursor: pointer;
+  /* 鼠标变为手型 */
 }
 
 
@@ -478,17 +504,41 @@ body {
 .auction-item-right {
   margin-bottom: 100px;
   margin-top: 10px;
-  margin-left: 640px;
-  width: 50%;
+  margin-left: 600px;
+  width: 250px;
   /* 右侧占50%的宽度 */
   padding: 20px;
 }
 
+.bidding-records {
+  margin-top: 30px;
+}
+
+.section-title {
+  font-size: 25px;
+  font-weight: bold;
+  color: red; /* 可以根据需要更改颜色 */
+  text-align: center;
+  position: relative;
+  top: -60px;
+}
+
+.el-table {
+  background-color: #f9f9f9; /* 表格背景色 */
+  position: relative;
+  top: -60px;
+}
+
+
 .item-title {
-  font-size: 35px; /* 调整标题文字大小 */
-  font-weight: bold; /* 加粗标题文字 */
-  color: #333; /* 设置标题文字颜色 */
-  margin-bottom: 20px; /* 添加标题与后面内容的间距 */
+  font-size: 35px;
+  /* 调整标题文字大小 */
+  font-weight: bold;
+  /* 加粗标题文字 */
+  color: #333;
+  /* 设置标题文字颜色 */
+  margin-bottom: 20px;
+  /* 添加标题与后面内容的间距 */
 }
 
 .price {
@@ -507,7 +557,8 @@ body {
 
 .item-image {
   position: absolute;
-  top: 200px; /* 将图片往上移动 */
+  top: 200px;
+  /* 将图片往上移动 */
   left: 200px;
   width: 200px;
   max-height: 500px;
@@ -606,10 +657,14 @@ body {
 .product-info-box {
   width: 400px;
   padding: 20px;
-  border: 1px solid #e0e0e0; /* 边框颜色 */
-  border-radius: 8px; /* 圆角 */
-  background-color: #f9f9f9; /* 背景颜色 */
-  margin-top: 20px; /* 上方间距 */
+  border: 1px solid #e0e0e0;
+  /* 边框颜色 */
+  border-radius: 8px;
+  /* 圆角 */
+  background-color: #f9f9f9;
+  /* 背景颜色 */
+  margin-top: 20px;
+  /* 上方间距 */
 }
 
 .product-info-box h3 {
@@ -634,7 +689,7 @@ body {
   cursor: pointer;
 }
 
-.info-value1{
+.info-value1 {
   color: red;
 }
 
@@ -667,14 +722,18 @@ body {
 }
 
 .price-label {
-  font-size: 20px; /* 增大字体 */
-  color: #333; /* 设置颜色 */
-  font-weight: bold; /* 加粗文字 */
-  margin-right: 5px; /* 与后面的文字保持间距 */
+  font-size: 20px;
+  /* 增大字体 */
+  color: #333;
+  /* 设置颜色 */
+  font-weight: bold;
+  /* 加粗文字 */
+  margin-right: 5px;
+  /* 与后面的文字保持间距 */
 }
 
 
-.author{
+.author {
   font-size: 17px;
   color: #333;
   font-weight: bold;
@@ -702,20 +761,29 @@ body {
 }
 
 .icon-heart {
-  margin-left: 10px; /* 图标与标题文字的间距 */
-  font-size: 18px; /* 图标和数字的大小 */
-  color: #ff4d4f; /* 设置红色的爱心图标 */
-  vertical-align: middle; /* 垂直居中对齐 */
-  cursor: pointer; /* 鼠标移到图标上时变为手型 */
+  margin-left: 10px;
+  /* 图标与标题文字的间距 */
+  font-size: 18px;
+  /* 图标和数字的大小 */
+  color: #ff4d4f;
+  /* 设置红色的爱心图标 */
+  vertical-align: middle;
+  /* 垂直居中对齐 */
+  cursor: pointer;
+  /* 鼠标移到图标上时变为手型 */
 }
 
 .icon-heart:hover {
-  transform: scale(1.2); /* 悬停时放大效果 */
-  transition: transform 0.2s ease-in-out; /* 动画效果 */
+  transform: scale(1.2);
+  /* 悬停时放大效果 */
+  transition: transform 0.2s ease-in-out;
+  /* 动画效果 */
 }
 
 .spacing {
-  display: inline-block; /* 确保占据空间 */
-  width: 95px; /* 设置左右间隔的大小，可以根据需要调整 */
+  display: inline-block;
+  /* 确保占据空间 */
+  width: 95px;
+  /* 设置左右间隔的大小，可以根据需要调整 */
 }
 </style>
