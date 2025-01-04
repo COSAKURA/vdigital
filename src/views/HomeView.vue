@@ -96,8 +96,8 @@
   </el-form>
 
   <!-- 掌纹验证表单 -->
-<el-form v-if="verificationForm.method === 'palm'" :model="palmForm" ref="palmForm" label-width="100px">
-  <el-form-item label="掌纹识别">
+<el-form v-if="verificationForm.method === 'palm'"  :model="palmForm" ref="palmForm" label-width="100px">
+  <el-form-item label="掌纹识别" :rules="[{ required: true, trigger: 'change' }]">
      <!-- 替换为图片 -->
      <img 
       src="../assets/images/resource/zw.png" 
