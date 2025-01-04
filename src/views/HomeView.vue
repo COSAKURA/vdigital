@@ -82,29 +82,48 @@
   </div>
 
   <div class="home-view">
-    <!-- 身份验证弹框 -->
-    <el-dialog v-model="isPrivateKeyDialogVisible" title="上传私钥文件进行身份验证" width="400px" :close-on-click-modal="false">
-      <el-form :model="privateKeyForm" ref="privateKeyForm" label-width="100px">
-        <!-- 私钥文件上传 -->
-        <el-form-item label="私钥文件" :rules="[{ required: true, message: '请上传私钥文件', trigger: 'change' }]">
-          <el-upload class="upload-demo" drag :on-change="handleFileChange" :before-upload="() => false"
-            :auto-upload="false" limit="1">
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">拖拽文件到这里，或点击上传</div>
-          </el-upload>
-        </el-form-item>
-        <!-- 密码输入 -->
-        <el-form-item label="密码" :rules="[{ required: true, message: '请输入密码', trigger: 'blur' }]">
-          <el-input v-model="privateKeyForm.password" type="password" placeholder="请输入密码"></el-input>
-        </el-form-item>
-      </el-form>
+     <!-- 身份验证弹框 -->
+<el-dialog v-model="isPrivateKeyDialogVisible" title="选择验证方式" width="400px" :close-on-click-modal="false">
+  <el-form :model="verificationForm" ref="verificationForm" label-width="100px">
+    <!-- 验证方式选择 -->
+    <el-form-item label="验证方式" :rules="[{ required: true, message: '请选择验证方式', trigger: 'change' }]">
+      <el-radio-group v-model="verificationForm.method">
+        <el-radio label="privateKey">私钥验证</el-radio>
+        <el-radio label="palm">掌纹验证</el-radio>
+      </el-radio-group>
+    </el-form-item>
+  </el-form>
 
-      <template #footer>
-        <el-button @click="isPrivateKeyDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="submitPrivateKeyForm">确认</el-button>
-      </template>
-    </el-dialog>
-  </div>
+  <!-- 私钥验证表单 -->
+  <el-form v-if="verificationForm.method === 'privateKey'" :model="privateKeyForm" ref="privateKeyForm" label-width="100px">
+    <el-form-item label="私钥文件" :rules="[{ required: true, message: '请上传私钥文件', trigger: 'change' }]">
+      <el-upload class="upload-demo" drag :on-change="handleFileChange" :before-upload="() => false" :auto-upload="false" limit="1">
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">拖拽文件到这里，或点击上传</div>
+      </el-upload>
+    </el-form-item>
+    <el-form-item label="密码" :rules="[{ required: true, message: '请输入密码', trigger: 'blur' }]">
+      <el-input v-model="privateKeyForm.password" type="password" placeholder="请输入密码"></el-input>
+    </el-form-item>
+  </el-form>
+
+  <!-- 掌纹验证表单 -->
+<el-form v-if="verificationForm.method === 'palm'" :model="palmForm" ref="palmForm" label-width="100px">
+  <el-form-item label="掌纹识别">
+    <el-button type="primary" @click="submitVerificationForm">掌纹识别</el-button>
+  </el-form-item>
+  <!-- 显示识别状态 -->
+  <el-form-item v-if="palmRecognitionStatus" label="识别状态">
+    <p>{{ palmRecognitionStatus }}</p>
+  </el-form-item>
+</el-form>
+
+  <template #footer>
+    <el-button @click="isPrivateKeyDialogVisible = false">取消</el-button>
+    <el-button type="primary" @click="submitVerificationForm">确认</el-button>
+  </template>
+</el-dialog>
+  </div>~
 </template>
 
 
@@ -123,11 +142,24 @@ export default {
       headerTitle: "我们为您的原创内容提供全方位的版权保护。",
       headerSubtitle: "艺溯之链平台",
       isPrivateKeyDialogVisible: false, // 控制弹框显示
+
+       // 当前选择的验证方式
+        verificationForm: {
+        method: '', // 当前选择的验证方式 (privateKey 或 palm)
+      },
+
+      // 私钥验证表单数据
       privateKeyForm: {
         privateKeyFile: null, // 私钥文件
         email: localStorage.getItem("email"), // 用户邮箱
         password: "", // 用户密码
       },
+
+       // 掌纹验证表单数据
+       palmForm: {
+        file: null, // 掌纹文件
+      },
+      
       activeMenu: "home", // 默认选中的菜单项
       activeStep: 4, // 当前步骤
       painPoints: [
@@ -321,6 +353,62 @@ export default {
 
       console.log("Header 内容重新调用一次"); // 确认方法执行
     },
+
+  // 处理掌纹文件上传
+  handlePalmUpload(file) {
+    this.palmForm.file = file.raw; // 获取上传的掌纹文件
+  },
+
+  // 提交掌纹验证表单
+  async submitVerificationForm() {
+    if (this.verificationForm.method === 'privateKey') {
+      // 私钥验证逻辑（已完成，无需更改）
+      this.$refs.privateKeyForm.validate((valid) => {
+        if (valid) {
+          console.log('提交私钥验证表单：', this.privateKeyForm);
+          this.submitPrivateKeyForm();
+        }
+      });
+    } else if (this.verificationForm.method === 'palm') {
+      // 掌纹验证逻辑
+      this.$refs.palmForm.validate(async (valid) => {
+        if (!valid) {
+          this.$message.error("请完整填写表单！");
+          return;
+        }
+
+        if (!this.palmForm.file) {
+          this.$message.error("掌纹验证失败，请检查网络连接或稍后重试！");
+          return;
+        }
+
+        // 创建 FormData 对象，用于上传掌纹文件
+        const formData = new FormData();
+        formData.append("file", this.palmForm.file); // 上传掌纹文件
+
+        try {
+          // 调用后端接口进行掌纹验证
+          const response = await request.post("/palm/verify", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+
+          if (response.data.code === 0) {
+            this.$message.success("掌纹验证成功！");
+            this.isVerificationDialogVisible = false; // 关闭弹框
+            // 如果需要，可以存储一些返回数据，例如身份信息：
+            localStorage.setItem("palmVerified", true);
+          } else {
+            this.$message.error(response.data.message || "掌纹验证失败，请重试！");
+          }
+        } catch (error) {
+          console.error("掌纹验证失败：", error);
+          this.$message.error("掌纹验证失败，请检查网络连接或稍后重试！");
+        }
+      });
+    } else {
+      this.$message.error("请选择验证方式！");
+    }
+  },
 
     // 处理文件选择
     handleFileChange(file) {

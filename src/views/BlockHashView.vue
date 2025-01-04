@@ -172,10 +172,6 @@ const currentTransactionPage = ref(1);
 const transactionPageSize = ref(5);
 
 
-
-
-
-
 // 获取区块数据
 const fetchBlockData = async () => {
   try {
@@ -203,8 +199,7 @@ const fetchBlockData = async () => {
   }
 };
 
-
-// 获取交易数据
+                // 获取交易数据
 const fetchTransactionData = async () => {
   try {
     const response = await request.get(`/blockchain/allTransactionHashes`, {
