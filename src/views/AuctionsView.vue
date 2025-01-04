@@ -31,9 +31,30 @@
             <span class="price">{{ auctions.currentPrice || '暂无竞拍' }}</span>
           </p>
           <div class="buttons">
+             <!-- 减号按钮 -->
+            <el-button
+              type="primary"
+              @click="decreaseAmount"
+              :disabled="isAuctionEnded || bidAmount <= minBidAmount"
+              style="height: 35px;  font-size: 24px;"
+            >
+              -
+            </el-button>
+
             <!-- 输入框禁用状态 -->
-            <el-input v-model="bidAmount" placeholder="输入竞拍金额" style="width: 150px; margin-right: 10px;"
-              :disabled="isAuctionEnded" />
+            <el-input v-model="bidAmount" placeholder="输入竞拍金额" style="width: 250px; height: 35px; margin-right: 10px;"
+              :disabled="isAuctionEnded"  @blur="validateBidAmount" 
+              @input="bidAmount = Number(bidAmount)" />
+
+              <!-- 加号按钮 -->
+            <el-button
+              type="primary"
+              @click="increaseAmount"
+              :disabled="isAuctionEnded || bidAmount >= maxBidAmount"
+              style="height: 35px;  font-size: 24px;" 
+            >
+              +
+            </el-button>
 
             <!-- 根据拍卖状态动态切换按钮 -->
             <el-button v-if="!isAuctionEnded" type="primary" @click="openBidDialog">
@@ -43,9 +64,8 @@
             <el-button v-else type="danger" disabled>
               拍卖已结束
             </el-button>
+            
           </div>
-
-
           <p v-if="isAuctionEnded" class="error-message">拍卖已结束，无法竞拍。</p>
           <p v-if="bidError" class="error-message">{{ bidError }}</p>
 
@@ -79,13 +99,19 @@
           </div>
         </el-col>
       </el-row>
+      <!-- 标题部分 -->
+     <div class="bidding-records-title">
+      <h3 class="section-title">竞买记录</h3>
+    </div>
       <el-row class="bidding-records">
   <el-col :span="24">
-    <h3 class="section-title">竞买记录</h3>
+    <div class="bidding-records-title">
+      <h3 class="section-title">竞买记录</h3>
+    </div>
     <el-table
       :data="bids"
       style="width: 100%; margin-top: 10px;"
-      border
+      
     >
       <el-table-column prop="username" label="用户名称" align="center" width="250">
         <template #default="scope">
@@ -108,6 +134,7 @@
         </template>
       </el-table-column>
     </el-table>
+  
   </el-col>
 </el-row>
 
@@ -154,7 +181,10 @@ export default {
       },
       auctions: {}, // 拍卖相关信息
       valueDescription: "此艺术品由著名艺术家创作，具有极高的历史文化价值。",
-      bidAmount: "",
+      bidAmount: 1, // 当前竞拍金额
+      minBidAmount: 1, // 最小竞拍金额
+      maxBidAmount: '1000000000000000000', // 最大竞拍金额
+      stepAmount: 100, // 每次加减的步进值
       isAuctionEnded: false,
       remainingTime: "",
       bidError: "",
@@ -183,6 +213,33 @@ export default {
   },
 
   methods: {
+
+       // 减少金额
+  decreaseAmount() {
+    this.bidAmount = Number(this.bidAmount); // 确保 bidAmount 为数字
+    if (this.bidAmount - this.stepAmount < 0) {
+      this.bidAmount = 0; // 如果减去步进值后小于零，直接设置为 0
+    } else {
+      this.bidAmount -= this.stepAmount; // 正常减去步进值
+    }
+  },
+
+  // 增加金额
+  increaseAmount() {
+    this.bidAmount = Number(this.bidAmount); // 确保 bidAmount 为数字
+    if (this.bidAmount < this.maxBidAmount) {
+      this.bidAmount += this.stepAmount;
+    }
+  },
+
+  // 校验用户手动输入的金额
+  validateBidAmount() {
+    this.bidAmount = Number(this.bidAmount); // 确保为数字
+    if (this.bidAmount < 0 || isNaN(this.bidAmount)) {
+      this.bidAmount = 0; // 修正为 0
+    }
+  },
+
     // 初始化 WebSocket 连接
     initWebSocket() {
       const socket = new WebSocket("ws://172.46.225.3:8888/ws/auction");
@@ -391,13 +448,12 @@ body {
 }
 
 .auction-item-container {
-  /* margin-top: 100px; */
-  position: relative;
-  top: 55px;
+  position: fixed; /* 固定位置 */
+  top: 180px;
   max-width: 100%;
   /* 确保内容不会超出屏幕 */
   overflow-x: hidden;
-  /* 禁止容器水平滚动 */
+  z-index: 10; /* 保证在其他内容之上 */
 }
 
 .auction-item-left {
@@ -511,7 +567,17 @@ body {
 }
 
 .bidding-records {
-  margin-top: 30px;
+  margin-top: -60px;
+  height: 300px; /* 固定高度 */
+  overflow-y: auto; /* 启用垂直滚动条 */
+  background-color: #f9f9f9; /* 背景色，确保视觉清晰 */
+  border: 1px solid #e0e0e0; /* 边框 */
+  border-radius: 8px; /* 圆角 */
+  padding: 10px; /* 内边距 */
+}
+
+.bidding-records-title {
+  margin-bottom: 10px; /* 标题与表格的间距 */
 }
 
 .section-title {
@@ -520,7 +586,7 @@ body {
   color: red; /* 可以根据需要更改颜色 */
   text-align: center;
   position: relative;
-  top: -60px;
+  top: -70px;
 }
 
 .el-table {
