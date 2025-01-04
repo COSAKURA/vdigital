@@ -86,16 +86,34 @@
 <el-dialog v-model="isPrivateKeyDialogVisible" title="选择验证方式" width="400px" :close-on-click-modal="false">
   <el-form :model="verificationForm" ref="verificationForm" label-width="100px">
     <!-- 验证方式选择 -->
-    <el-form-item label="验证方式" :rules="[{ required: true, message: '请选择验证方式', trigger: 'change' }]">
+    <el-form-item label="验证流程" :rules="[{ required: true, message: '请选择验证方式', trigger: 'change' }]">
       <el-radio-group v-model="verificationForm.method">
-        <el-radio label="privateKey">私钥验证</el-radio>
         <el-radio label="palm">掌纹验证</el-radio>
+        <el-radio label="privateKey">私钥验证</el-radio>
+        
       </el-radio-group>
     </el-form-item>
   </el-form>
 
-  <!-- 私钥验证表单 -->
-  <el-form v-if="verificationForm.method === 'privateKey'" :model="privateKeyForm" ref="privateKeyForm" label-width="100px">
+  <!-- 掌纹验证表单 -->
+<el-form v-if="verificationForm.method === 'palm'" :model="palmForm" ref="palmForm" label-width="100px">
+  <el-form-item label="掌纹识别">
+     <!-- 替换为图片 -->
+     <img 
+      src="../assets/images/resource/zw.png" 
+      alt="掌纹识别" 
+      @click="submitVerificationForm" 
+      style="cursor: pointer; width: 150px; height: 150px; margin: 0 auto; position: relative; right: 30px;"
+    />
+  </el-form-item>
+  <!-- 显示识别状态 -->
+  <el-form-item v-if="palmRecognitionStatus" label="识别状态">
+    <p>{{ palmRecognitionStatus }}</p>
+  </el-form-item>
+</el-form>
+
+ <!-- 私钥验证表单 -->
+ <el-form v-if="verificationForm.method === 'privateKey'" :model="privateKeyForm" ref="privateKeyForm" label-width="100px">
     <el-form-item label="私钥文件" :rules="[{ required: true, message: '请上传私钥文件', trigger: 'change' }]">
       <el-upload class="upload-demo" drag :on-change="handleFileChange" :before-upload="() => false" :auto-upload="false" limit="1">
         <i class="el-icon-upload"></i>
@@ -107,23 +125,12 @@
     </el-form-item>
   </el-form>
 
-  <!-- 掌纹验证表单 -->
-<el-form v-if="verificationForm.method === 'palm'" :model="palmForm" ref="palmForm" label-width="100px">
-  <el-form-item label="掌纹识别">
-    <el-button type="primary" @click="submitVerificationForm">掌纹识别</el-button>
-  </el-form-item>
-  <!-- 显示识别状态 -->
-  <el-form-item v-if="palmRecognitionStatus" label="识别状态">
-    <p>{{ palmRecognitionStatus }}</p>
-  </el-form-item>
-</el-form>
-
   <template #footer>
     <el-button @click="isPrivateKeyDialogVisible = false">取消</el-button>
-    <el-button type="primary" @click="submitVerificationForm">确认</el-button>
+    <el-button type="primary" @click="submitVerificationForm">验证</el-button>
   </template>
 </el-dialog>
-  </div>~
+  </div>
 </template>
 
 
