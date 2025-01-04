@@ -188,7 +188,7 @@ const fetchBlockData = async () => {
 
     blockData.value = response.data.data; // 区块数据
     blockTotalPages.value = Math.ceil(response.data.total / blockPageSize.value);
-    blockCountData.value = response.data.count; // 提取统计信息
+    blockCountData.value = response.data.statistics; // 提取统计信息
 
     // 动态更新表格数据
     tableData.value = blockCountData.value.nodeList.map((node, index) => ({
