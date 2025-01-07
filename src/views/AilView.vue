@@ -35,84 +35,34 @@ import Navbar from "@/components/Navbar.vue";
 // 定义响应式数据
 const newMessage = ref("");
 const messages = reactive([
-  { from: "assistant", text: "你好！欢迎使用本地 AI 服务，有什么可以帮您的吗？ 😊" },
+  { from: "assistant", text: "你好！欢迎使用本地服务，有什么可以帮您的吗？ 😊" },
 ]);
 
+// 预定义话术
+const predefinedResponses = [
+  "流动的色彩交织成诗意画卷，展现无限想象力。",
+  "光影交错间，捕捉永恒与瞬间的美妙结合。",
+  "自然之美与人造几何完美融合，动人心魄。",
+  "自然之美与人造几何完美融合，动人心魄。",
+];
+
 // 发送消息方法
-async function sendMessage() {
+function sendMessage() {
   if (newMessage.value.trim() === "") return;
 
   // 添加用户消息
   messages.push({ from: "user", text: newMessage.value });
 
+  // 模拟 AI 回复固定话术
+  setTimeout(() => {
+    const randomResponse =
+      predefinedResponses[Math.floor(Math.random() * predefinedResponses.length)];
+    messages.push({ from: "assistant", text: randomResponse });
+    scrollToBottom(); // 每次更新消息后滚动到底部
+  }, 1000);
 
-  try {
-    // 改了这个路径别动
-    const response = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "glm4:9b", // 模型名称
-        keep_alive: "5m", // 连接保持时间
-        messages: [
-          {
-            role: "user",
-            content: newMessage.value,
-            images: [],
-          },
-        ],
-      }),
-    });
-
-    if (!response.body) {
-      throw new Error("Response body is null");
-    }
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder("utf-8");
-    let assistantMessage = "";
-    messages.push({ from: "assistant", text: "" });
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      // 解析流数据
-      const chunk = decoder.decode(value, { stream: true });
-      try {
-        const jsonChunks = chunk
-          .split("\n")
-          .filter((line) => line.trim() !== "") // 过滤空行
-          .map((line) => JSON.parse(line)); // 转换为 JSON
-
-
-        // 清空输入框
-        newMessage.value = ""; // 在这里清空输入框内容 
-
-
-        for (const json of jsonChunks) {
-          if (json.message && json.message.content) {
-            assistantMessage += json.message.content;
-
-            // 更新对话框中 AI 的回答
-            messages[messages.length - 1].text = assistantMessage;
-            scrollToBottom(); // 每次更新消息后滚动到底部
-          }
-        }
-      } catch (e) {
-        console.error("解析流数据失败：", e, chunk);
-      }
-    }
-  } catch (error) {
-    console.error("发送消息失败：", error);
-    messages.push({
-      from: "assistant",
-      text: "发送失败，请检查服务器状态或稍后再试。",
-    });
-  }
-  scrollToBottom(); // 发送消息后滚动到底部
-
-
+  // 清空输入框内容
+  newMessage.value = "";
 }
 
 // 滚动到底部方法

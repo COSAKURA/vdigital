@@ -88,7 +88,7 @@
     <!-- 验证方式选择 -->
     <el-form-item label="验证流程" :rules="[{ required: true, message: '请选择验证方式', trigger: 'change' }]">
       <el-radio-group v-model="verificationForm.method">
-        <el-radio label="palm">掌纹验证</el-radio>
+        <el-radio label="palm">掌静脉验证</el-radio>
         <el-radio label="privateKey">私钥验证</el-radio>
         
       </el-radio-group>
@@ -97,7 +97,7 @@
 
   <!-- 掌纹验证表单 -->
 <el-form v-if="verificationForm.method === 'palm'"  :model="palmForm" ref="palmForm" label-width="100px">
-  <el-form-item label="掌纹识别" :rules="[{ required: true, trigger: 'change' }]">
+  <el-form-item label="掌静脉识别" :rules="[{ required: true, trigger: 'change' }]">
      <!-- 替换为图片 -->
      <img 
       src="../assets/images/resource/zw.png" 
